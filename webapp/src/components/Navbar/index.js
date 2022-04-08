@@ -4,7 +4,7 @@ import {IoEnterOutline} from 'react-icons/io5';
 
 const Navbar = () =>{
 
-    let activeClassName = "block text-base mx-3 py-0.5 border-b-2 border-green-400";
+    let activeClassName = "block text-base mx-3 py-0.5 border-b-2 border-teal-400";
     let inactiveClassName="block text-base mx-3 py-0.5 border-b-2 border-transparent hover:border-white hover:text-white";
 
     let navigate = useNavigate();
