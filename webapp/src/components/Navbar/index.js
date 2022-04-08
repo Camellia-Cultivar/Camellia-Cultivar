@@ -8,10 +8,10 @@ const Navbar = () =>{
 
 
     return (
-        <nav className="bg-green-900 px-2 sm:px-4 py-6 text-stone-200 select-none">
+        <nav className="bg-emerald-900 px-2 sm:px-4 py-6 text-stone-200 select-none">
             <div className="container flex flex-wrap justify-between items-center mx-auto">
                 <Link to={"/"} className="flex items-center">
-                    <img src="/public/logo192.png" className="mr-3 h-6 sm:h-9" alt="Logo"/>
+                    <img src="logo192.png" className="mr-3 h-6 sm:h-9" alt="Logo"/>
                     <span
                         className="self-center text-2xl font-bold whitespace-nowrap dark:text-white">Camellia Cultivar</span>
                 </Link>
@@ -46,6 +46,15 @@ const Navbar = () =>{
                                      )}
                             >
                                 Homepage
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/login"
+                                className={({ isActive }) => (
+                                    isActive ? activeClassName : inactiveClassName
+                                )}
+                            >
+                                Login
                             </NavLink>
                         </li>
                         <li>
