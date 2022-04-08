@@ -1,17 +1,19 @@
 import React from 'react';
-import {Link, NavLink} from 'react-router-dom';
+import {Link, NavLink, useNavigate} from 'react-router-dom';
+import {IoEnterOutline} from 'react-icons/io5';
 
 const Navbar = () =>{
 
     let activeClassName = "block text-base mx-3 py-0.5 border-b-2 border-teal-400";
     let inactiveClassName="block text-base mx-3 py-0.5 border-b-2 border-transparent hover:border-white hover:text-white";
 
+    let navigate = useNavigate();
 
     return (
-        <nav className="bg-emerald-900 px-2 sm:px-4 py-6 text-stone-200 select-none">
+        <nav className="flex bg-emerald-900 px-2 sm:px-4 py-6 text-stone-200 select-none">
             <div className="container flex flex-wrap justify-between items-center mx-auto">
                 <Link to={"/"} className="flex items-center">
-                    <img src="/public/logo192.png" className="mr-3 h-6 sm:h-9" alt="Logo"/>
+                    <img src="logo192.png" className="mr-3 h-6 sm:h-9" alt="Logo"/>
                     <span
                         className="self-center text-2xl font-bold whitespace-nowrap dark:text-white">Camellia Cultivar</span>
                 </Link>
@@ -60,6 +62,8 @@ const Navbar = () =>{
                     </ul>
                 </div>
             </div>
+            <button onClick={()=>{navigate("/login")}} className="flex justify-self-end mr-4 font-medium border-2 rounded-md border-emerald-900 px-4 hover:border-white hover:text-white"><span className="self-center mr-1">Login</span><IoEnterOutline  className="self-center mt-1"/></button>
+            
         </nav>
     );
 }
