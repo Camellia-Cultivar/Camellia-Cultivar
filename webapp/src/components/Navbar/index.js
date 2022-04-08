@@ -3,12 +3,12 @@ import {Link, NavLink} from 'react-router-dom';
 
 const Navbar = () =>{
 
-    let activeClassName = "block text-base mx-3 py-0.5 border-b-2 border-green-400";
+    let activeClassName = "block text-base mx-3 py-0.5 border-b-2 border-teal-400";
     let inactiveClassName="block text-base mx-3 py-0.5 border-b-2 border-transparent hover:border-white hover:text-white";
 
 
     return (
-        <nav className="bg-green-900 px-2 sm:px-4 py-6 text-stone-200 select-none">
+        <nav className="bg-emerald-900 px-2 sm:px-4 py-6 text-stone-200 select-none">
             <div className="container flex flex-wrap justify-between items-center mx-auto">
                 <Link to={"/"} className="flex items-center">
                     <img src="/public/logo192.png" className="mr-3 h-6 sm:h-9" alt="Logo"/>
