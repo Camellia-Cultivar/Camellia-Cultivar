@@ -2,7 +2,7 @@ import React from "react";
 
 function QuizCard(prop) {
     return (
-        <div className="grid justify-items-stretch gap-3 rounded-lg bg-emerald-900/10 max-w-lg px-2 pt-2 pb-8">
+        <div className="grid justify-items-stretch gap-3 rounded-lg bg-emerald-900/10 max-w-lg px-2 pt-2 pb-8 select-none">
             <div className="grid grid-cols-4 grid-rows-3 gap-2">
                 { prop.images.slice(0, 4).map((link, index) =>
                     <div
