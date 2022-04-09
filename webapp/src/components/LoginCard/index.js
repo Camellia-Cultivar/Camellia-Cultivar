@@ -2,10 +2,10 @@ import React from 'react'
 
 import './index.css'
 
-const LoginCard = ({history}) => {
+const LoginCard = ({navigate}) => {
 
     const redirect = (route)=>{
-       history.push(route)
+       navigate(route);
     }
 
     return (
