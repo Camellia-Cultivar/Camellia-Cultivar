@@ -10,7 +10,7 @@ const Navbar = () =>{
     let navigate = useNavigate();
 
     return (
-        <nav className="flex bg-emerald-900 px-2 sm:px-4 py-6 text-stone-200 select-none">
+        <nav className="flex w-screen bg-emerald-900 px-2 sm:px-4 py-6 text-stone-200 select-none">
             <div className="container flex flex-wrap justify-between items-center mx-auto">
                 <Link to={"/"} className="flex items-center">
                     <img src="logo192.png" className="mr-3 h-6 sm:h-9" alt="Logo"/>
@@ -48,6 +48,15 @@ const Navbar = () =>{
                                      )}
                             >
                                 Homepage
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/quizzes"
+                                className={({ isActive }) => (
+                                    isActive ? activeClassName : inactiveClassName
+                                )}
+                            >
+                                Quizzes
                             </NavLink>
                         </li>
                         <li>
