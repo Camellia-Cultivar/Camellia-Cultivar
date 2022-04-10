@@ -7,7 +7,7 @@ function Step(props) {
             <div className="flex flex-none justify-center items-center font-medium text-neutral-900 dark:text-white bg-teal-400 rounded-full aspect-square w-8">
                 {props.id}
             </div>
-            <div>
+            <div className="text-base md:text-lg">
                 {props.content}
             </div>
         </div>
