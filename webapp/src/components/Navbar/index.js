@@ -61,6 +61,15 @@ const Navbar = () =>{
                                 </NavLink>
                             </li>
                             <li>
+                                <NavLink to="/encyclopedia" end
+                                         className={({ isActive }) => (
+                                             isActive ? activeClassName : inactiveClassName
+                                         )}
+                                >
+                                    Encyclopedia
+                                </NavLink>
+                            </li>
+                            <li>
                                 <NavLink to="/about"
                                          className={({ isActive }) => (
                                              isActive ? activeClassName : inactiveClassName
@@ -69,8 +78,7 @@ const Navbar = () =>{
                                     About Us
                                 </NavLink>
                             </li>
-                        </ul>
-                    </div>
+                    </ul>
                 </div>
                 <button onClick={()=>{navigate("/login")}} className="flex justify-self-end mr-4 font-medium border-2 rounded-md border-emerald-900 px-4 hover:border-white hover:text-white"><span className="self-center mr-1">Login</span><IoEnterOutline  className="self-center mt-1"/></button>
 
