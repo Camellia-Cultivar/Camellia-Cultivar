@@ -78,7 +78,8 @@ const Navbar = () =>{
                                     About Us
                                 </NavLink>
                             </li>
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
                 <button onClick={()=>{navigate("/login")}} className="flex justify-self-end mr-4 font-medium border-2 rounded-md border-emerald-900 px-4 hover:border-white hover:text-white"><span className="self-center mr-1">Login</span><IoEnterOutline  className="self-center mt-1"/></button>
 
