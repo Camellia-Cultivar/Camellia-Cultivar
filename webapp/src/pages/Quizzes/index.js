@@ -15,7 +15,7 @@ const Quizzes = () =>{
                 </div>
                 <div className="col-span-2 justify-self-stretch self-stretch bg-stone-100 rounded-l-full"></div>
             </div>
-            <div className="invisible lg:visible container mx-auto md:max-w-screen-md xl:max-w-screen-lg grid grid-cols-3 gap-x-8 gap-y-3.5">
+            <div className="pb-4 px-20 md:scroll-px-36 gap-4 md:gap-7 md:gap-4 snap-x snap-mandatory overflow-x-scroll lg:overflow-x-auto flex lg:flex-none lg:grid lg:grid-cols-3 lg:container lg:mx-auto lg:max-w-screen-md xl:max-w-screen-lg lg:gap-x-8 lg:gap-y-3.5 lg:px-0">
                 {quizzes.map(quiz => <QuizCard id={quiz.id} images={quiz.images} />)}
             </div>
         </div>
