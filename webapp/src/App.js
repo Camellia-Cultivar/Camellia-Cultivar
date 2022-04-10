@@ -8,6 +8,7 @@ import Register from "./pages/Register";
 import Navbar from './components/Navbar'
 
 import './App.css';
+import Encyclopedia from './pages/Encyclopedia';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Navbar/>
           <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/encyclopedia" element={<Encyclopedia />} />
               <Route path="/login" element={<Login/>} />
               <Route path="/register" element={<Register />}/>
               <Route path="/about" element={<About />}/>
