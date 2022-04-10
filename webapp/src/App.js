@@ -5,6 +5,7 @@ import About from "./pages/About";
 import Home from "./pages/Home";
 import Quizzes from "./pages/Quizzes";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Navbar from './components/Navbar'
 
 import './App.css';
@@ -17,6 +18,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />}/>
               <Route path="/quizzes" element={<Quizzes />}/>
+              <Route path="/register" element={<Register />}/>
               <Route path="/about" element={<About />}/>
           </Routes>
       </BrowserRouter>
