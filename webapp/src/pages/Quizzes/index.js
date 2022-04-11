@@ -14,7 +14,7 @@ const slide = (direction=1) => {
 
 const Quizzes = () =>{
     return (
-        <div className="select-none">
+        <div className="select-none pt-16 md:pt-20">
             <div className="grid gap-3 sm:place-items-center grid-flow-row-dense md:place-items-start sm:grid-cols-1 md:grid-cols-5 text-neutral-900 py-10">
                 <div className="col-span-2 justify-self-stretch self-stretch rounded-r-full bg-emerald-500/20"></div>
                 <div className="grid col-span-3 mx-5">

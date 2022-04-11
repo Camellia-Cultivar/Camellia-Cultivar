@@ -34,7 +34,7 @@ const Encyclopedia = () => {
     }
 
     return (
-        <div className="mx-36 flex flex-col">
+        <div className="mx-36 flex flex-col pt-16 md:pt-20">
             <div className="pt-16 pb-6 ml-4">
                 <p className="text-3xl font-bold text-start">Encyclopedia</p>
             </div>
