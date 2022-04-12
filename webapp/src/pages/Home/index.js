@@ -18,7 +18,7 @@ let second_list = [
 
 const Home = () =>{
     return (
-        <div className="bg-stone-100 pb-16 pt-16 md:pt-20">
+        <div className="bg-stone-100 pb-16">
 
             {/* "Help identify" section */}
             <div className="grid gap-3 sm:place-items-center grid-flow-row-dense md:place-items-end sm:grid-cols-1 md:grid-cols-5 bg-emerald-900 text-white py-16">
