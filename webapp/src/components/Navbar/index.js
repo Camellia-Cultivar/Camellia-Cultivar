@@ -25,7 +25,7 @@ const Navbar = () =>{
 
     return (
         <div className="overflow-x-hidden fixed top-0 z-50">
-            <nav className="w-screen flex bg-emerald-900 lg:px-2 py-3 md:py-5 text-stone-200 select-none">
+            <nav className="w-screen flex bg-emerald-900 lg:px-2 py-2 md:py-4 text-stone-200 select-none">
                 <div className="container mx-auto flex flex-wrap justify-between items-center lg:mx-auto">
                     <Link to={"/"} className="flex items-center">
                         <img src="logo192.png" className="ml-2 lg:ml-0 md:mr-3 h-10 md:h-9" alt="Logo"/>
@@ -33,7 +33,7 @@ const Navbar = () =>{
                             className="hidden md:flex whitespace-nowrap self-center text-2xl font-bold dark:text-white">Camellia Cultivar</span>
                     </Link>
                     {/* LINKS */}
-                    <div className="fixed top-16 md:top-20 left-0 lg:top-0 lg:relative bg-white lg:mt-3 lg:bg-transparent w-full lg:flex lg:w-auto lg:order-0 order-1">
+                    <div className="fixed top-20 md:top-18 left-0 lg:top-0 lg:relative bg-white lg:mt-3 lg:bg-transparent w-full lg:flex lg:w-auto lg:order-0 order-1">
                         <ul className={navbarOpen ? openNavbar:closedNavbar}>
                             <li>
                                 <NavLink to="/" end
@@ -82,10 +82,10 @@ const Navbar = () =>{
                         {/*LOGIN BUTTON*/}
                         <button
                             onClick={()=>{navigate("/login"); closeMenu()}}
-                            className="flex justify-center align-middle font-medium rounded-full md:rounded-md md:px-2 md:py-1 hover:bg-white/10 hover:ring-teal-400/50 hover:ring-2 m-auto mr-1 lg:mr-0 focus:outline-none"
+                            className="flex justify-center align-middle font-medium rounded-full md:rounded-md md:px-2 md:py-1 hover:bg-white/10 hover:ring-teal-400/50 hover:ring-2 m-auto mr-3 lg:mr-0 focus:outline-none"
                         >
                             <span className="px-1 self-center hidden md:flex">Login</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-11 w-11 md:h-9 md:w-9" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd"/>
                             </svg>
                         </button>
@@ -93,7 +93,7 @@ const Navbar = () =>{
                         {/* HAMBURGER TOGGLE */}
                         <div className="flex items-center lg:hidden">
                             <button className="p-2 rounded-md hover:bg-white/10 focus:outline-none hover:ring-teal-400/50 hover:ring-2 m-auto" onClick={() => handleToggle()}>
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                                 </svg>
                             </button>
