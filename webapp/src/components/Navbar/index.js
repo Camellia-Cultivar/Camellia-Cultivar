@@ -33,7 +33,7 @@ const Navbar = () =>{
                             className="hidden md:flex whitespace-nowrap self-center text-2xl font-bold dark:text-white">Camellia Cultivar</span>
                     </Link>
                     {/* LINKS */}
-                    <div className="fixed top-20 md:top-18 left-0 lg:top-0 lg:relative bg-white lg:mt-3 lg:bg-transparent w-full lg:flex lg:w-auto lg:order-0 order-1">
+                    <div className="fixed top-16 md:top-20 left-0 lg:top-0 lg:relative bg-white lg:mt-3 lg:bg-transparent w-full lg:flex lg:w-auto lg:order-0 order-1">
                         <ul className={navbarOpen ? openNavbar:closedNavbar}>
                             <li>
                                 <NavLink to="/" end
