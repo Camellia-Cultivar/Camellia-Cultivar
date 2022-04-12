@@ -15,7 +15,7 @@ const Navbar = () =>{
     }
 
     let activeLink = "block text-base py-5 px-3 lg:py-0.5 lg:px-0 lg:border-b-2 border-teal-400 bg-emerald-900/10 text-neutral-600 lg:text-white lg:bg-transparent";
-    let link="block text-base py-5 px-3 lg:py-0.5 lg:px-0 lg:border-b-2 border-transparent hover:border-white hover:text-white";
+    let link="block text-base py-5 px-3 lg:py-0.5 lg:px-0 lg:border-b-2 border-transparent hover:border-white lg:hover:text-white";
 
     let openNavbar = "shadow-md lg:flex flex flex-col lg:gap-7 w-full justify-evenly text-base lg:text-stone-200 text-neutral-500 lg:flex-row lg:mt-0 lg:text-sm lg:font-medium";
     let closedNavbar = "hidden lg:flex gap-7 justify-evenly text-stone-200 flex-row mt-0 text-sm font-medium";
@@ -24,9 +24,9 @@ const Navbar = () =>{
     let navigate = useNavigate();
 
     return (
-        <div className="overflow-x-hidden fixed top-0 z-50">
-            <nav className="w-screen flex bg-emerald-900 lg:px-2 py-2 md:py-4 lg:py-5 text-stone-200 select-none">
-                <div className="container mx-auto flex flex-wrap justify-between items-center lg:mx-auto">
+        <div className="overflow-x-hidden sticky top-0 z-50">
+            <nav className="flex bg-emerald-900 lg:px-2 py-2 md:py-4 lg:py-5 text-stone-200 select-none">
+                <div className="container flex flex-wrap justify-between items-center mx-auto">
                     <Link to={"/"} className="flex items-center" onClick={() => closeMenu()}>
                         <img src="logo192.png" className="ml-2 lg:ml-0 md:mr-3 h-10 md:h-9" alt="Logo"/>
                         <span
