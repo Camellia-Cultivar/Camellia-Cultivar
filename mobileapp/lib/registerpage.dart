@@ -138,7 +138,7 @@ class RegisterPage extends StatelessWidget {
                     width: 260,
                       child: TextButton(
                         onPressed: ()=>{
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()))
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()))
                         }, 
                         style:  ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(const Color(0xFF064E3B)),

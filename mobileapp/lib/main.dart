@@ -4,11 +4,11 @@ import 'package:camellia_cultivar/registerpage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const LoginPage());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class LoginPage extends StatelessWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -98,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: 260,
                       child: TextButton(
                         onPressed: ()=>{
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()))
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()))
                         }, 
                         style:  ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(const Color(0xFF064E3B)),
@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: 260,
                       child: TextButton(
                         onPressed: () => {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> RegisterPage())),
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> const RegisterPage())),
                         }, 
                         style:  ButtonStyle(
                           //backgroundColor: MaterialStateProperty.all(Color()),
