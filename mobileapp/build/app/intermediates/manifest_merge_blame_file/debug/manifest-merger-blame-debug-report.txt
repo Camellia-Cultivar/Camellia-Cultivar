@@ -1,0 +1,109 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.camellia_cultivar"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="16"
+9        android:targetSdkVersion="31" />
+10    <!--
+11         Flutter needs it to communicate with the running application
+12         to allow setting breakpoints, to provide hot reload, etc.
+13    -->
+14    <uses-permission android:name="android.permission.INTERNET" />
+14-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/debug/AndroidManifest.xml:6:5-66
+14-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/debug/AndroidManifest.xml:6:22-64
+15    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+15-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:3:5-73
+15-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:3:22-71
+16    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+16-->[:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:7:5-80
+16-->[:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:7:22-77
+17    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+17-->[:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:8:5-81
+17-->[:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:8:22-78
+18    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+18-->[androidx.biometric:biometric:1.0.0-beta01] /home/patricia/.gradle/caches/transforms-2/files-2.1/4bd531eee9631e31ee362ab4506520a9/biometric-1.0.0-beta01/AndroidManifest.xml:24:5-72
+18-->[androidx.biometric:biometric:1.0.0-beta01] /home/patricia/.gradle/caches/transforms-2/files-2.1/4bd531eee9631e31ee362ab4506520a9/biometric-1.0.0-beta01/AndroidManifest.xml:24:22-69
+19
+20    <application
+21        android:name="android.app.Application"
+22        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+22-->[androidx.core:core:1.6.0] /home/patricia/.gradle/caches/transforms-2/files-2.1/122df2e57d294d1a53db26bbc3b813c1/core-1.6.0/AndroidManifest.xml:24:18-86
+23        android:debuggable="true"
+24        android:icon="@mipmap/ic_launcher"
+25        android:label="camellia_cultivar" >
+26        <activity
+27            android:name="com.example.camellia_cultivar.MainActivity"
+28            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+29            android:exported="true"
+30            android:hardwareAccelerated="true"
+31            android:launchMode="singleTop"
+32            android:theme="@style/LaunchTheme"
+33            android:windowSoftInputMode="adjustResize" >
+34
+35            <!--
+36                 Specifies an Android theme to apply to this Activity as soon as
+37                 the Android process has started. This theme is visible to the user
+38                 while the Flutter UI initializes. After that, this theme continues
+39                 to determine the Window background behind the Flutter UI.
+40            -->
+41            <meta-data
+42                android:name="io.flutter.embedding.android.NormalTheme"
+43                android:resource="@style/NormalTheme" />
+44
+45            <intent-filter>
+46                <action android:name="android.intent.action.MAIN" />
+47
+48                <category android:name="android.intent.category.LAUNCHER" />
+49            </intent-filter>
+50        </activity>
+51        <!--
+52             Don't delete the meta-data below.
+53             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+54        -->
+55        <meta-data
+56            android:name="flutterEmbedding"
+57            android:value="2" />
+58
+59        <provider
+59-->[:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:11:9-19:20
+60            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
+60-->[:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:12:13-82
+61            android:authorities="com.example.camellia_cultivar.flutter.image_provider"
+61-->[:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:13:13-74
+62            android:exported="false"
+62-->[:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:14:13-37
+63            android:grantUriPermissions="true" >
+63-->[:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:15:13-47
+64            <meta-data
+64-->[:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:16:13-18:75
+65                android:name="android.support.FILE_PROVIDER_PATHS"
+65-->[:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:17:17-67
+66                android:resource="@xml/flutter_image_picker_file_paths" />
+66-->[:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:18:17-72
+67        </provider>
+68
+69        <uses-library
+69-->[androidx.window:window:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/03c633e46d75bfb21f082f0417f55161/jetified-window-1.0.0-beta04/AndroidManifest.xml:25:9-27:40
+70            android:name="androidx.window.extensions"
+70-->[androidx.window:window:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/03c633e46d75bfb21f082f0417f55161/jetified-window-1.0.0-beta04/AndroidManifest.xml:26:13-54
+71            android:required="false" />
+71-->[androidx.window:window:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/03c633e46d75bfb21f082f0417f55161/jetified-window-1.0.0-beta04/AndroidManifest.xml:27:13-37
+72        <uses-library
+72-->[androidx.window:window:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/03c633e46d75bfb21f082f0417f55161/jetified-window-1.0.0-beta04/AndroidManifest.xml:28:9-30:40
+73            android:name="androidx.window.sidecar"
+73-->[androidx.window:window:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/03c633e46d75bfb21f082f0417f55161/jetified-window-1.0.0-beta04/AndroidManifest.xml:29:13-51
+74            android:required="false" />
+74-->[androidx.window:window:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/03c633e46d75bfb21f082f0417f55161/jetified-window-1.0.0-beta04/AndroidManifest.xml:30:13-37
+75
+76        <activity
+76-->[androidx.biometric:biometric:1.0.0-beta01] /home/patricia/.gradle/caches/transforms-2/files-2.1/4bd531eee9631e31ee362ab4506520a9/biometric-1.0.0-beta01/AndroidManifest.xml:28:9-30:67
+77            android:name="androidx.biometric.DeviceCredentialHandlerActivity"
+77-->[androidx.biometric:biometric:1.0.0-beta01] /home/patricia/.gradle/caches/transforms-2/files-2.1/4bd531eee9631e31ee362ab4506520a9/biometric-1.0.0-beta01/AndroidManifest.xml:29:13-78
+78            android:theme="@style/DeviceCredentialHandlerTheme" />
+78-->[androidx.biometric:biometric:1.0.0-beta01] /home/patricia/.gradle/caches/transforms-2/files-2.1/4bd531eee9631e31ee362ab4506520a9/biometric-1.0.0-beta01/AndroidManifest.xml:30:13-64
+79    </application>
+80
+81</manifest>
