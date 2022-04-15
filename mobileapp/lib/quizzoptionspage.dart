@@ -1,3 +1,4 @@
+import 'package:camellia_cultivar/bluetooth.dart';
 import 'package:camellia_cultivar/quizzpage.dart';
 import 'package:flutter/material.dart';
 
@@ -44,7 +45,7 @@ class QuizzOptionsPage extends StatelessWidget {
                 width: 260,
                 child: TextButton(
                   onPressed: ()=>{
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => QuizzPage()))
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => FlutterBlueApp()))
                   }, 
                   style:  ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(const Color(0xFF064E3B)),

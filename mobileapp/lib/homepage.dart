@@ -12,11 +12,17 @@ class HomePage extends StatelessWidget {
         title: const Text("Home Page"),
       ),
       body: Center(
-        child: TextButton(
-          onPressed: (() => {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => QuizzOptionsPage()))
-          }),
-          child: const Text("Quizz"),)),
+        child: Column(
+          children: [
+            TextButton(
+              onPressed: (() => {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => QuizzOptionsPage()))
+              }),
+              child: const Text("Quizz")
+            ),
+          ]
+        )
+      )
     );
   }
 }

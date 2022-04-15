@@ -1,0 +1,4 @@
+#Fri Apr 15 17:22:48 WEST 2022
+base.0=/home/sophie/Desktop/Camellia-Cultivar/mobileapp/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
+renamed.0=classes.dex
+path.0=classes.dex

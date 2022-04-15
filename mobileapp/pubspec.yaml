@@ -37,6 +37,7 @@ dependencies:
 
   local_auth: ^0.6.3+4
   carousel_slider: ^4.0.0
+  flutter_blue: ^0.8.0
 
 dev_dependencies:
   flutter_test:

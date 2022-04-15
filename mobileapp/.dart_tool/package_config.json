@@ -44,6 +44,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "convert",
+      "rootUri": "file:///home/sophie/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/convert-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "cupertino_icons",
       "rootUri": "file:///home/sophie/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/cupertino_icons-1.0.4",
       "packageUri": "lib/",
@@ -56,8 +62,20 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "fixnum",
+      "rootUri": "file:///home/sophie/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/fixnum-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter",
       "rootUri": "file:///home/sophie/snap/flutter/common/flutter/packages/flutter",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_blue",
+      "rootUri": "file:///home/sophie/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_blue-0.8.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -128,6 +146,18 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "protobuf",
+      "rootUri": "file:///home/sophie/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/protobuf-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "rxdart",
+      "rootUri": "file:///home/sophie/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/rxdart-0.26.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///home/sophie/snap/flutter/common/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -188,7 +218,7 @@
       "languageVersion": "2.16"
     }
   ],
-  "generated": "2022-04-13T20:43:57.346680Z",
+  "generated": "2022-04-15T14:11:00.815191Z",
   "generator": "pub",
   "generatorVersion": "2.16.2"
 }
