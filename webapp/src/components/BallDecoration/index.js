@@ -1,8 +1,9 @@
 import React from 'react'
 
-const BallDecoration = () => {
+const BallDecoration = ({className}) => {
     return (
-        <div className="fixed  bottom-0 right-0">
+        <div className={className}>
+        <div className="lg:fixed  lg:bottom-0 lg:right-0">
             <div className="h-10 w-10 bg-emerald-900 rounded-full absolute -top-12 -left-16">
             </div>
             <div className="h-10 w-10 bg-emerald-900 rounded-full absolute top-16 -left-24">
@@ -15,6 +16,8 @@ const BallDecoration = () => {
             </div>
             <div className="h-40 w-40 bg-emerald-900 rounded-full relative -bottom-5 -right-16">
             </div>
+        </div>
+
         </div>
     )
 }
