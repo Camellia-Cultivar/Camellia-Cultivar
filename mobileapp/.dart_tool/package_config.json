@@ -74,8 +74,20 @@
       "languageVersion": "2.1"
     },
     {
+      "name": "flutter_svg",
+      "rootUri": "file:///home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_svg-1.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_test",
       "rootUri": "file:///home/patricia/snap/flutter/common/flutter/packages/flutter_test",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "google_nav_bar",
+      "rootUri": "file:///home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/google_nav_bar-5.0.6",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -108,6 +120,12 @@
       "rootUri": "file:///home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.16.1",
       "packageUri": "lib/",
       "languageVersion": "2.5"
+    },
+    {
+      "name": "line_icons",
+      "rootUri": "file:///home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/line_icons-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "lints",
@@ -146,10 +164,28 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "path_drawing",
+      "rootUri": "file:///home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_drawing-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "path_parsing",
+      "rootUri": "file:///home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_parsing-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "pedantic",
       "rootUri": "file:///home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/pedantic-1.11.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "petitparser",
+      "rootUri": "file:///home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/petitparser-4.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
     },
     {
       "name": "platform",
@@ -218,13 +254,19 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "xml",
+      "rootUri": "file:///home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/xml-5.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "camellia_cultivar",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     }
   ],
-  "generated": "2022-04-15T16:00:58.808308Z",
+  "generated": "2022-04-16T12:17:06.882254Z",
   "generator": "pub",
   "generatorVersion": "2.16.1"
 }

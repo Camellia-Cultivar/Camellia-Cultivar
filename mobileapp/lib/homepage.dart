@@ -1,9 +1,11 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
+import 'package:camellia_cultivar/navbar/botnavbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import 'camera.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
@@ -164,10 +166,10 @@ class HomePageState extends State<HomePage> {
                 // )
                 GestureDetector(
                     onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const CameraPage()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const CameraPage()));
                     },
                     child: Container(
                         height: 125,
@@ -226,12 +228,12 @@ class HomePageState extends State<HomePage> {
                             TextStyle(fontSize: 20, color: Color(0xFF064E3B)))
                   ],
                 ),
-                // GNav(tabs: [GButton(icon: Icons.add)])
               ],
             ),
           ),
         ),
       ]),
+      bottomNavigationBar: BotNavbar(pageIndex: 1),
     );
   }
 }
