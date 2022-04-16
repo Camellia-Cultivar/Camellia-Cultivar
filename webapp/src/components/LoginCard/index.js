@@ -1,6 +1,5 @@
 import React from 'react'
 
-import './index.css'
 
 const LoginCard = ({navigate}) => {
 
@@ -9,12 +8,12 @@ const LoginCard = ({navigate}) => {
     }
 
     return (
-        <div className="container top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 absolute min-h-max min-w-max max-w-2xl">
-            <div className="bg-white flex flex-col justify-center align-middle border-2 border-b-3 rounded-lg pb-10 pt-8 shadow">
+        <div className="container mx-auto md:top-1/2 md:left-1/2 md:-translate-y-1/2 md:-translate-x-1/2 md:absolute min-h-max min-w-max max-w-2xl">
+            <div className="bg-white flex flex-col md:border-2 md:border-b-[3px] md:rounded-lg pb-10 pt-8 md:shadow">
                 <div className="mb-7">
                     <p className="font-bold text-center text-3xl">Login</p>
                 </div>
-                <div className="mx-auto flex flex-col my-2 min-w-lg">
+                <div className="lg:mx-auto flex flex-col my-2 lg:min-w-[30rem]">
                     <input className="mt-2 mb-4 mx-4 border-b-2 focus:outline-none focus:border-b-2 focus:border-b-emerald-600 focus:shadow" type="text" placeholder="Username"></input>
                     <input className="mx-4 my-2 border-b-2 focus:outline-none focus:border-b-2 focus:border-b-emerald-600 focus:shadow" type="text" placeholder="Password"></input>
                     <div className="mx-4 mt-1">
