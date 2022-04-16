@@ -77,7 +77,7 @@ class Camera extends State<CameraPage> {
               ))
         ],
       ),
-      bottomNavigationBar: BotNavbar(pageIndex: 0),
+      bottomNavigationBar: const BotNavbar(pageIndex: 0),
     );
   }
 }
