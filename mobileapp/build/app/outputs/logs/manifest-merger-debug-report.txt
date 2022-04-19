@@ -24,6 +24,8 @@ MERGED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/Andr
 MERGED from [:local_auth] /home/patricia/GitHubRep/project/mobileapp/build/local_auth/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-7:12
 MERGED from [:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-22:12
 MERGED from [:flutter_plugin_android_lifecycle] /home/patricia/GitHubRep/project/mobileapp/build/flutter_plugin_android_lifecycle/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-7:12
+MERGED from [:path_provider_android] /home/patricia/GitHubRep/project/mobileapp/build/path_provider_android/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-7:12
+MERGED from [:camera] /home/patricia/GitHubRep/project/mobileapp/build/camera/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-10:12
 MERGED from [androidx.window:window-java:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/ad201fac15a88598107ec645f351f5b4/jetified-window-java-1.0.0-beta04/AndroidManifest.xml:17:1-23:12
 MERGED from [androidx.window:window:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/03c633e46d75bfb21f082f0417f55161/jetified-window-1.0.0-beta04/AndroidManifest.xml:17:1-33:12
 MERGED from [androidx.biometric:biometric:1.0.0-beta01] /home/patricia/.gradle/caches/transforms-2/files-2.1/4bd531eee9631e31ee362ab4506520a9/biometric-1.0.0-beta01/AndroidManifest.xml:17:1-33:12
@@ -83,6 +85,10 @@ MERGED from [:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/ima
 MERGED from [:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:5:5-44
 MERGED from [:flutter_plugin_android_lifecycle] /home/patricia/GitHubRep/project/mobileapp/build/flutter_plugin_android_lifecycle/intermediates/library_manifest/debug/AndroidManifest.xml:5:5-44
 MERGED from [:flutter_plugin_android_lifecycle] /home/patricia/GitHubRep/project/mobileapp/build/flutter_plugin_android_lifecycle/intermediates/library_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:path_provider_android] /home/patricia/GitHubRep/project/mobileapp/build/path_provider_android/intermediates/library_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:path_provider_android] /home/patricia/GitHubRep/project/mobileapp/build/path_provider_android/intermediates/library_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:camera] /home/patricia/GitHubRep/project/mobileapp/build/camera/intermediates/library_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:camera] /home/patricia/GitHubRep/project/mobileapp/build/camera/intermediates/library_manifest/debug/AndroidManifest.xml:5:5-44
 MERGED from [androidx.window:window-java:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/ad201fac15a88598107ec645f351f5b4/jetified-window-java-1.0.0-beta04/AndroidManifest.xml:19:5-21:41
 MERGED from [androidx.window:window-java:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/ad201fac15a88598107ec645f351f5b4/jetified-window-java-1.0.0-beta04/AndroidManifest.xml:19:5-21:41
 MERGED from [androidx.window:window:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/03c633e46d75bfb21f082f0417f55161/jetified-window-1.0.0-beta04/AndroidManifest.xml:20:5-22:41
@@ -171,6 +177,14 @@ ADDED from [:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/imag
 		ADDED from [:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:18:17-72
 	android:name
 		ADDED from [:image_picker] /home/patricia/GitHubRep/project/mobileapp/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:17:17-67
+uses-permission#android.permission.CAMERA
+ADDED from [:camera] /home/patricia/GitHubRep/project/mobileapp/build/camera/intermediates/library_manifest/debug/AndroidManifest.xml:7:5-65
+	android:name
+		ADDED from [:camera] /home/patricia/GitHubRep/project/mobileapp/build/camera/intermediates/library_manifest/debug/AndroidManifest.xml:7:22-62
+uses-permission#android.permission.RECORD_AUDIO
+ADDED from [:camera] /home/patricia/GitHubRep/project/mobileapp/build/camera/intermediates/library_manifest/debug/AndroidManifest.xml:8:5-71
+	android:name
+		ADDED from [:camera] /home/patricia/GitHubRep/project/mobileapp/build/camera/intermediates/library_manifest/debug/AndroidManifest.xml:8:22-68
 uses-library#androidx.window.extensions
 ADDED from [androidx.window:window:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/03c633e46d75bfb21f082f0417f55161/jetified-window-1.0.0-beta04/AndroidManifest.xml:25:9-27:40
 	android:required

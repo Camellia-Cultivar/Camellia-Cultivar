@@ -233,7 +233,7 @@ class HomePageState extends State<HomePage> {
           ),
         ),
       ]),
-      bottomNavigationBar: BotNavbar(pageIndex: 1),
+      bottomNavigationBar: const BotNavbar(pageIndex: 1),
     );
   }
 }

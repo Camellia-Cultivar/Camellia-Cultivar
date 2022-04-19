@@ -22,9 +22,5 @@
     {
         "merged": "/home/patricia/GitHubRep/project/mobileapp/build/app/intermediates/res/merged/debug/mipmap-xxhdpi_ic_launcher.png.flat",
         "source": "/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png"
-    },
-    {
-        "merged": "/home/patricia/GitHubRep/project/mobileapp/build/app/intermediates/res/merged/debug/drawable_launch_background.xml.flat",
-        "source": "/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/res/drawable/launch_background.xml"
     }
 ]

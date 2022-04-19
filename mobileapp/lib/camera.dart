@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:camellia_cultivar/flower_icon.dart';
 import 'package:camellia_cultivar/main.dart';
 import 'package:camellia_cultivar/navbar/botnavbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,9 +35,6 @@ class Camera extends State<CameraPage> {
   Widget build(BuildContext context) {
     // _getFromCamera();
     return Scaffold(
-      appBar: AppBar(
-        title: Text("New Specimen"),
-      ),
       body: ListView(
         children: [
           // SizedBox(
@@ -57,15 +55,15 @@ class Camera extends State<CameraPage> {
               //   )
               : Container(
                   child: Icon(
-                    Icons.camera_enhance_rounded,
-                    color: Colors.green,
+                    FlowerIcon.new_specimen3,
+                    color: const Color(0xFF064E3B),
                     size: MediaQuery.of(context).size.width * .6,
                   ),
                 ),
           Padding(
               padding: const EdgeInsets.all(10.0),
               child: ElevatedButton(
-                child: Text('Capture Image with Camera'),
+                child: const Text('Camera'),
                 onPressed: () {
                   _getFromCamera();
                 },
