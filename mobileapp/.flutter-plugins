@@ -1,11 +1,4 @@
 # This is a generated file; do not edit or check into version control.
-camera=/home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/camera-0.8.1+7/
 flutter_plugin_android_lifecycle=/home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-1.0.11/
 image_picker=/home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/image_picker-0.6.7+22/
 local_auth=/home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/local_auth-0.6.3+4/
-path_provider=/home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.9/
-path_provider_android=/home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.9/
-path_provider_ios=/home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_ios-2.0.8/
-path_provider_linux=/home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-2.1.5/
-path_provider_macos=/home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_macos-2.0.3/
-path_provider_windows=/home/patricia/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-2.0.5/

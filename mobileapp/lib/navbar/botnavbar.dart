@@ -19,92 +19,104 @@ class _BotNavBar extends State<BotNavbar> {
   @override
   Widget build(BuildContext context) {
     int _selectedIndex = widget.pageIndex;
-    return Padding(
-        padding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(150)),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 20,
-                color: Colors.black.withOpacity(.1),
-              )
-            ],
-          ),
-          child: SafeArea(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-              child: GNav(
-                rippleColor: Colors.grey[300]!,
-                hoverColor: Colors.grey[100]!,
-                gap: 8,
-                activeColor: Color(0xFF064E3B),
-                iconSize: 24,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                duration: Duration(milliseconds: 400),
-                tabBackgroundColor: Colors.grey[100]!,
-                color: Colors.black,
-                tabs: const [
-                  GButton(
-                    icon: FlowerIcon.new_specimen3,
-                    text: 'New ID',
-                  ),
-                  GButton(
-                    icon: Icons.home_rounded,
-                    text: 'Home',
-                  ),
-                  GButton(
-                    icon: Icons.list_rounded,
-                    text: 'Quiz',
-                  ),
-                  GButton(
-                    icon: Icons.person_outline_rounded,
-                    text: 'Profile',
-                  ),
+    return /*Align(
+        alignment: FractionalOffset.center,
+        child:*/
+        Stack(
+      fit: StackFit.passthrough,
+      // alignment: Alignment.center,
+      children: [
+        Padding(
+            padding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
+            child: Container(
+              // height: 100,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(150)),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 20,
+                    color: Colors.black.withOpacity(.1),
+                  )
                 ],
-                selectedIndex: _selectedIndex,
-                onTabChange: (index) {
-                  setState(() {
-                    if (index != _selectedIndex) {
-                      _selectedIndex = index;
-                      switch (index) {
-                        case 0:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const CameraPage()));
-                          break;
-                        case 1:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const HomePage(
-                                        title: '',
-                                      )));
-                          break;
-                        case 2:
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => const CameraPage()));
-                          break;
-                        case 3:
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => const CameraPage()));
-                          break;
-                        default:
-                          print('Not a valid tab index');
-                      }
-                    }
-                  });
-                },
               ),
-            ),
-          ),
-        ));
+              child: SafeArea(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                  child: GNav(
+                    rippleColor: Colors.grey[300]!,
+                    hoverColor: Colors.grey[100]!,
+                    gap: 8,
+                    activeColor: Color(0xFF064E3B),
+                    iconSize: 24,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    duration: Duration(milliseconds: 400),
+                    tabBackgroundColor: Colors.grey[100]!,
+                    color: Colors.black,
+                    tabs: const [
+                      GButton(
+                        icon: FlowerIcon.new_specimen3,
+                        text: 'New ID',
+                      ),
+                      GButton(
+                        icon: Icons.home_rounded,
+                        text: 'Home',
+                      ),
+                      GButton(
+                        icon: Icons.list_rounded,
+                        text: 'Quiz',
+                      ),
+                      GButton(
+                        icon: Icons.person_outline_rounded,
+                        text: 'Profile',
+                      ),
+                    ],
+                    selectedIndex: _selectedIndex,
+                    onTabChange: (index) {
+                      setState(() {
+                        if (index != _selectedIndex) {
+                          _selectedIndex = index;
+                          switch (index) {
+                            case 0:
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CameraPage()));
+                              break;
+                            case 1:
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const HomePage(
+                                            title: '',
+                                          )));
+                              break;
+                            case 2:
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //       builder: (context) => const CameraPage()));
+                              break;
+                            case 3:
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //       builder: (context) => const CameraPage()));
+                              break;
+                            default:
+                              print('Not a valid tab index');
+                          }
+                        }
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ))
+      ],
+    );
+    // );
   }
 }

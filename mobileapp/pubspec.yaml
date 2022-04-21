@@ -40,9 +40,12 @@ dependencies:
   carousel_slider: ^4.0.0
   google_nav_bar: ^5.0.6
   line_icons: ^2.0.1
-  camera:
-  path_provider:
-  path:
+  # camera:
+  # path_provider:
+  # path:
+  latlong: ^0.6.1
+  flutter_map: any
+  flutter_map_marker_cluster: any
 
 dev_dependencies:
   flutter_test:

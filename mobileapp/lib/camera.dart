@@ -35,6 +35,7 @@ class Camera extends State<CameraPage> {
   Widget build(BuildContext context) {
     // _getFromCamera();
     return Scaffold(
+      // backgroundColor: Colors.blueAccent,
       body: ListView(
         children: [
           // SizedBox(
@@ -72,10 +73,12 @@ class Camera extends State<CameraPage> {
                   padding: MaterialStateProperty.all(EdgeInsets.all(12)),
                   textStyle: MaterialStateProperty.all(TextStyle(fontSize: 16)),
                 ),
-              ))
+              )),
+          const Positioned(bottom: 0, child: BotNavbar(pageIndex: 0)),
         ],
       ),
-      bottomNavigationBar: const BotNavbar(pageIndex: 0),
+
+      // bottomNavigationBar: const BotNavbar(pageIndex: 0),
     );
   }
 }
