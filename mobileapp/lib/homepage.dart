@@ -24,14 +24,14 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     File? imageFile;
 
-    void _getFromCamera() async {
-      PickedFile pickedFile = await ImagePicker().getImage(
-          source: ImageSource.camera, maxHeight: 1080, maxWidth: 1080);
-      setState(() {
-        imageFile = File(pickedFile.path);
-      });
-      Navigator.pop(context);
-    }
+    // void _getFromCamera() async {
+    //   PickedFile pickedFile = await ImagePicker().getImage(
+    //       source: ImageSource.camera, maxHeight: 1080, maxWidth: 1080);
+    //   setState(() {
+    //     imageFile = File(pickedFile.path);
+    //   });
+    //   Navigator.pop(context);
+    // }
 
     final PopupController _popupController = PopupController();
     MapController _mapController = MapController();
@@ -53,7 +53,7 @@ class HomePageState extends State<HomePage> {
               point: point,
               width: 50,
               height: 50,
-              builder: (context) => Icon(
+              builder: (context) => const Icon(
                 Icons.location_on,
                 size: 60,
                 color: Color(0xFF064E3B),
@@ -62,7 +62,7 @@ class HomePageState extends State<HomePage> {
         .toList();
 
     return Scaffold(
-      backgroundColor: Color(0xFF064E3B),
+      backgroundColor: const Color(0xFF064E3B),
       // appBar: AppBar(
       //   backgroundColor: Color(0xFF064E3B),
       //   // title: Text("Home Page"),
@@ -72,47 +72,39 @@ class HomePageState extends State<HomePage> {
         const SizedBox(
             height: 80,
             child: Padding(
-              padding: EdgeInsets.only(top: 50),
-              child: Text('Camellia Cultivar',
-                  style: TextStyle(color: Colors.white, fontSize: 30)),
-            )),
+                padding: EdgeInsets.only(top: 50),
+                child: Center(
+                  child: Text('Camellia Cultivar',
+                      style: TextStyle(color: Colors.white, fontSize: 30)),
+                ))),
         Container(
             height: 100,
-            color: Color(0xFF064E3B),
+            color: const Color(0xFF064E3B),
             // margin: EdgeInsets.only(left: 50, right: 50),
 
             // const BorderRadius.all(const Radius.circular(8))),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 0, left: 80),
-                  child: Center(
-                      child: Text(
-                    'Welcome',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    // textAlign: TextAlign.center,
-                  )),
+                const Text(
+                  'Welcome',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                const Padding(
-                    padding: EdgeInsets.only(top: 0),
-                    child: Center(
-                        child: Text(
-                      ', Emerald ',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                      // textAlign: TextAlign.center,
-                    ))),
-                Padding(
-                    padding: EdgeInsets.only(top: 0),
-                    child: IconButton(
-                      iconSize: 40,
-                      icon: Icon(Icons.account_circle_outlined),
-                      color: Colors.white,
-                      onPressed: () {},
-                    ))
+                const Text(
+                  ', Emerald ',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  // textAlign: TextAlign.center,
+                ),
+                IconButton(
+                  iconSize: 40,
+                  icon: const Icon(Icons.account_circle_outlined),
+                  color: Colors.white,
+                  onPressed: () {},
+                )
               ],
             )),
         Expanded(
@@ -120,7 +112,7 @@ class HomePageState extends State<HomePage> {
               height: 600,
               decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(width: 1, color: Color(0x064E3B)),
+                  border: Border.all(width: 1, color: const Color(0x064E3B)),
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(15))),
@@ -262,8 +254,8 @@ class HomePageState extends State<HomePage> {
                               color: Colors.grey,
                             ),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: const [
-                                Padding(padding: EdgeInsets.only(left: 70)),
                                 Icon(
                                   Icons.location_on_rounded,
                                   color: Color(0xFF064E3B),
@@ -319,12 +311,12 @@ class HomePageState extends State<HomePage> {
                             builder: (context, markers) {
                               return Container(
                                 alignment: Alignment.center,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                     color: Color(0xFF064E3B),
                                     shape: BoxShape.circle),
                                 child: Text(
                                   '${markers.length}',
-                                  style: TextStyle(color: Colors.white),
+                                  style: const TextStyle(color: Colors.white),
                                 ),
                               );
                             },

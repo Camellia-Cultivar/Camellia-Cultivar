@@ -1,4 +1,4 @@
-#Thu Apr 21 11:39:59 WEST 2022
+#Fri Apr 22 20:22:23 WEST 2022
 base.0=/home/patricia/GitHubRep/project/mobileapp/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
 renamed.0=classes.dex
 path.0=classes.dex
