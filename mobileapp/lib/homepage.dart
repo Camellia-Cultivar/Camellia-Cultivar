@@ -60,22 +60,6 @@ class HomePageState extends State<HomePage> {
               ),
             ))
         .toList();
-    // @override
-    // void initState() {
-    //   _markers = _latLngList
-    //       .map((point) => Marker(
-    //             point: point,
-    //             width: 60,
-    //             height: 60,
-    //             builder: (context) => Icon(
-    //               Icons.location_on,
-    //               size: 60,
-    //               color: Colors.blueAccent,
-    //             ),
-    //           ))
-    //       .toList();
-    //   super.initState();
-    // }
 
     return Scaffold(
       backgroundColor: Color(0xFF064E3B),
@@ -302,7 +286,8 @@ class HomePageState extends State<HomePage> {
                       child: FlutterMap(
                         mapController: _mapController,
                         options: MapOptions(
-                          center: _latLngList[0],
+                          center:
+                              _latLngList[0], //change center with geolocation
                           bounds: LatLngBounds.fromPoints(_latLngList),
                           zoom: _zoom,
                           plugins: [
