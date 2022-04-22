@@ -47,7 +47,7 @@ class BluetoothOffScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Icon(
+            const Icon(
               Icons.bluetooth_disabled,
               size: 200.0,
               color: Colors.white54,
@@ -67,12 +67,14 @@ class BluetoothOffScreen extends StatelessWidget {
 }
 
 class FindDevicesScreen extends StatelessWidget {
+  const FindDevicesScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF064E3B),
-        title: Text('Find Devices'),
+        backgroundColor: const Color(0xFF064E3B),
+        title: const Text('Find Devices'),
       ),
       body: RefreshIndicator(
         onRefresh: () =>
@@ -81,7 +83,7 @@ class FindDevicesScreen extends StatelessWidget {
           child: Column(
             children: <Widget>[
               StreamBuilder<List<BluetoothDevice>>(
-                stream: Stream.periodic(Duration(seconds: 2))
+                stream: Stream.periodic(const Duration(seconds: 2))
                     .asyncMap((_) => FlutterBlue.instance.connectedDevices),
                 initialData: [],
                 builder: (c, snapshot) => Column(
@@ -96,7 +98,7 @@ class FindDevicesScreen extends StatelessWidget {
                                 if (snapshot.data ==
                                     BluetoothDeviceState.connected) {
                                   return TextButton(
-                                    child: Text('OPEN'),
+                                    child: const Text('OPEN'),
                                     onPressed: () => Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (context) =>
@@ -146,10 +148,10 @@ class FindDevicesScreen extends StatelessWidget {
             );
           } else {
             return FloatingActionButton(
-              backgroundColor: Color(0xFF064E3B),
-                child: Icon(Icons.search),
+              backgroundColor: const Color(0xFF064E3B),
+                child: const Icon(Icons.search),
                 onPressed: () => FlutterBlue.instance
-                    .startScan(timeout: Duration(seconds: 4)));
+                    .startScan(timeout: const Duration(seconds: 4)));
           }
         },
       ),
@@ -254,8 +256,8 @@ class DeviceScreen extends StatelessWidget {
               initialData: BluetoothDeviceState.connecting,
               builder: (c, snapshot) => ListTile(
                 leading: (snapshot.data == BluetoothDeviceState.connected)
-                    ? Icon(Icons.bluetooth_connected)
-                    : Icon(Icons.bluetooth_disabled),
+                    ? const Icon(Icons.bluetooth_connected)
+                    : const Icon(Icons.bluetooth_disabled),
                 title: Text(
                     'Device is ${snapshot.data.toString().split('.')[1]}.'),
                 subtitle: Text('${device.id}'),
@@ -266,10 +268,10 @@ class DeviceScreen extends StatelessWidget {
                     index: snapshot.data! ? 1 : 0,
                     children: <Widget>[
                       IconButton(
-                        icon: Icon(Icons.refresh),
+                        icon: const Icon(Icons.refresh),
                         onPressed: () => device.discoverServices(),
                       ),
-                      IconButton(
+                      const IconButton(
                         icon: SizedBox(
                           child: CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation(Colors.grey),
@@ -288,17 +290,17 @@ class DeviceScreen extends StatelessWidget {
               stream: device.mtu,
               initialData: 0,
               builder: (c, snapshot) => ListTile(
-                title: Text('MTU Size'),
+                title: const Text('MTU Size'),
                 subtitle: Text('${snapshot.data} bytes'),
                 trailing: IconButton(
-                  icon: Icon(Icons.edit),
+                  icon: const Icon(Icons.edit),
                   onPressed: () => device.requestMtu(223),
                 ),
               ),
             ),
             StreamBuilder<List<BluetoothService>>(
               stream: device.services,
-              initialData: [],
+              initialData: const [],
               builder: (c, snapshot) {
                 return Column(
                   children: _buildServiceTiles(snapshot.data!),

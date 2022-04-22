@@ -10,13 +10,11 @@ void main() {
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Camellia Cultivar',
       theme: ThemeData(
-        // primarySwatch: Colors.blueGrey,
         primaryColor: const Color(0x00064e3b),
       ),
       home: const MyHomePage(title: ''),
@@ -34,18 +32,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
+
+  var login = {};
 
   @override
   Widget build(BuildContext context) {
@@ -67,27 +65,40 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  // Column with username and password fields
                   Column(
                     children: [
                       Container(
                         padding: const EdgeInsets.only(top: 60, bottom: 30),
                         width: 220,
-                        child: const TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Username',
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            hintText: 'Email',
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF064E3B)),
+                            ),
+                            border: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF064E3B)),
+                            ),
                           ),
+                          controller: emailController,
                         )
                       ),
-                     const SizedBox(
+                     SizedBox(
                         width: 220,
                         child: TextField(
                           obscureText: true,
                           enableSuggestions: false,
                           autocorrect: false,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: 'Password',
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF064E3B)),
+                            ),
+                            border: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF064E3B)),
+                            ),
                           ),
+                          controller: passwordController,
                         )
                       ),
                     ],
@@ -98,6 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: 260,
                       child: TextButton(
                         onPressed: ()=>{
+                          login["email"] = emailController.text,
+                          login["password"] = passwordController.text,
                           Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()))
                         }, 
                         style:  ButtonStyle(
@@ -154,10 +167,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ]
               ),
             ),
-            
-            // TextButton(onPressed: () => {
-            //   Navigator.push(context, MaterialPageRoute(builder: (context)=> SecondPage())),
-            // } , child: Text("Next Page")),
             Positioned(
               top: -68,
               child: Container(
@@ -178,11 +187,6 @@ class _MyHomePageState extends State<MyHomePage> {
           clipBehavior: Clip.none,
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

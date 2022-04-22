@@ -2,8 +2,31 @@ import 'package:flutter/material.dart';
 
 import 'homepage.dart';
 
-class RegisterPage extends StatelessWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+
+const RegisterPage({Key? key}) : super(key: key);
+
+
+  @override 
+  _RegisterPageState createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  var register;
+
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +40,13 @@ class RegisterPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(15.0)
           ),
           height: 770,
-          width: 350,
+          width: 370,
           child: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 30, right: 40, bottom: 20), 
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                child: Wrap(
+                  spacing: 20,
                   children: const [
                     BackButton(
                       color: Color(0xFF064E3B),
@@ -32,10 +55,10 @@ class RegisterPage extends StatelessWidget {
                   ],
                 )
               ),
-              Padding(padding: const EdgeInsets.all(20),
+              Padding(padding: const EdgeInsets.all(60),
               child: Column(
                 children: [
-                  SizedBox( // <-- SEE HERE
+                  SizedBox(
                     width: 300,
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 20),
@@ -46,13 +69,14 @@ class RegisterPage extends StatelessWidget {
                           fillColor: const Color(0x1FA4A4A4),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15.0),
-                            borderSide: const BorderSide(color:Color(0x1FA4A4A4) )
+                            borderSide: const BorderSide(color:Color(0x1FA4A4A4))
                           ),
                         ),
+                        controller: firstNameController,
                       )
                     )
                   ),
-                  SizedBox( // <-- SEE HERE
+                  SizedBox( 
                     width: 300,
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 20),
@@ -66,27 +90,11 @@ class RegisterPage extends StatelessWidget {
                             borderSide: const BorderSide(color:Color(0x1FA4A4A4) )
                           ),
                         ),
+                        controller: lastNameController,
                       )
                     )
                   ),
-                  SizedBox( // <-- SEE HERE
-                    width: 300,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Username",
-                          filled: true,
-                          fillColor: const Color(0x1FA4A4A4),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                            borderSide: const BorderSide(color:Color(0x1FA4A4A4) )
-                          ),
-                        ),
-                      )
-                    )
-                  ),
-                  SizedBox( // <-- SEE HERE
+                  SizedBox(
                     width: 300,
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 20),
@@ -100,10 +108,11 @@ class RegisterPage extends StatelessWidget {
                             borderSide: const BorderSide(color:Color(0x1FA4A4A4) )
                           ),
                         ),
+                        controller: emailController,
                       )
                     )
                   ),
-                  SizedBox( // <-- SEE HERE
+                  SizedBox(
                     width: 300,
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 20),
@@ -117,6 +126,7 @@ class RegisterPage extends StatelessWidget {
                             borderSide: const BorderSide(color:Color(0x1FA4A4A4) )
                           ),
                         ),
+                        controller: passwordController,
                       )
                     )
                   ),
@@ -139,6 +149,10 @@ class RegisterPage extends StatelessWidget {
                     width: 260,
                       child: TextButton(
                         onPressed: ()=>{
+                          register["first_name"] = firstNameController.text,
+                          register["last_name"] = lastNameController.text,
+                          register["email"] = emailController.text,
+                          register["password"] = passwordController.text,
                           Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()))
                         }, 
                         style:  ButtonStyle(

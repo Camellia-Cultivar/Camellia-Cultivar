@@ -1,3 +1,4 @@
+import 'package:camellia_cultivar/quizzoptionspage.dart';
 import 'package:flutter/material.dart';
 
 class FormItem {
@@ -11,7 +12,6 @@ class FormItem {
   }
 }
 
-
 class QuizzPage extends StatefulWidget {
   const QuizzPage({Key? key}) : super(key: key);
 
@@ -20,7 +20,6 @@ class QuizzPage extends StatefulWidget {
   _QuizzPageState createState() => _QuizzPageState();
 
 }
-
 
 class _QuizzPageState extends State<QuizzPage> {
 
@@ -46,11 +45,11 @@ class _QuizzPageState extends State<QuizzPage> {
   
   List answers = [];
   
-  final myController = TextEditingController();
+  final cultivarNameController = TextEditingController();
 
   @override
   void dispose() {
-    myController.dispose();
+    cultivarNameController.dispose();
     super.dispose();
   }
 
@@ -66,10 +65,8 @@ class _QuizzPageState extends State<QuizzPage> {
   Widget build(BuildContext context) {
     
     if(form[_currentIndex]?.answer != null) {
-      myController.text = form[_currentIndex]?.answer as String;
+      cultivarNameController.text = form[_currentIndex]?.answer as String;
     }
-
-
 
     return Scaffold(
       backgroundColor: const Color(0xFFA4A4A4),
@@ -80,23 +77,40 @@ class _QuizzPageState extends State<QuizzPage> {
             borderRadius: BorderRadius.circular(15.0)
           ),
           height: 770,
-          width: 350,
+          width: 370,
           child: Column(
           children: <Widget>[
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: map<Widget>(ids, (index, url) {
-                return Container(
-                  width: 10.0,
-                  height: 60.0,
-                  margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _currentIndex == index ? Colors.grey : (form[index]?.answer != null ? const Color(0xFF064E3B) :Colors.white),
-                    border: Border.all(color: Colors.black),
-                    ),
-                );
-              }),
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Padding(padding: EdgeInsets.only(left: 30)),
+                
+                IconButton(
+                  onPressed: ((() => {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => QuizzOptionsPage()))
+                  })),
+                  icon: const Icon(
+                    IconData(0xe16a, fontFamily: 'MaterialIcons'),
+                    size: 30,
+                  ),
+                ),
+                
+                const Padding(padding: EdgeInsets.only(left: 90)),
+                Row(
+                  children: map<Widget>(ids, (index, url) {
+                    return Container(
+                      width: 10.0,
+                      height: 60.0,
+                      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: _currentIndex == index ? const Color(0x5F064E3B) : (form[index]?.answer != null ? const Color(0xFF064E3B) :Colors.white),
+                        border: Border.all(color: Colors.black),
+                        ),
+                    );
+                  }),
+                ),
+              ],
             ),
             Column(
               children: [
@@ -118,8 +132,14 @@ class _QuizzPageState extends State<QuizzPage> {
                   child: TextField(
                     decoration: const InputDecoration(
                       hintText: 'Name',
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF064E3B)),
+                      ),
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF064E3B)),
+                      ),
                     ),
-                    controller: myController,
+                    controller: cultivarNameController,
                   )
                 ),
                 Row(
@@ -153,13 +173,13 @@ class _QuizzPageState extends State<QuizzPage> {
                       child: TextButton(
                         onPressed: () => {
                           setState(() => {
-                            if(myController.text.isNotEmpty) {
-                              form[_currentIndex] = FormItem( data[_currentIndex]["key"],myController.text),
+                            if(cultivarNameController.text.isNotEmpty) {
+                              form[_currentIndex] = FormItem( data[_currentIndex]["key"], cultivarNameController.text),
                             },
                             if(_currentIndex < data.length-1) {
                               _currentIndex++
                             },
-                            myController.clear()
+                            cultivarNameController.clear()
                           }),3
                         }, 
                         style:  ButtonStyle(
