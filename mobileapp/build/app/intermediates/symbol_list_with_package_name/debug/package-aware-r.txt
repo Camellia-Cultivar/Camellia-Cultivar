@@ -23,6 +23,18 @@ anim btn_radio_to_off_mtrl_ring_outer_path_animation
 anim btn_radio_to_on_mtrl_dot_group_animation
 anim btn_radio_to_on_mtrl_ring_outer_animation
 anim btn_radio_to_on_mtrl_ring_outer_path_animation
+anim fragment_fast_out_extra_slow_in
+animator fragment_close_enter
+animator fragment_close_exit
+animator fragment_fade_enter
+animator fragment_fade_exit
+animator fragment_open_enter
+animator fragment_open_exit
+array assume_strong_biometrics_models
+array crypto_fingerprint_fallback_prefixes
+array crypto_fingerprint_fallback_vendors
+array delay_showing_prompt_models
+array hide_fingerprint_instantly_prefixes
 attr actionBarDivider
 attr actionBarItemBackground
 attr actionBarPopupTheme
@@ -91,12 +103,14 @@ attr buttonCompat
 attr buttonGravity
 attr buttonIconDimen
 attr buttonPanelSideLayout
+attr buttonSize
 attr buttonStyle
 attr buttonStyleSmall
 attr buttonTint
 attr buttonTintMode
 attr checkboxStyle
 attr checkedTextViewStyle
+attr circleCrop
 attr clearTop
 attr closeIcon
 attr closeItemLayout
@@ -112,6 +126,7 @@ attr colorControlNormal
 attr colorError
 attr colorPrimary
 attr colorPrimaryDark
+attr colorScheme
 attr colorSwitchThumbNormal
 attr commitIcon
 attr contentDescription
@@ -174,6 +189,8 @@ attr icon
 attr iconTint
 attr iconTintMode
 attr iconifiedByDefault
+attr imageAspectRatio
+attr imageAspectRatioAdjust
 attr imageButtonStyle
 attr indeterminateProgressStyle
 attr initialActivityCount
@@ -231,6 +248,7 @@ attr radioButtonStyle
 attr ratingBarStyle
 attr ratingBarStyleIndicator
 attr ratingBarStyleSmall
+attr scopeUris
 attr searchHintIcon
 attr searchIcon
 attr searchViewStyle
@@ -327,9 +345,10 @@ color abc_background_cache_hint_selector_material_light
 color abc_btn_colored_borderless_text_material
 color abc_btn_colored_text_material
 color abc_color_highlight_material
+color abc_decor_view_status_guard
+color abc_decor_view_status_guard_light
 color abc_hint_foreground_material_dark
 color abc_hint_foreground_material_light
-color abc_input_method_navigation_guard
 color abc_primary_text_disable_only_material_dark
 color abc_primary_text_disable_only_material_light
 color abc_primary_text_material_dark
@@ -364,6 +383,17 @@ color bright_foreground_material_dark
 color bright_foreground_material_light
 color button_material_dark
 color button_material_light
+color common_google_signin_btn_text_dark
+color common_google_signin_btn_text_dark_default
+color common_google_signin_btn_text_dark_disabled
+color common_google_signin_btn_text_dark_focused
+color common_google_signin_btn_text_dark_pressed
+color common_google_signin_btn_text_light
+color common_google_signin_btn_text_light_default
+color common_google_signin_btn_text_light_disabled
+color common_google_signin_btn_text_light_focused
+color common_google_signin_btn_text_light_pressed
+color common_google_signin_btn_tint
 color dim_foreground_disabled_material_dark
 color dim_foreground_disabled_material_light
 color dim_foreground_material_dark
@@ -629,11 +659,32 @@ drawable btn_radio_off_mtrl
 drawable btn_radio_off_to_on_mtrl_animation
 drawable btn_radio_on_mtrl
 drawable btn_radio_on_to_off_mtrl_animation
-drawable fingerprint_dialog_error_to_fp
-drawable fingerprint_dialog_fp_to_error
+drawable common_full_open_on_phone
+drawable common_google_signin_btn_icon_dark
+drawable common_google_signin_btn_icon_dark_focused
+drawable common_google_signin_btn_icon_dark_normal
+drawable common_google_signin_btn_icon_dark_normal_background
+drawable common_google_signin_btn_icon_disabled
+drawable common_google_signin_btn_icon_light
+drawable common_google_signin_btn_icon_light_focused
+drawable common_google_signin_btn_icon_light_normal
+drawable common_google_signin_btn_icon_light_normal_background
+drawable common_google_signin_btn_text_dark
+drawable common_google_signin_btn_text_dark_focused
+drawable common_google_signin_btn_text_dark_normal
+drawable common_google_signin_btn_text_dark_normal_background
+drawable common_google_signin_btn_text_disabled
+drawable common_google_signin_btn_text_light
+drawable common_google_signin_btn_text_light_focused
+drawable common_google_signin_btn_text_light_normal
+drawable common_google_signin_btn_text_light_normal_background
+drawable fingerprint_dialog_error
+drawable fingerprint_dialog_fp_icon
 drawable fingerprint_initial_icon
 drawable fingerprint_success_icon
 drawable fingerprint_warning_icon
+drawable googleg_disabled_color_18
+drawable googleg_standard_color_18
 drawable ic_done_white_24dp
 drawable ic_fingerprint_white_24dp
 drawable ic_priority_high_white_24dp
@@ -711,10 +762,13 @@ id action_text
 id actions
 id activity_chooser_view_content
 id add
+id adjust_height
+id adjust_width
 id alertTitle
 id always
 id androidx_window_activity_scope
 id async
+id auto
 id beginning
 id blocking
 id bottom
@@ -728,6 +782,7 @@ id content
 id contentPanel
 id custom
 id customPanel
+id dark
 id decor_content_parent
 id default_activity_button
 id dialog_button
@@ -744,16 +799,19 @@ id fingerprint_signin
 id fingerprint_status
 id fingerprint_subtitle
 id forever
+id fragment_container_view_tag
 id go_to_setting_description
 id group_divider
 id home
 id homeAsUp
 id icon
 id icon_group
+id icon_only
 id ifRoom
 id image
 id info
 id italic
+id light
 id line1
 id line3
 id listMode
@@ -798,10 +856,12 @@ id showCustom
 id showHome
 id showTitle
 id spacer
+id special_effects_controller_view_tag
 id split_action_bar
 id src_atop
 id src_in
 id src_over
+id standard
 id submenuarrow
 id submit_area
 id tabMode
@@ -832,12 +892,18 @@ id unchecked
 id uniform
 id up
 id useLogo
+id view_tree_lifecycle_owner
+id view_tree_saved_state_registry_owner
+id view_tree_view_model_store_owner
+id visible_removing_fragment_view_tag
+id wide
 id withText
 id wrap_content
 integer abc_config_activityDefaultDur
 integer abc_config_activityShortDur
 integer cancel_button_image_alpha
 integer config_tooltipAnimTime
+integer google_play_services_version
 integer status_bar_notification_info_maxnum
 interpolator btn_checkbox_checked_mtrl_animation_interpolator_0
 interpolator btn_checkbox_checked_mtrl_animation_interpolator_1
@@ -875,7 +941,6 @@ layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
 layout custom_dialog
-layout device_credential_handler_activity
 layout fingerprint_dialog_layout
 layout go_to_setting
 layout notification_action
@@ -917,7 +982,24 @@ string abc_searchview_description_voice
 string abc_shareactionprovider_share_with
 string abc_shareactionprovider_share_with_application
 string abc_toolbar_collapse_description
-string accessibility_fingerprint_dialog_help_area
+string common_google_play_services_enable_button
+string common_google_play_services_enable_text
+string common_google_play_services_enable_title
+string common_google_play_services_install_button
+string common_google_play_services_install_text
+string common_google_play_services_install_title
+string common_google_play_services_notification_channel_name
+string common_google_play_services_notification_ticker
+string common_google_play_services_unknown_issue
+string common_google_play_services_unsupported_text
+string common_google_play_services_update_button
+string common_google_play_services_update_text
+string common_google_play_services_update_title
+string common_google_play_services_updating_text
+string common_google_play_services_wear_update_text
+string common_open_on_phone
+string common_signin_button_text
+string common_signin_button_text_long
 string confirm_device_credential_password
 string default_error_msg
 string fingerprint_dialog_touch_sensor
@@ -927,6 +1009,8 @@ string fingerprint_error_lockout
 string fingerprint_error_no_fingerprints
 string fingerprint_error_user_canceled
 string fingerprint_not_recognized
+string generic_error_no_device_credential
+string generic_error_no_keyguard
 string generic_error_user_canceled
 string search_menu_title
 string status_bar_notification_info_overflow
@@ -1092,7 +1176,6 @@ style Base_Widget_AppCompat_TextView
 style Base_Widget_AppCompat_TextView_SpinnerItem
 style Base_Widget_AppCompat_Toolbar
 style Base_Widget_AppCompat_Toolbar_Button_Navigation
-style DeviceCredentialHandlerTheme
 style LaunchTheme
 style NormalTheme
 style Platform_AppCompat
@@ -1191,6 +1274,7 @@ style Theme_AppCompat_Dialog
 style Theme_AppCompat_Dialog_Alert
 style Theme_AppCompat_Dialog_MinWidth
 style Theme_AppCompat_DialogWhenLarge
+style Theme_AppCompat_Empty
 style Theme_AppCompat_Light
 style Theme_AppCompat_Light_DarkActionBar
 style Theme_AppCompat_Light_Dialog
@@ -1208,7 +1292,6 @@ style ThemeOverlay_AppCompat_DayNight_ActionBar
 style ThemeOverlay_AppCompat_Dialog
 style ThemeOverlay_AppCompat_Dialog_Alert
 style ThemeOverlay_AppCompat_Light
-style TransparentStyle
 style Widget_AppCompat_ActionBar
 style Widget_AppCompat_ActionBar_Solid
 style Widget_AppCompat_ActionBar_TabBar
@@ -1308,11 +1391,14 @@ styleable CompoundButton android_button buttonCompat buttonTint buttonTintMode
 styleable DrawerArrowToggle arrowHeadLength arrowShaftLength barLength color drawableSize gapBetweenBars spinBars thickness
 styleable FontFamily fontProviderAuthority fontProviderCerts fontProviderFetchStrategy fontProviderFetchTimeout fontProviderPackage fontProviderQuery fontProviderSystemFontFamily
 styleable FontFamilyFont android_font android_fontWeight android_fontStyle android_ttcIndex android_fontVariationSettings font fontStyle fontVariationSettings fontWeight ttcIndex
+styleable Fragment android_name android_id android_tag
+styleable FragmentContainerView android_name android_tag
 styleable GradientColor android_startColor android_endColor android_type android_centerX android_centerY android_gradientRadius android_tileMode android_centerColor android_startX android_startY android_endX android_endY
 styleable GradientColorItem android_color android_offset
 styleable LinearLayoutCompat android_gravity android_orientation android_baselineAligned android_baselineAlignedChildIndex android_weightSum divider dividerPadding measureWithLargestChild showDividers
 styleable LinearLayoutCompat_Layout android_layout_gravity android_layout_width android_layout_height android_layout_weight
 styleable ListPopupWindow android_dropDownHorizontalOffset android_dropDownVerticalOffset
+styleable LoadingImageView circleCrop imageAspectRatio imageAspectRatioAdjust
 styleable MenuGroup android_enabled android_id android_visible android_menuCategory android_orderInCategory android_checkableBehavior
 styleable MenuItem android_icon android_enabled android_id android_checked android_visible android_menuCategory android_orderInCategory android_title android_titleCondensed android_alphabeticShortcut android_numericShortcut android_checkable android_onClick actionLayout actionProviderClass actionViewClass alphabeticModifiers contentDescription iconTint iconTintMode numericModifiers showAsAction tooltipText
 styleable MenuView android_windowAnimationStyle android_itemTextAppearance android_horizontalDivider android_verticalDivider android_headerBackground android_itemBackground android_itemIconDisabledAlpha preserveIconSpacing subMenuArrow
@@ -1320,6 +1406,7 @@ styleable PopupWindow android_popupBackground android_popupAnimationStyle overla
 styleable PopupWindowBackgroundState state_above_anchor
 styleable RecycleListView paddingBottomNoButtons paddingTopNoTitle
 styleable SearchView android_focusable android_maxWidth android_inputType android_imeOptions closeIcon commitIcon defaultQueryHint goIcon iconifiedByDefault layout queryBackground queryHint searchHintIcon searchIcon submitBackground suggestionRowLayout voiceIcon
+styleable SignInButton buttonSize colorScheme scopeUris
 styleable Spinner android_entries android_popupBackground android_prompt android_dropDownWidth popupTheme
 styleable SplitPairFilter primaryActivityName secondaryActivityAction secondaryActivityName
 styleable SplitPairRule clearTop finishPrimaryWithSecondary finishSecondaryWithPrimary splitLayoutDirection splitMinSmallestWidth splitMinWidth splitRatio
