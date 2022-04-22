@@ -133,7 +133,7 @@ class HomePageState extends State<HomePage> {
                     // ListView(children: [
                     SizedBox(
                       child: Container(
-                        padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                         child: Column(
                           children: [
                             // const Text(
