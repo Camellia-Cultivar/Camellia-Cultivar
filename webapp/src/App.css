@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+/* Centered container with margin */
+.container-4\/5{
+  width:80% !important;
+  margin-left:10%;
+  margin-right:10%;
+}
