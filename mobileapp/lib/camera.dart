@@ -413,7 +413,7 @@ class Camera extends State<CameraPage> {
                               "\n" +
                               "Long:" +
                               _position!.longitude.toString())
-                          : const Text('lat\nlong'),
+                          : const Text('Lat:\nLong:'),
                       const Padding(padding: EdgeInsets.all(5)),
                       MaterialButton(
                           padding: const EdgeInsets.fromLTRB(10, 8, 20, 8),
