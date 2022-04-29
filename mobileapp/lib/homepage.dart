@@ -22,17 +22,6 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    File? imageFile;
-
-    // void _getFromCamera() async {
-    //   PickedFile pickedFile = await ImagePicker().getImage(
-    //       source: ImageSource.camera, maxHeight: 1080, maxWidth: 1080);
-    //   setState(() {
-    //     imageFile = File(pickedFile.path);
-    //   });
-    //   Navigator.pop(context);
-    // }
-
     final PopupController _popupController = PopupController();
     MapController _mapController = MapController();
     double _zoom = 7;

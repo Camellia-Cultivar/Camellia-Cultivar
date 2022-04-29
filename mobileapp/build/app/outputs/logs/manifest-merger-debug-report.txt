@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 application
-INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:4:4-34:19
+INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:7:4-37:19
 MERGED from [:image_picker_android] /home/patricia/GitHubRep/project/mobileapp/build/image_picker_android/intermediates/library_manifest/debug/AndroidManifest.xml:7:5-17:19
 MERGED from [:image_picker_android] /home/patricia/GitHubRep/project/mobileapp/build/image_picker_android/intermediates/library_manifest/debug/AndroidManifest.xml:7:5-17:19
 MERGED from [:geolocator_android] /home/patricia/GitHubRep/project/mobileapp/build/geolocator_android/intermediates/library_manifest/debug/AndroidManifest.xml:9:5-15:19
@@ -26,11 +26,11 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /home/patri
 	android:name
 		INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml
 manifest
-ADDED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:1:1-35:12
-INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:1:1-35:12
-INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:1:1-35:12
-INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:1:1-35:12
-MERGED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:1:1-35:12
+ADDED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:1:1-38:12
+INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:1:1-38:12
+INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:1:1-38:12
+INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:1:1-38:12
+MERGED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:1:1-38:12
 MERGED from [:image_picker_android] /home/patricia/GitHubRep/project/mobileapp/build/image_picker_android/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-19:12
 MERGED from [:local_auth_android] /home/patricia/GitHubRep/project/mobileapp/build/local_auth_android/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-11:12
 MERGED from [:flutter_plugin_android_lifecycle] /home/patricia/GitHubRep/project/mobileapp/build/flutter_plugin_android_lifecycle/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-7:12
@@ -76,11 +76,11 @@ INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/debug/A
 		INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/debug/AndroidManifest.xml
 	android:versionName
 		INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml
-		ADDED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:1:1-35:12
+		ADDED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:1:1-38:12
 		INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/debug/AndroidManifest.xml
 	android:versionCode
 		INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml
-		ADDED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:1:1-35:12
+		ADDED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:1:1-38:12
 		INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/debug/AndroidManifest.xml
 	xmlns:android
 		ADDED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:1:11-69
@@ -92,6 +92,18 @@ MERGED from [androidx.biometric:biometric:1.1.0] /home/patricia/.gradle/caches/t
 MERGED from [androidx.biometric:biometric:1.1.0] /home/patricia/.gradle/caches/transforms-2/files-2.1/cbb3d625d33b72056d970fab9ec3f1b4/biometric-1.1.0/AndroidManifest.xml:27:5-74
 	android:name
 		ADDED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:3:22-71
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:4:5-79
+	android:name
+		ADDED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:4:22-76
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:5:5-81
+	android:name
+		ADDED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:5:22-78
+uses-permission#android.permission.ACCESS_BACKGROUND_LOCATION
+ADDED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:6:5-85
+	android:name
+		ADDED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:6:22-82
 uses-sdk
 INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml

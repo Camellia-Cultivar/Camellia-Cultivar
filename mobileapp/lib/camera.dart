@@ -47,12 +47,26 @@ class Camera extends State<CameraPage> {
 
   MapController _mapController = MapController();
 
-  Position? position = null;
+  Position? _position = null;
 
-  // void getLocation() async {
-  //   position = await Geolocator.getCurrentPosition(
-  //       desiredAccuracy: LocationAccuracy.high);
-  // }
+  void _getCurrentPosition() async {
+    Position position = await _determinePosition();
+    setState(() {
+      _position = position;
+    });
+  }
+
+  Future<Position> _determinePosition() async {
+    LocationPermission permission;
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error("Location Permissions are denied");
+      }
+    }
+    return await Geolocator.getCurrentPosition();
+  }
 
   @override
   // void initState() {
@@ -65,7 +79,12 @@ class Camera extends State<CameraPage> {
   Widget build(BuildContext context) {
     final PopupController _popupController = PopupController();
     double _zoom = 7;
-    LatLng location = LatLng(40.6384943, -8.6540832);
+    LatLng location = _position == null
+        ? LatLng(40.6384943, -8.6540832)
+        : LatLng(_position!.latitude, _position!.longitude);
+    LatLng? actualLocation = _position != null
+        ? LatLng(_position!.latitude, _position!.longitude)
+        : null;
     List<Marker> markers = [
       Marker(
         point: location,
@@ -80,7 +99,7 @@ class Camera extends State<CameraPage> {
     ];
 
     specimen_images = [
-      // imageFile,
+      imageFile,
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBA5mAFxS9mjuuD-AWAGB_z1676LSGYIBoNA&usqp=CAU',
       'https://media.istockphoto.com/photos/white-camellia-flower-isolated-on-white-background-picture-id1251528600?k=20&m=1251528600&s=612x612&w=0&h=AW64ZIfakH0ROp3WJeh_Gd5bjaJtOOyokx-NMjAho7E='
     ];
@@ -164,23 +183,22 @@ class Camera extends State<CameraPage> {
                                     },
                                   ),
                                   items: [
-                                    for (int i = 0;
-                                        i < specimen_images.length;
-                                        i++)
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(9),
-                                        child:
-                                            Image.network(specimen_images[i]!),
-                                      ),
+                                    // for (int i = 0;
+                                    //     i < specimen_images.length;
+                                    //     i++)
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(9),
+                                      child: Image.file(specimen_images[0]),
+                                    ),
 
-                                    // ClipRRect(
-                                    //   borderRadius: BorderRadius.circular(9),
-                                    //   child: Image.network(specimen_images[1]),
-                                    // ),
-                                    // ClipRRect(
-                                    //   borderRadius: BorderRadius.circular(9),
-                                    //   child: Image.network(specimen_images[2]),
-                                    // ),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(9),
+                                      child: Image.network(specimen_images[1]),
+                                    ),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(9),
+                                      child: Image.network(specimen_images[2]),
+                                    ),
                                   ]),
                               Positioned(
                                   bottom: 0,
@@ -340,7 +358,9 @@ class Camera extends State<CameraPage> {
                         child: FlutterMap(
                           mapController: _mapController,
                           options: MapOptions(
-                            center: location, //change center with geolocation
+                            center: actualLocation != null
+                                ? actualLocation
+                                : location, //change center with geolocation
                             zoom: _zoom,
                             plugins: [
                               MarkerClusterPlugin(),
@@ -387,7 +407,13 @@ class Camera extends State<CameraPage> {
                   const Padding(padding: EdgeInsets.all(10)),
                   Column(
                     children: [
-                      const Text('lat\nlong'),
+                      _position != null
+                          ? Text("Lat:" +
+                              _position!.latitude.toString() +
+                              "\n" +
+                              "Long:" +
+                              _position!.longitude.toString())
+                          : const Text('lat\nlong'),
                       const Padding(padding: EdgeInsets.all(5)),
                       MaterialButton(
                           padding: const EdgeInsets.fromLTRB(10, 8, 20, 8),
@@ -396,7 +422,7 @@ class Camera extends State<CameraPage> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15.0))),
                           onPressed: () {
-                            // _determinePosition();
+                            _getCurrentPosition();
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -417,7 +443,7 @@ class Camera extends State<CameraPage> {
                     ],
                   )
                 ],
-              )
+              ),
             ]),
           )),
 
