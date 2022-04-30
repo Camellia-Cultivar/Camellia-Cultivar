@@ -4,6 +4,7 @@ import 'package:camellia_cultivar/flower_icon.dart';
 import 'package:camellia_cultivar/main.dart';
 import 'package:camellia_cultivar/navbar/botnavbar.dart';
 import 'package:camellia_cultivar/navbar/button.dart';
+import 'package:camellia_cultivar/upov_characteristics.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -32,8 +33,8 @@ class Camera extends State<CameraPage> {
   List specimen_images = [];
 
   void _getFromCamera() async {
-    PickedFile? pickedFile = await ImagePicker()
-        .getImage(source: ImageSource.camera, imageQuality: 100);
+    XFile? pickedFile = await ImagePicker()
+        .pickImage(source: ImageSource.camera, imageQuality: 100);
     setState(() {
       imageFile = File(pickedFile!.path);
     });
@@ -67,13 +68,6 @@ class Camera extends State<CameraPage> {
     }
     return await Geolocator.getCurrentPosition();
   }
-
-  @override
-  // void initState() {
-  //   getLocation();
-  //   print(position);
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -442,6 +436,12 @@ class Camera extends State<CameraPage> {
                   )
                 ],
               ),
+              Container(
+                width: 350,
+                margin: const EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.only(bottom: 10),
+                child: const UpovCharacteristics(),
+              ),
             ]),
           )),
 
@@ -449,19 +449,3 @@ class Camera extends State<CameraPage> {
     );
   }
 }
-
-// class ServerIpText extends StatefulWidget {
-//   final String serverIP;
-
-//   const ServerIpText({Key? key, required this.serverIP}) : super(key: key);
-
-//   @override
-//   _ServerIpTextState createState() => _ServerIpTextState();
-// }
-
-// class _ServerIpTextState extends State<ServerIpText> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Text(widget.serverIP);
-//   }
-// }

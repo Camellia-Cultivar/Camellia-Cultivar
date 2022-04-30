@@ -84,7 +84,7 @@ class Home extends State<HomePage> {
                   ),
                 ),
                 const Text(
-                  ', Emerald ',
+                  ', Sherlock ',
                   style: TextStyle(color: Colors.white, fontSize: 20),
                   // textAlign: TextAlign.center,
                 ),
@@ -119,7 +119,7 @@ class Home extends State<HomePage> {
                     // ListView(children: [
                     SizedBox(
                       child: Container(
-                        padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                         child: Column(
                           children: [
                             // const Text(
