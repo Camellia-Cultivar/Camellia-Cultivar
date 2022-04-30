@@ -1,10 +1,20 @@
 import 'package:camellia_cultivar/homepage.dart';
+import 'package:camellia_cultivar/layout.dart';
 import 'package:camellia_cultivar/local_auth_api.dart';
+import 'package:camellia_cultivar/model/user.dart';
+import 'package:camellia_cultivar/providers/user.dart';
 import 'package:camellia_cultivar/registerpage.dart';
+import 'package:camellia_cultivar/database/database_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const LoginPage());
+  runApp( MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
+      child: const LoginPage(),
+    ),);
 }
 
 class LoginPage extends StatelessWidget {
@@ -18,6 +28,11 @@ class LoginPage extends StatelessWidget {
         primaryColor: const Color(0x00064e3b),
       ),
       home: const MyHomePage(title: ''),
+      builder: (context, child) {
+        return Layout(
+          body: child as Widget,
+        );
+      },
     );
   }
 }
@@ -32,7 +47,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -43,7 +57,25 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  var login = {};
+  bool _authError = false;
+
+
+  void handleSubmit(BuildContext context) async {
+    final dbHelper = DatabaseHelper.instance;
+
+    User? user = await dbHelper.getUser(emailController.text);
+
+    bool isAuth = user != null && user.password == passwordController.text;
+
+    if(isAuth) {
+      context.read<UserProvider>().setUser(user);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+    } else {
+      setState(() => {
+        _authError = true,
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +112,11 @@ class _MyHomePageState extends State<MyHomePage> {
                               borderSide: BorderSide(color: Color(0xFF064E3B)),
                             ),
                           ),
+                          onChanged: (String str) {
+                            setState(() {
+                              _authError = false;                                 
+                            });
+                          },
                           controller: emailController,
                         )
                       ),
@@ -98,20 +135,24 @@ class _MyHomePageState extends State<MyHomePage> {
                               borderSide: BorderSide(color: Color(0xFF064E3B)),
                             ),
                           ),
+                          onChanged: (String str) {
+                            setState(() {
+                              _authError = false;                                 
+                            });
+                          },
                           controller: passwordController,
                         )
                       ),
                     ],
                   ),
-                  const Padding(padding: EdgeInsets.all(5)),
+                  SizedBox(width: 260, child: _authError == true ? const Text("Email and Password do not match.", style: TextStyle(color: Colors.red)) : null),
+                  // const Padding(padding: EdgeInsets.all(5)),
                   SizedBox(
                     height: 69,
                     width: 260,
                       child: TextButton(
-                        onPressed: ()=>{
-                          login["email"] = emailController.text,
-                          login["password"] = passwordController.text,
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()))
+                        onPressed: () => {
+                          handleSubmit(context),
                         }, 
                         style:  ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(const Color(0xFF064E3B)),

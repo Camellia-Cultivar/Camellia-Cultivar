@@ -1,13 +1,33 @@
+import 'package:camellia_cultivar/database/database_helper.dart';
 import 'package:camellia_cultivar/editprofilepage.dart';
+import 'package:camellia_cultivar/layout.dart';
+import 'package:camellia_cultivar/main.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:camellia_cultivar/providers/user.dart';
+import 'package:camellia_cultivar/model/user.dart';
 
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
+
+  void handleClick(BuildContext context, User user) async {
+    final dbHelper = DatabaseHelper.instance;
+    await dbHelper.delete("users", user.id);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+  }
+
   @override
   Widget build(BuildContext context) {
     var json = {"profile_image": "https://i.imgflip.com/2/1975nj.jpg", "name": "Sherlock Holmes", "email":  "sherlockh@gmail.com", "password": "******", "reputation": "3000"};
+
+    User? user = context.read<UserProvider>().user;
+
+    if(user == null) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+      return const Scaffold();
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -59,7 +79,7 @@ class ProfilePage extends StatelessWidget {
                             color: Color(0xFF064E3B),
                           ),
                           const Padding(padding: EdgeInsets.all(10)),
-                          Text(json["name"].toString(), style: const TextStyle(color: Color(0xFF064E3B)))
+                          Text(user.name, style: const TextStyle(color: Color(0xFF064E3B)))
                         ],
                       ),
                     ),
@@ -73,7 +93,7 @@ class ProfilePage extends StatelessWidget {
                             color: Color(0xFF064E3B),
                           ),
                           const Padding(padding: EdgeInsets.all(10)), 
-                          Text(json["email"].toString(), style: const TextStyle(color: Color(0xFF064E3B)))
+                          Text(user.email, style: const TextStyle(color: Color(0xFF064E3B)))
                         ],
                       )
                     ),
@@ -81,27 +101,14 @@ class ProfilePage extends StatelessWidget {
                       height: 40,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const Icon(
-                            IconData(0xf052b, fontFamily: 'MaterialIcons'),
-                            color: Color(0xFF064E3B),
-                          ),
-                          const Padding(padding: EdgeInsets.all(10)),
-                          Text(json["password"].toString(), style: const TextStyle(color: Color(0xFF064E3B)))
-                        ],
-                      )
-                    ),
-                    SizedBox(
-                      height: 40,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        // ignore: prefer_const_literals_to_create_immutables
                         children: [
                           const Icon(
                             IconData(0xf3e2, fontFamily: 'MaterialIcons'), 
                             color: Color(0xFF064E3B),
                           ),
                           const Padding(padding: EdgeInsets.all(10)),
-                          Text(json["reputation"].toString() + " reputation", style: const TextStyle(color: Color(0xFF064E3B)))
+                          Text("0 reputation", style: const TextStyle(color: Color(0xFF064E3B)))
                         ],
                       )
                     ),
@@ -123,6 +130,45 @@ class ProfilePage extends StatelessWidget {
                           ),
                         ),
                         child: Text("Edit".toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w300))
+                      ),
+                    ),
+                    SizedBox(
+                      height: 50,
+                      width: 200,
+                      child: TextButton(
+                        onPressed: () => {
+                          context.read<UserProvider>().setUser(null),
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage())),
+                        }, 
+                        style:  ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(const Color(0xFF064E3B)),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(150.0),
+                              side: const BorderSide(color: Colors.white)
+                            )
+                          ),
+                        ),
+                        child: Text("Log out".toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w300))
+                      ),
+                    ),
+                      SizedBox(
+                      height: 50,
+                      width: 200,
+                      child: TextButton(
+                        onPressed: () => {
+                         handleClick(context, user)
+                        }, 
+                        style:  ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(const Color(0xFF064E3B)),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(150.0),
+                              side: const BorderSide(color: Colors.white)
+                            )
+                          ),
+                        ),
+                        child: Text("Delete account".toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w300))
                       ),
                     ),
                   ],

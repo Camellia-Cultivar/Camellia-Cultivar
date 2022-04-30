@@ -1,5 +1,7 @@
 import 'package:camellia_cultivar/profilepage.dart';
+import 'package:camellia_cultivar/providers/user.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'quizzoptionspage.dart';
 
@@ -8,6 +10,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(context.read<UserProvider>().user);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home Page"),

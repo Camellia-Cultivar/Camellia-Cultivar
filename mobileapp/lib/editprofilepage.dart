@@ -1,9 +1,23 @@
+import 'package:camellia_cultivar/main.dart';
+import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/profilepage.dart';
+import 'package:camellia_cultivar/providers/user.dart';
 import 'package:flutter/material.dart';
+import "package:camellia_cultivar/extensions/string_apis.dart";
+import 'package:provider/provider.dart';
 
-
-class EditProfilePage extends StatelessWidget {
+class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
+
+
+  @override
+  State<EditProfilePage> createState() => _EditProfilePage();
+
+
+   }
+
+
+  class _EditProfilePage extends State<EditProfilePage> {  
 
   @override
   Widget build(BuildContext context) {
@@ -12,24 +26,44 @@ class EditProfilePage extends StatelessWidget {
 
     var edit = {};
 
-    final nameController = TextEditingController();
-    final emailController = TextEditingController();
+    User? user = context.read<UserProvider>().user;
+
+    if(user == null) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+      return const Scaffold();
+    }
+
+    final firstNameController = TextEditingController(text: user.firstName);
+    final lastNameController = TextEditingController(text: user.lastName);
+    final emailController = TextEditingController(text: user.email);
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
 
+    Map<String, bool> errors = {
+      "firstName": false,
+      "lastName": false,
+      "email": false,
+      "password": false,
+    };
+
     @override
     void dispose() {
-      nameController.dispose();
+      firstNameController.dispose();
+      lastNameController.dispose();
       emailController.dispose();
       passwordController.dispose();
       confirmPasswordController.dispose();
     }
 
+    final _formKey = GlobalKey<FormState>();
+
+
     return Scaffold(
-       resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFFA4A4A4),
       body: Center(
-        child: Container(
+        child: Form(
+          key: _formKey, child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(15.0)
@@ -77,22 +111,58 @@ class EditProfilePage extends StatelessWidget {
                           const Padding(padding: EdgeInsets.all(10)),
                           SizedBox(
                             width: 150,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: json["name"].toString(),
-                                hintStyle: const TextStyle(fontSize: 14),
-                                focusedBorder: const UnderlineInputBorder(
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                hintStyle: TextStyle(fontSize: 14),
+                                focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: Color(0xFF064E3B)),
                                 ),
-                                border: const UnderlineInputBorder(
+                                border: UnderlineInputBorder(
                                   borderSide: BorderSide(color: Color(0xFF064E3B)),
                                 ),
                               ),
-                              controller: nameController,
+                              controller: firstNameController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'First name is required';
+                                }
+                                return null;
+                              },
                             )
                           ),
                         ],
                       ),
+                    ),
+                    const Padding(padding: EdgeInsets.only(bottom: 20)),
+                    SizedBox(
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Padding(padding: EdgeInsets.only(right: 45)),
+                          SizedBox(
+                            width: 150,
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                hintStyle: TextStyle(fontSize: 14),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Color(0xFF064E3B)),
+                                ),
+                                border: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Color(0xFF064E3B)),
+                                ),
+                              ),
+                              controller: lastNameController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Last name is required';
+                                }
+                                return null;
+                              },
+                            )
+                          ), 
+                        ],
+                      )
                     ),
                     const Padding(padding: EdgeInsets.only(bottom: 20)),
                     SizedBox(
@@ -107,18 +177,18 @@ class EditProfilePage extends StatelessWidget {
                           const Padding(padding: EdgeInsets.all(10)), 
                           SizedBox(
                             width: 150,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: json["email"].toString(),
-                                hintStyle: const TextStyle(fontSize: 14),
-                                focusedBorder: const UnderlineInputBorder(
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                hintStyle: TextStyle(fontSize: 14),
+                                focusedBorder:  UnderlineInputBorder(
                                   borderSide: BorderSide(color: Color(0xFF064E3B)),
                                 ),
-                                border: const UnderlineInputBorder(
+                                border: UnderlineInputBorder(
                                   borderSide: BorderSide(color: Color(0xFF064E3B)),
                                 ),
                               ),
                               controller: emailController,
+                              validator: (input) => input != null && input.isValidEmail() ? null : "Check your email",
                             )
                           ),
                         ],
@@ -137,14 +207,13 @@ class EditProfilePage extends StatelessWidget {
                           const Padding(padding: EdgeInsets.all(10)),
                           SizedBox(
                             width: 150,
-                            child: TextField(
+                            child: TextFormField(
                               obscureText: true,
                               enableSuggestions: false,
                               autocorrect: false,
                               decoration: const InputDecoration(
                                 hintText: "New Password",
                                 hintStyle: TextStyle(fontSize: 14),
-                                
                                 focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: Color(0xFF064E3B)),
                                 ),
@@ -153,6 +222,12 @@ class EditProfilePage extends StatelessWidget {
                                 ),
                               ),
                               controller: passwordController,
+                              validator: (value) {
+                                if ((value == null || value.isEmpty) && confirmPasswordController.text.isNotEmpty) {
+                                  return 'Password is required!';
+                                }
+                                return null;
+                              },
                             )
                           ),
                         ],
@@ -167,7 +242,7 @@ class EditProfilePage extends StatelessWidget {
                           const Padding(padding: EdgeInsets.only(right: 45)),
                           SizedBox(
                             width: 150,
-                            child: TextField(
+                            child: TextFormField(
                               obscureText: true,
                               enableSuggestions: false,
                               autocorrect: false,
@@ -182,6 +257,7 @@ class EditProfilePage extends StatelessWidget {
                                 ),
                               ),
                               controller: confirmPasswordController,
+                              validator: (input) => passwordController.text.isEmpty && passwordController.text == input ? null : "Passwords don't match!",
                             )
                           ), 
                         ],
@@ -193,12 +269,13 @@ class EditProfilePage extends StatelessWidget {
                       width: 200,
                       child: TextButton(
                         onPressed: ()=>{
-                          edit["name"] = nameController.text,
-                          edit["email"] = emailController.text,
-                          if(passwordController.text == confirmPasswordController.text) {
-                            edit["password"] = passwordController.text,
+                         if (_formKey.currentState!.validate()) {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage()))
                           },
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage()))
+                          // if(passwordController.text == confirmPasswordController.text) {
+                          //   edit["password"] = passwordController.text,
+                          // },
+                          
                         }, 
                         style:  ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(const Color(0xFF064E3B)),
@@ -217,6 +294,7 @@ class EditProfilePage extends StatelessWidget {
               )
             ]
           )
+        )
         )
       )
     );

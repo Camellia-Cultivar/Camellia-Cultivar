@@ -1,3 +1,5 @@
+import 'package:camellia_cultivar/database/database_helper.dart';
+import 'package:camellia_cultivar/model/user.dart';
 import 'package:flutter/material.dart';
 
 import 'homepage.dart';
@@ -13,12 +15,11 @@ const RegisterPage({Key? key}) : super(key: key);
 
 class _RegisterPageState extends State<RegisterPage> {
 
+
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
-  var register;
 
   @override
   void dispose() {
@@ -28,11 +29,22 @@ class _RegisterPageState extends State<RegisterPage> {
     passwordController.dispose();
   }
 
+  void handleSubmit() async {
+    // TODO: ofuscate password
+    final dbHelper = DatabaseHelper.instance;
+    User user = User(id: null as int ,firstName: firstNameController.text, email:emailController.text, lastName: lastNameController.text, password: passwordController.text );
+    
+    int id = await dbHelper.insert("users", user.toMap());
+    user.id = id;
+
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFFA4A4A4),
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Container(
           decoration: BoxDecoration(
@@ -117,6 +129,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 20),
                       child: TextFormField(
+                        obscureText: true,
+                        enableSuggestions: false,
+                        autocorrect: false,
                         decoration: InputDecoration(
                           labelText: "Password",
                           filled: true,
@@ -149,11 +164,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     width: 260,
                       child: TextButton(
                         onPressed: ()=>{
-                          register["first_name"] = firstNameController.text,
-                          register["last_name"] = lastNameController.text,
-                          register["email"] = emailController.text,
-                          register["password"] = passwordController.text,
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()))
+                          handleSubmit(),
                         }, 
                         style:  ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(const Color(0xFF064E3B)),

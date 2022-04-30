@@ -59,10 +59,71 @@ class QuizzOptionsPage extends StatelessWidget {
                   child: Text("Share with friends".toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w300))
                 ),
               ),
+              SizedBox(
+                height: 69,
+                width: 260,
+                child: TextButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => _buildPopupDialog(context),
+                    );
+                  }, 
+                  style:  ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(const Color(0xFF064E3B)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        side: const BorderSide(color: Colors.white)
+                      )
+                    ),
+                  ),
+                  child: Text("Answer quizz by code".toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w300))
+                ),
+              )
             ],
           )
         )
       ),
     );
   }
+}
+
+
+Widget _buildPopupDialog(BuildContext context) {
+  return AlertDialog(
+    title: const Text('Insert Quizz Code:'),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const <Widget>[
+        TextField(
+          decoration: InputDecoration(
+            hintText: "Code",
+            hintStyle: TextStyle(fontSize: 14),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFF064E3B)),
+            ),
+            border: UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFF064E3B)),
+            ),
+          ),
+        )
+      ],
+    ),
+    actions: <Widget>[
+      TextButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: const Text("Close", style: TextStyle(color: Color(0xFF064E3B))),
+      ),
+      TextButton(
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const QuizzPage()));
+        },
+        child: const Text('Start Quizz', style: TextStyle(color: Color(0xFF064E3B))),
+      ),
+    ],
+  );
 }
