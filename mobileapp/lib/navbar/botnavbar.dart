@@ -1,8 +1,11 @@
+import 'package:camellia_cultivar/profilepage.dart';
+import 'package:camellia_cultivar/quizzpage.dart';
 import 'package:flutter/material.dart';
 
 import '../camera.dart';
 import '../flower_icon.dart';
 import '../homepage.dart';
+import '../quizzoptionspage.dart';
 import 'gbutton.dart';
 import 'gnav.dart';
 
@@ -89,21 +92,21 @@ class _BotNavBar extends State<BotNavbar> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const HomePage(
-                                            title: '',
-                                          )));
+                                      builder: (context) => const HomePage()));
                               break;
                             case 2:
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //       builder: (context) => const CameraPage()));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          QuizzOptionsPage()));
                               break;
                             case 3:
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //       builder: (context) => const CameraPage()));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ProfilePage()));
                               break;
                             default:
                               print('Not a valid tab index');

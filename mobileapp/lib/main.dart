@@ -7,13 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const LoginPage());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class LoginPage extends StatelessWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,6 +36,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  var login = {};
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,50 +67,69 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    // Column with username and password fields
                     Column(
                       children: [
                         Container(
-                            padding: EdgeInsets.only(top: 60, bottom: 30),
+                            padding: const EdgeInsets.only(top: 60, bottom: 30),
                             width: 220,
                             child: TextField(
-                              decoration: InputDecoration(
-                                hintText: 'Username',
+                              decoration: const InputDecoration(
+                                hintText: 'Email',
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xFF064E3B)),
+                                ),
+                                border: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xFF064E3B)),
+                                ),
                               ),
+                              controller: emailController,
                             )),
-                        Container(
+                        SizedBox(
                             width: 220,
                             child: TextField(
                               obscureText: true,
                               enableSuggestions: false,
                               autocorrect: false,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 hintText: 'Password',
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xFF064E3B)),
+                                ),
+                                border: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xFF064E3B)),
+                                ),
                               ),
+                              controller: passwordController,
                             )),
                       ],
                     ),
-                    Padding(padding: EdgeInsets.all(5)),
+                    const Padding(padding: EdgeInsets.all(5)),
                     SizedBox(
                       height: 69,
                       width: 260,
                       child: TextButton(
                           onPressed: () => {
+                                login["email"] = emailController.text,
+                                login["password"] = passwordController.text,
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            HomePage(title: '')))
+                                        builder: (context) => HomePage()))
                               },
                           style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Color(0xFF064E3B)),
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(150.0),
-                                    side: BorderSide(color: Colors.white))),
-                          ),
+                              backgroundColor: MaterialStateProperty.all(
+                                  const Color(0xFF064E3B)),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(150.0),
+                                      side: const BorderSide(
+                                          color: Colors.white)))),
                           child: Text("Login".toUpperCase(),
                               style: TextStyle(
                                   color: Colors.white,
@@ -114,17 +144,18 @@ class _MyHomePageState extends State<MyHomePage> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => RegisterPage())),
+                                        builder: (context) =>
+                                            const RegisterPage())),
                               },
                           style: ButtonStyle(
-                            //backgroundColor: MaterialStateProperty.all(Color()),
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(150.0),
-                                    side:
-                                        BorderSide(color: Color(0xFF064E3B)))),
-                          ),
+                              //backgroundColor: MaterialStateProperty.all(Color()),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(150.0),
+                                      side: const BorderSide(
+                                          color: Color(0xFF064E3B))))),
                           child: Text("Register".toUpperCase(),
                               style: TextStyle(
                                   color: Color(0xFF064E3B),
@@ -141,8 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          HomePage(title: '')));
+                                      builder: (context) => const HomePage()));
                             }
                           },
                           child: Text("Authenticate with Fingerprint",
@@ -153,10 +183,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ])
                   ]),
             ),
-
-            // TextButton(onPressed: () => {
-            //   Navigator.push(context, MaterialPageRoute(builder: (context)=> SecondPage())),
-            // } , child: Text("Next Page")),
             Positioned(
               top: -68,
               child: Container(

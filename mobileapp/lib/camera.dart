@@ -153,9 +153,7 @@ class Camera extends State<CameraPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const HomePage(
-                                    title: '',
-                                  )));
+                              builder: (context) => const HomePage()));
                     },
                   ),
                 ],

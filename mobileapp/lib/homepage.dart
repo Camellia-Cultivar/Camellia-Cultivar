@@ -1,25 +1,25 @@
 import 'dart:io';
 
 import 'package:camellia_cultivar/navbar/botnavbar.dart';
+import 'package:camellia_cultivar/profilepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong/latlong.dart';
+import 'quizzoptionspage.dart';
 
 import 'camera.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => HomePageState();
+  Home createState() => Home();
 }
 
-class HomePageState extends State<HomePage> {
+class Home extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final PopupController _popupController = PopupController();
@@ -92,7 +92,12 @@ class HomePageState extends State<HomePage> {
                   iconSize: 40,
                   icon: const Icon(Icons.account_circle_outlined),
                   color: Colors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ProfilePage()));
+                  },
                 )
               ],
             )),
