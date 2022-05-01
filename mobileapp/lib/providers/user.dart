@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:camellia_cultivar/model/user.dart';
 
-
 class UserProvider with ChangeNotifier, DiagnosticableTreeMixin {
   User? _user;
 
