@@ -50,6 +50,9 @@ class Camera extends State<CameraPage> {
 
   Position? _position = null;
 
+  final gardenController = TextEditingController();
+  final ownerController = TextEditingController();
+
   void _getCurrentPosition() async {
     Position position = await _determinePosition();
     setState(() {
@@ -67,6 +70,12 @@ class Camera extends State<CameraPage> {
       }
     }
     return await Geolocator.getCurrentPosition();
+  }
+
+  @override
+  void dispose() {
+    ownerController.dispose();
+    gardenController.dispose();
   }
 
   @override
@@ -103,15 +112,12 @@ class Camera extends State<CameraPage> {
       });
     }
 
-    print(specimen_images);
+    // print(specimen_images);
 
     // _getFromCamera();
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6F7),
-      // SingleChildScrollView(
-      //     child: Column(children: <Widget>[
       body: Container(
-          // height: 18,
           margin: const EdgeInsets.fromLTRB(10, 40, 10, 0),
           decoration: const BoxDecoration(
               color: Colors.white,
@@ -144,10 +150,31 @@ class Camera extends State<CameraPage> {
                       size: 25,
                     ),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomePage()));
+                      if (ownerController.text.isEmpty ||
+                          gardenController.text.isEmpty ||
+                          specimen_images.isEmpty ||
+                          actualLocation == null) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                                backgroundColor: Colors.white,
+                                content: Text(
+                                  'Please, fill in the required fields',
+                                  style: TextStyle(color: Colors.red),
+                                )));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              backgroundColor: Colors.white,
+                              content: Text(
+                                'ID request sent for validation.',
+                                style: TextStyle(color: Colors.black),
+                              )),
+                        );
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const HomePage()));
+                      }
                     },
                   ),
                 ],
@@ -317,6 +344,7 @@ class Camera extends State<CameraPage> {
                           ),
                           labelText: 'Garden',
                         ),
+                        controller: gardenController,
                       ),
                       TextFormField(
                         focusNode: myFocusNode,
@@ -335,6 +363,7 @@ class Camera extends State<CameraPage> {
                           ),
                           labelText: 'Owner',
                         ),
+                        controller: ownerController,
                       ),
                     ],
                   ))),
@@ -350,9 +379,8 @@ class Camera extends State<CameraPage> {
                         child: FlutterMap(
                           mapController: _mapController,
                           options: MapOptions(
-                            center: actualLocation != null
-                                ? actualLocation
-                                : location, //change center with geolocation
+                            center: actualLocation ??
+                                location, //change center with geolocation
                             zoom: _zoom,
                             plugins: [
                               MarkerClusterPlugin(),
@@ -444,7 +472,6 @@ class Camera extends State<CameraPage> {
               ),
             ]),
           )),
-
       bottomNavigationBar: const BotNavbar(pageIndex: 0),
     );
   }
