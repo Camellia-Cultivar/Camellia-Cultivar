@@ -4,6 +4,7 @@ class User {
   String lastName;
   String email;
   String password;
+  int reputation;
 
   User({
     required this.id,
@@ -11,6 +12,7 @@ class User {
     required this.lastName,
     required this.email,
     required this.password,
+    required this.reputation,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,6 +22,7 @@ class User {
       'lastName': lastName,
       'email': email,
       'password': password,
+      "reputation": reputation,
     };
   }
 

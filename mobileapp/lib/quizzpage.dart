@@ -3,6 +3,9 @@ import 'package:camellia_cultivar/providers/user.dart';
 import 'package:camellia_cultivar/quizzoptionspage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:camellia_cultivar/database/database_helper.dart';
+
+import 'homepage.dart';
 
 class FormItem {
   int? specimen_id;
@@ -62,9 +65,8 @@ class _QuizzPageState extends State<QuizzPage> {
 
   List answers = [];
 
-  Map<int, List> responses = {};
-
   final cultivarNameController = TextEditingController();
+  final FocusNode focusInput = FocusNode();
 
   @override
   void dispose() {
@@ -79,13 +81,48 @@ class _QuizzPageState extends State<QuizzPage> {
     ids = List<int>.generate(data.length, (i) => i);
   }
 
+  void handleNext() {
+    setState(() => {
+          if (_currentIndex < data.length - 1) {_currentIndex++},
+        });
+  }
+
+  void handleBack() {
+    setState(() => {if (_currentIndex > 0) _currentIndex--});
+  }
+
+  void handleEditingComplete() {
+    setState(() {
+      form[_currentIndex] =
+          FormItem(data[_currentIndex]["key"], cultivarNameController.text);
+    });
+    focusInput.unfocus();
+  }
+
+  void handleSubmit(User? user) async {
+    if (user == null) {
+      return;
+    }
+
+    user.reputation += 2;
+
+    final dbHelper = DatabaseHelper.instance;
+    await dbHelper.update("users", user.toMap());
+    context.read<UserProvider>().setUser(user);
+    Navigator.popUntil(context, ModalRoute.withName('/home'));
+
+    // form.entries.forEach((entry) =>
+    // answers.add(entry.value.getData())),
+    // responses[user!.id] = answers,
+  }
+
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+
     User? user = context.read<UserProvider>().user;
 
-    if (form[_currentIndex]?.answer != null) {
-      cultivarNameController.text = form[_currentIndex]?.answer as String;
-    }
+    cultivarNameController.text = form[_currentIndex]?.answer ?? "";
 
     return Scaffold(
         backgroundColor: const Color(0xFFF5F6F7),
@@ -95,14 +132,16 @@ class _QuizzPageState extends State<QuizzPage> {
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15.0)),
-              height: 770,
-              width: 370,
+              height: screenSize.height / 1.2,
+              width: screenSize.width / 1.2,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const Padding(padding: EdgeInsets.only(left: 30)),
                       IconButton(
                         onPressed: ((() => {
                               Navigator.pop(
@@ -114,15 +153,21 @@ class _QuizzPageState extends State<QuizzPage> {
                           IconData(0xe16a, fontFamily: 'MaterialIcons'),
                           size: 30,
                         ),
-                      ),
-                      const Padding(padding: EdgeInsets.only(left: 90)),
+                      )
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                       Row(
                         children: map<Widget>(ids, (index, url) {
                           return Container(
-                            width: 10.0,
-                            height: 60.0,
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 10.0, horizontal: 2.0),
+                            // width: 10.0,
+                            // height: 60.0,
+                            width: screenSize.width / 40,
+                            height: screenSize.height / 20,
+                            margin: const EdgeInsets.symmetric(horizontal: 2.0),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: _currentIndex == index
@@ -138,13 +183,16 @@ class _QuizzPageState extends State<QuizzPage> {
                     ],
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Name the cultivar",
+                      Text("Name the cultivar",
                           style: TextStyle(
-                              color: Color(0xFF064E3B), fontSize: 30)),
+                              color: Color(0xFF064E3B),
+                              fontSize: screenSize.height / 35)),
                       SizedBox(
-                        width: 300,
-                        height: 300,
+                        width: screenSize.width / 1.5,
+                        height: screenSize.height / 3,
                         child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: data[_currentIndex]["images"].length,
@@ -152,39 +200,37 @@ class _QuizzPageState extends State<QuizzPage> {
                               List<String>? images =
                                   data[_currentIndex]["images"];
                               return Image.network(images![position],
-                                  width: 300, fit: BoxFit.fitHeight);
+                                  width: screenSize.width / 1.5,
+                                  fit: BoxFit.fitHeight);
                             }),
                       ),
                       Container(
-                          padding: const EdgeInsets.only(bottom: 40),
-                          width: 220,
+                          padding: const EdgeInsets.only(top: 5, bottom: 30),
+                          width: screenSize.width / 1.5,
                           child: TextField(
-                            decoration: const InputDecoration(
-                              hintText: 'Name',
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xFF064E3B)),
+                              decoration: const InputDecoration(
+                                hintText: 'Name',
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xFF064E3B)),
+                                ),
+                                border: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xFF064E3B)),
+                                ),
                               ),
-                              border: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xFF064E3B)),
-                              ),
-                            ),
-                            controller: cultivarNameController,
-                          )),
+                              controller: cultivarNameController,
+                              focusNode: focusInput,
+                              onEditingComplete: () =>
+                                  handleEditingComplete())),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           SizedBox(
-                            height: 60,
-                            width: 120,
+                            height: screenSize.height / 14.5,
+                            width: screenSize.width / 3.5,
                             child: TextButton(
-                                onPressed: () => {
-                                      setState(() => {
-                                            if (_currentIndex > 0)
-                                              _currentIndex--
-                                          })
-                                    },
+                                onPressed: () => handleBack(),
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
                                       const Color(0xFF064E3B)),
@@ -199,29 +245,13 @@ class _QuizzPageState extends State<QuizzPage> {
                                 child: Text("Back".toUpperCase(),
                                     style: const TextStyle(
                                         color: Colors.white,
-                                        fontSize: 18,
                                         fontWeight: FontWeight.w300))),
                           ),
                           SizedBox(
-                            height: 60,
-                            width: 120,
+                            height: screenSize.height / 14.5,
+                            width: screenSize.width / 3.5,
                             child: TextButton(
-                                onPressed: () => {
-                                      setState(() => {
-                                            if (cultivarNameController
-                                                .text.isNotEmpty)
-                                              {
-                                                form[_currentIndex] = FormItem(
-                                                    data[_currentIndex]["key"],
-                                                    cultivarNameController
-                                                        .text),
-                                              },
-                                            if (_currentIndex < data.length - 1)
-                                              {_currentIndex++},
-                                            cultivarNameController.clear()
-                                          }),
-                                      3
-                                    },
+                                onPressed: () => handleNext(),
                                 style: ButtonStyle(
                                   shape: MaterialStateProperty.all<
                                           RoundedRectangleBorder>(
@@ -234,7 +264,6 @@ class _QuizzPageState extends State<QuizzPage> {
                                 child: Text("Next".toUpperCase(),
                                     style: const TextStyle(
                                         color: Color(0xFF064E3B),
-                                        fontSize: 18,
                                         fontWeight: FontWeight.w300))),
                           ),
                         ],
@@ -242,14 +271,10 @@ class _QuizzPageState extends State<QuizzPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 40),
                         child: SizedBox(
-                          height: 69,
-                          width: 260,
+                          height: screenSize.height / 12.5,
+                          width: screenSize.width / 1.8,
                           child: TextButton(
-                              onPressed: () => {
-                                    form.entries.forEach((entry) =>
-                                        answers.add(entry.value.getData())),
-                                    responses[user!.id] = answers,
-                                  },
+                              onPressed: () => handleSubmit(user),
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
                                     const Color(0xFF064E3B)),
@@ -264,7 +289,6 @@ class _QuizzPageState extends State<QuizzPage> {
                               child: Text("Submit Quizz".toUpperCase(),
                                   style: const TextStyle(
                                       color: Colors.white,
-                                      fontSize: 18,
                                       fontWeight: FontWeight.w300))),
                         ),
                       )

@@ -5,13 +5,6 @@ import 'package:provider/provider.dart';
 
 import 'quizzoptionspage.dart';
 
-// class EditProfilePage extends StatefulWidget {
-//   const EditProfilePage({Key? key}) : super(key: key);
-
-//   @override
-//   State<EditProfilePage> createState() => _EditProfilePage();
-// }
-
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 

@@ -23,29 +23,40 @@ class DatabaseHelper {
 
   Future _onCreate(Database db, int version) async {
     await db.execute(
-      'CREATE TABLE users(id INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, email TEXT, password TEXT)',
+      'CREATE TABLE users(id INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, email TEXT, password TEXT, reputation INTEGER)',
     );
   }
 
   Future<int> insert(String table, Map<String, dynamic> row) async {
-    Database? db = await instance.database;
-    return db.insert(table, row);
+    try {
+      Database? db = await instance.database;
+      return db.insert(table, row);
+    } catch (e) {
+      print(e);
+      throw Exception(e);
+    }
   }
 
   Future<User?> getUser(String email) async {
-    Database db = await instance.database;
-    List<Map> maps =
-        await db.query("users", where: 'email = ?', whereArgs: [email]);
-    if (maps.isNotEmpty) {
-      Map first = maps.first;
-      return User(
-          id: first["id"],
-          email: first["email"],
-          firstName: first["firstName"],
-          lastName: first["lastName"],
-          password: first["password"]);
+    try {
+      Database db = await instance.database;
+      List<Map> maps =
+          await db.query("users", where: 'email = ?', whereArgs: [email]);
+      if (maps.isNotEmpty) {
+        Map first = maps.first;
+        return User(
+            id: first["id"],
+            email: first["email"],
+            firstName: first["firstName"],
+            lastName: first["lastName"],
+            password: first["password"],
+            reputation: first["reputation"]);
+      }
+      return null;
+    } catch (e) {
+      print(e);
+      throw Exception(e);
     }
-    return null;
   }
 
   Future<int> update(String table, Map<String, dynamic> row) async {
@@ -54,12 +65,18 @@ class DatabaseHelper {
       int id = row["id"];
       return await db.update(table, row, where: 'id = ?', whereArgs: [id]);
     } on Exception catch (e) {
+      print(e);
       throw Exception(e);
     }
   }
 
   Future<int> delete(String table, int id) async {
-    Database db = await instance.database;
-    return await db.delete(table, where: 'id', whereArgs: [id]);
+    try {
+      Database db = await instance.database;
+      return await db.delete(table, where: 'id = ?', whereArgs: [id]);
+    } on Exception catch (e) {
+      print(e);
+      throw Exception(e);
+    }
   }
 }
