@@ -1,4 +1,6 @@
 import 'package:camellia_cultivar/extensions/string_apis.dart';
+import 'dart:io';
+
 import 'package:camellia_cultivar/homepage.dart';
 import 'package:camellia_cultivar/layout.dart';
 import 'package:camellia_cultivar/local_auth_api.dart';
@@ -30,7 +32,8 @@ class LoginPage extends StatelessWidget {
     return MaterialApp(
       title: 'Camellia Cultivar',
       theme: ThemeData(
-        primaryColor: const Color(0x00064e3b),
+        // primarySwatch: Colors.blueGrey,
+        primaryColor: Color(0xFF064E3B),
       ),
       home: const MyHomePage(title: ''),
       routes: {
@@ -274,7 +277,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Positioned(
               top: -68,
               child: Container(
-                decoration: const BoxDecoration(
+                decoration: new BoxDecoration(
                   shape: BoxShape.circle,
                   color: Color(0xFF064E3B),
                 ),

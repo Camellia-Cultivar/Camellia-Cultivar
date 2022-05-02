@@ -1,6 +1,8 @@
 import 'package:camellia_cultivar/quizzpage.dart';
 import 'package:flutter/material.dart';
 
+import 'navbar/botnavbar.dart';
+
 class QuizzOptionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,7 @@ class QuizzOptionsPage extends StatelessWidget {
                   ),
                 ],
               ))),
+      bottomNavigationBar: const BotNavbar(pageIndex: 2),
     );
   }
 }

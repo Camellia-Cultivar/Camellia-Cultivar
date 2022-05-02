@@ -7,6 +7,8 @@ import 'package:camellia_cultivar/database/database_helper.dart';
 
 import 'homepage.dart';
 
+import 'navbar/botnavbar.dart';
+
 class FormItem {
   int? specimen_id;
   String? answer;
@@ -125,156 +127,110 @@ class _QuizzPageState extends State<QuizzPage> {
     cultivarNameController.text = form[_currentIndex]?.answer ?? "";
 
     return Scaffold(
-        backgroundColor: const Color(0xFFF5F6F7),
-        resizeToAvoidBottomInset: false,
-        body: Center(
-          child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0)),
-              height: screenSize.height / 1.2,
-              width: screenSize.width / 1.2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      IconButton(
-                        onPressed: ((() => {
-                              Navigator.pop(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => QuizzOptionsPage()))
-                            })),
-                        icon: const Icon(
-                          IconData(0xe16a, fontFamily: 'MaterialIcons'),
-                          size: 30,
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        children: map<Widget>(ids, (index, url) {
-                          return Container(
-                            // width: 10.0,
-                            // height: 60.0,
-                            width: screenSize.width / 40,
-                            height: screenSize.height / 20,
-                            margin: const EdgeInsets.symmetric(horizontal: 2.0),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: _currentIndex == index
-                                  ? const Color(0x5F064E3B)
-                                  : (form[index]?.answer != null
-                                      ? const Color(0xFF064E3B)
-                                      : Colors.white),
-                              border: Border.all(color: Colors.black),
-                            ),
-                          );
-                        }),
+      backgroundColor: const Color(0xFFF5F6F7),
+      resizeToAvoidBottomInset: false,
+      body: Center(
+        child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(15.0)),
+            height: screenSize.height / 1.2,
+            width: screenSize.width / 1.2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      onPressed: ((() => {
+                            Navigator.pop(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => QuizzOptionsPage()))
+                          })),
+                      icon: const Icon(
+                        IconData(0xe16a, fontFamily: 'MaterialIcons'),
+                        size: 30,
                       ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Name the cultivar",
-                          style: TextStyle(
-                              color: Color(0xFF064E3B),
-                              fontSize: screenSize.height / 35)),
-                      SizedBox(
+                    )
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: map<Widget>(ids, (index, url) {
+                        return Container(
+                          // width: 10.0,
+                          // height: 60.0,
+                          width: screenSize.width / 40,
+                          height: screenSize.height / 20,
+                          margin: const EdgeInsets.symmetric(horizontal: 2.0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _currentIndex == index
+                                ? const Color(0x5F064E3B)
+                                : (form[index]?.answer != null
+                                    ? const Color(0xFF064E3B)
+                                    : Colors.white),
+                            border: Border.all(color: Colors.black),
+                          ),
+                        );
+                      }),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Name the cultivar",
+                        style: TextStyle(
+                            color: Color(0xFF064E3B),
+                            fontSize: screenSize.height / 35)),
+                    SizedBox(
+                      width: screenSize.width / 1.5,
+                      height: screenSize.height / 3,
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: data[_currentIndex]["images"].length,
+                          itemBuilder: (BuildContext context, int position) {
+                            List<String>? images =
+                                data[_currentIndex]["images"];
+                            return Image.network(images![position],
+                                width: screenSize.width / 1.5,
+                                fit: BoxFit.fitHeight);
+                          }),
+                    ),
+                    Container(
+                        padding: const EdgeInsets.only(top: 5, bottom: 30),
                         width: screenSize.width / 1.5,
-                        height: screenSize.height / 3,
-                        child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: data[_currentIndex]["images"].length,
-                            itemBuilder: (BuildContext context, int position) {
-                              List<String>? images =
-                                  data[_currentIndex]["images"];
-                              return Image.network(images![position],
-                                  width: screenSize.width / 1.5,
-                                  fit: BoxFit.fitHeight);
-                            }),
-                      ),
-                      Container(
-                          padding: const EdgeInsets.only(top: 5, bottom: 30),
-                          width: screenSize.width / 1.5,
-                          child: TextField(
-                              decoration: const InputDecoration(
-                                hintText: 'Name',
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Color(0xFF064E3B)),
-                                ),
-                                border: UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Color(0xFF064E3B)),
-                                ),
+                        child: TextField(
+                            decoration: const InputDecoration(
+                              hintText: 'Name',
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Color(0xFF064E3B)),
                               ),
-                              controller: cultivarNameController,
-                              focusNode: focusInput,
-                              onEditingComplete: () =>
-                                  handleEditingComplete())),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          SizedBox(
-                            height: screenSize.height / 14.5,
-                            width: screenSize.width / 3.5,
-                            child: TextButton(
-                                onPressed: () => handleBack(),
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      const Color(0xFF064E3B)),
-                                  shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0),
-                                          side: const BorderSide(
-                                              color: Colors.white))),
-                                ),
-                                child: Text("Back".toUpperCase(),
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300))),
-                          ),
-                          SizedBox(
-                            height: screenSize.height / 14.5,
-                            width: screenSize.width / 3.5,
-                            child: TextButton(
-                                onPressed: () => handleNext(),
-                                style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0),
-                                          side: const BorderSide(
-                                              color: Color(0xFF064E3B)))),
-                                ),
-                                child: Text("Next".toUpperCase(),
-                                    style: const TextStyle(
-                                        color: Color(0xFF064E3B),
-                                        fontWeight: FontWeight.w300))),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 40),
-                        child: SizedBox(
-                          height: screenSize.height / 12.5,
-                          width: screenSize.width / 1.8,
+                              border: UnderlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Color(0xFF064E3B)),
+                              ),
+                            ),
+                            controller: cultivarNameController,
+                            focusNode: focusInput,
+                            onEditingComplete: () => handleEditingComplete())),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          height: screenSize.height / 14.5,
+                          width: screenSize.width / 3.5,
                           child: TextButton(
-                              onPressed: () => handleSubmit(user),
+                              onPressed: () => handleBack(),
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
                                     const Color(0xFF064E3B)),
@@ -286,16 +242,61 @@ class _QuizzPageState extends State<QuizzPage> {
                                         side: const BorderSide(
                                             color: Colors.white))),
                               ),
-                              child: Text("Submit Quizz".toUpperCase(),
+                              child: Text("Back".toUpperCase(),
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w300))),
                         ),
-                      )
-                    ],
-                  )
-                ],
-              )),
-        ));
+                        SizedBox(
+                          height: screenSize.height / 14.5,
+                          width: screenSize.width / 3.5,
+                          child: TextButton(
+                              onPressed: () => handleNext(),
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                        side: const BorderSide(
+                                            color: Color(0xFF064E3B)))),
+                              ),
+                              child: Text("Next".toUpperCase(),
+                                  style: const TextStyle(
+                                      color: Color(0xFF064E3B),
+                                      fontWeight: FontWeight.w300))),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 40),
+                      child: SizedBox(
+                        height: screenSize.height / 12.5,
+                        width: screenSize.width / 1.8,
+                        child: TextButton(
+                            onPressed: () => handleSubmit(user),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  const Color(0xFF064E3B)),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      side: const BorderSide(
+                                          color: Colors.white))),
+                            ),
+                            child: Text("Submit Quizz".toUpperCase(),
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w300))),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            )),
+      ),
+      bottomNavigationBar: const BotNavbar(pageIndex: 2),
+    );
   }
 }
