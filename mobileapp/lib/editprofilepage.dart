@@ -1,4 +1,5 @@
 import 'package:camellia_cultivar/database/database_helper.dart';
+import 'package:camellia_cultivar/login.dart';
 import 'package:camellia_cultivar/main.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/profilepage.dart';
@@ -19,13 +20,14 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePage extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
+    Color primaryColor = Theme.of(context).primaryColor;
     var screenSize = MediaQuery.of(context).size;
 
     User? user = context.read<UserProvider>().user;
 
     if (user == null) {
       Navigator.pop(
-          context, MaterialPageRoute(builder: (context) => const LoginPage()));
+          context, MaterialPageRoute(builder: (context) => const MainPage()));
       return const Scaffold();
     }
 
@@ -85,12 +87,12 @@ class _EditProfilePage extends State<EditProfilePage> {
                               alignment: WrapAlignment.spaceBetween,
                               crossAxisAlignment: WrapCrossAlignment.center,
                               children: [
-                                const BackButton(
-                                  color: Color(0xFF064E3B),
+                                BackButton(
+                                  color: primaryColor,
                                 ),
                                 Text("Edit Profile",
                                     style: TextStyle(
-                                        color: const Color(0xFF064E3B),
+                                        color: primaryColor,
                                         fontSize: screenSize.height / 35,
                                         fontWeight: FontWeight.w500))
                               ],
@@ -116,36 +118,36 @@ class _EditProfilePage extends State<EditProfilePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.only(bottom: 20),
+                                        padding:
+                                            const EdgeInsets.only(bottom: 20),
                                         child: SizedBox(
                                           width: screenSize.width / 1.8,
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: [
-                                              const Icon(
+                                              Icon(
                                                 Icons.person_outlined,
-                                                color: Color(0xFF064E3B),
+                                                color: primaryColor,
                                               ),
                                               const Padding(
                                                   padding: EdgeInsets.all(10)),
                                               SizedBox(
                                                   width: screenSize.width / 2.5,
                                                   child: TextFormField(
-                                                    decoration:
-                                                        const InputDecoration(
+                                                    decoration: InputDecoration(
                                                       hintText: "First Name",
                                                       focusedBorder:
                                                           UnderlineInputBorder(
                                                         borderSide: BorderSide(
-                                                            color: Color(
-                                                                0xFF064E3B)),
+                                                            color:
+                                                                primaryColor),
                                                       ),
                                                       border:
                                                           UnderlineInputBorder(
                                                         borderSide: BorderSide(
-                                                            color: Color(
-                                                                0xFF064E3B)),
+                                                            color:
+                                                                primaryColor),
                                                       ),
                                                     ),
                                                     controller:
@@ -163,7 +165,8 @@ class _EditProfilePage extends State<EditProfilePage> {
                                         ),
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(bottom: 20),
+                                        padding:
+                                            const EdgeInsets.only(bottom: 20),
                                         child: SizedBox(
                                             width: screenSize.width / 1.8,
                                             child: Row(
@@ -180,19 +183,19 @@ class _EditProfilePage extends State<EditProfilePage> {
                                                         screenSize.width / 2.5,
                                                     child: TextFormField(
                                                       decoration:
-                                                          const InputDecoration(
+                                                          InputDecoration(
                                                         hintText: "Last Name",
                                                         focusedBorder:
                                                             UnderlineInputBorder(
                                                           borderSide: BorderSide(
-                                                              color: Color(
-                                                                  0xFF064E3B)),
+                                                              color:
+                                                                  primaryColor),
                                                         ),
                                                         border:
                                                             UnderlineInputBorder(
                                                           borderSide: BorderSide(
-                                                              color: Color(
-                                                                  0xFF064E3B)),
+                                                              color:
+                                                                  primaryColor),
                                                         ),
                                                       ),
                                                       controller:
@@ -209,18 +212,19 @@ class _EditProfilePage extends State<EditProfilePage> {
                                             )),
                                       ),
                                       Padding(
-                                          padding: EdgeInsets.only(bottom: 20),
+                                          padding:
+                                              const EdgeInsets.only(bottom: 20),
                                           child: SizedBox(
                                               width: screenSize.width / 1.8,
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.start,
                                                 children: [
-                                                  const Icon(
-                                                    IconData(0xf018,
+                                                  Icon(
+                                                    const IconData(0xf018,
                                                         fontFamily:
                                                             'MaterialIcons'),
-                                                    color: Color(0xFF064E3B),
+                                                    color: primaryColor,
                                                   ),
                                                   const Padding(
                                                       padding:
@@ -230,19 +234,19 @@ class _EditProfilePage extends State<EditProfilePage> {
                                                           2.5,
                                                       child: TextFormField(
                                                         decoration:
-                                                            const InputDecoration(
+                                                            InputDecoration(
                                                           hintText: "Email",
                                                           focusedBorder:
                                                               UnderlineInputBorder(
                                                             borderSide: BorderSide(
-                                                                color: Color(
-                                                                    0xFF064E3B)),
+                                                                color:
+                                                                    primaryColor),
                                                           ),
                                                           border:
                                                               UnderlineInputBorder(
                                                             borderSide: BorderSide(
-                                                                color: Color(
-                                                                    0xFF064E3B)),
+                                                                color:
+                                                                    primaryColor),
                                                           ),
                                                         ),
                                                         controller:
@@ -257,18 +261,19 @@ class _EditProfilePage extends State<EditProfilePage> {
                                                 ],
                                               ))),
                                       Padding(
-                                          padding: EdgeInsets.only(bottom: 20),
+                                          padding:
+                                              const EdgeInsets.only(bottom: 20),
                                           child: SizedBox(
                                               width: screenSize.width / 1.8,
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.start,
                                                 children: [
-                                                  const Icon(
-                                                    IconData(0xf052b,
+                                                  Icon(
+                                                    const IconData(0xf052b,
                                                         fontFamily:
                                                             'MaterialIcons'),
-                                                    color: Color(0xFF064E3B),
+                                                    color: primaryColor,
                                                   ),
                                                   const Padding(
                                                       padding:
@@ -282,22 +287,23 @@ class _EditProfilePage extends State<EditProfilePage> {
                                                             false,
                                                         autocorrect: false,
                                                         decoration:
-                                                            const InputDecoration(
+                                                            InputDecoration(
                                                           hintText:
                                                               "New Password",
-                                                          hintStyle: TextStyle(
-                                                              fontSize: 14),
+                                                          hintStyle:
+                                                              const TextStyle(
+                                                                  fontSize: 14),
                                                           focusedBorder:
                                                               UnderlineInputBorder(
                                                             borderSide: BorderSide(
-                                                                color: Color(
-                                                                    0xFF064E3B)),
+                                                                color:
+                                                                    primaryColor),
                                                           ),
                                                           border:
                                                               UnderlineInputBorder(
                                                             borderSide: BorderSide(
-                                                                color: Color(
-                                                                    0xFF064E3B)),
+                                                                color:
+                                                                    primaryColor),
                                                           ),
                                                         ),
                                                         controller:
@@ -317,7 +323,8 @@ class _EditProfilePage extends State<EditProfilePage> {
                                                 ],
                                               ))),
                                       Padding(
-                                          padding: EdgeInsets.only(bottom: 20),
+                                          padding:
+                                              const EdgeInsets.only(bottom: 20),
                                           child: SizedBox(
                                               width: screenSize.width / 1.8,
                                               child: Row(
@@ -338,22 +345,23 @@ class _EditProfilePage extends State<EditProfilePage> {
                                                             false,
                                                         autocorrect: false,
                                                         decoration:
-                                                            const InputDecoration(
+                                                            InputDecoration(
                                                           hintText:
                                                               "Confirm Password",
-                                                          hintStyle: TextStyle(
-                                                              fontSize: 14),
+                                                          hintStyle:
+                                                              const TextStyle(
+                                                                  fontSize: 14),
                                                           focusedBorder:
                                                               UnderlineInputBorder(
                                                             borderSide: BorderSide(
-                                                                color: Color(
-                                                                    0xFF064E3B)),
+                                                                color:
+                                                                    primaryColor),
                                                           ),
                                                           border:
                                                               UnderlineInputBorder(
                                                             borderSide: BorderSide(
-                                                                color: Color(
-                                                                    0xFF064E3B)),
+                                                                color:
+                                                                    primaryColor),
                                                           ),
                                                         ),
                                                         controller:
@@ -381,7 +389,7 @@ class _EditProfilePage extends State<EditProfilePage> {
                                       style: ButtonStyle(
                                         backgroundColor:
                                             MaterialStateProperty.all(
-                                                const Color(0xFF064E3B)),
+                                                primaryColor),
                                         shape: MaterialStateProperty.all<
                                                 RoundedRectangleBorder>(
                                             RoundedRectangleBorder(

@@ -90,7 +90,8 @@ class _RegisterPageState extends State<RegisterPage> {
       if (existingUser != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Account already exists! Try with a new email.'),
+              content:
+                  Text('Account already exists! Try with a different email.'),
               backgroundColor: Colors.red),
         );
         return;
@@ -122,6 +123,8 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
+    Color primaryColor = Theme.of(context).primaryColor;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6F7),
       resizeToAvoidBottomInset: false,
@@ -139,12 +142,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   alignment: WrapAlignment.spaceBetween,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    const BackButton(
-                      color: Color(0xFF064E3B),
+                    BackButton(
+                      color: primaryColor,
                     ),
                     Text("Create Account",
                         style: TextStyle(
-                            color: const Color(0xFF064E3B),
+                            color: primaryColor,
                             fontSize: screenSize.height / 35,
                             fontWeight: FontWeight.w500))
                   ],
@@ -215,20 +218,20 @@ class _RegisterPageState extends State<RegisterPage> {
                               : null,
                     ),
                     RichText(
-                      text: const TextSpan(
-                        style: TextStyle(
+                      text: TextSpan(
+                        style: const TextStyle(
                           fontSize: 12.0,
                           color: Colors.black,
                         ),
                         children: <TextSpan>[
-                          TextSpan(
+                          const TextSpan(
                               text:
                                   'By registering, you are agreeing with our '),
                           TextSpan(
                               text: 'Terms and Conditions',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xff064E3B))),
+                                  color: primaryColor)),
                         ],
                       ),
                       textAlign: TextAlign.center,
@@ -242,8 +245,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 handleSubmit(),
                               },
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                const Color(0xFF064E3B)),
+                            backgroundColor:
+                                MaterialStateProperty.all(primaryColor),
                             shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                 RoundedRectangleBorder(

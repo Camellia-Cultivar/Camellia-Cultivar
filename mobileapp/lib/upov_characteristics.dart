@@ -14,10 +14,12 @@ class Upov extends State<UpovCharacteristics> {
   List<String> selected_values = List.filled(50, 'idk');
   @override
   Widget build(BuildContext context) {
+    Color primaryColor = Theme.of(context).primaryColor;
+
     return Column(children: [
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Plant",
           style: TextStyle(fontSize: 18.0),
@@ -45,8 +47,8 @@ class Upov extends State<UpovCharacteristics> {
         height: 5,
       ),
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Branch",
           style: TextStyle(fontSize: 18.0),
@@ -66,8 +68,8 @@ class Upov extends State<UpovCharacteristics> {
         height: 5,
       ),
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Vegetative Bud",
           style: TextStyle(fontSize: 18.0),
@@ -87,8 +89,8 @@ class Upov extends State<UpovCharacteristics> {
         height: 5,
       ),
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Terminal Vegetative Bud",
           style: TextStyle(fontSize: 18.0),
@@ -108,8 +110,8 @@ class Upov extends State<UpovCharacteristics> {
         height: 5,
       ),
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Young Shoot",
           style: TextStyle(fontSize: 18.0),
@@ -129,8 +131,8 @@ class Upov extends State<UpovCharacteristics> {
         height: 5,
       ),
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Leaf",
           style: TextStyle(fontSize: 18.0),
@@ -158,8 +160,8 @@ class Upov extends State<UpovCharacteristics> {
         height: 5,
       ),
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Leaf Blade",
           style: TextStyle(fontSize: 18.0),
@@ -291,8 +293,8 @@ class Upov extends State<UpovCharacteristics> {
         height: 5,
       ),
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Petiole",
           style: TextStyle(fontSize: 18.0),
@@ -312,8 +314,8 @@ class Upov extends State<UpovCharacteristics> {
         height: 5,
       ),
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Sepal",
           style: TextStyle(fontSize: 18.0),
@@ -349,8 +351,8 @@ class Upov extends State<UpovCharacteristics> {
         height: 5,
       ),
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Flower Bud",
           style: TextStyle(fontSize: 18.0),
@@ -370,8 +372,8 @@ class Upov extends State<UpovCharacteristics> {
         height: 5,
       ),
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Flower",
           style: TextStyle(fontSize: 18.0),
@@ -431,8 +433,8 @@ class Upov extends State<UpovCharacteristics> {
         height: 5,
       ),
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Petal",
           style: TextStyle(fontSize: 18.0),
@@ -524,8 +526,8 @@ class Upov extends State<UpovCharacteristics> {
         height: 5,
       ),
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Stamens",
           style: TextStyle(fontSize: 18.0),
@@ -545,8 +547,8 @@ class Upov extends State<UpovCharacteristics> {
         height: 5,
       ),
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Style",
           style: TextStyle(fontSize: 18.0),
@@ -574,8 +576,8 @@ class Upov extends State<UpovCharacteristics> {
         height: 5,
       ),
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Stigma",
           style: TextStyle(fontSize: 18.0),
@@ -595,8 +597,8 @@ class Upov extends State<UpovCharacteristics> {
         height: 5,
       ),
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Ovary",
           style: TextStyle(fontSize: 18.0),
@@ -616,8 +618,8 @@ class Upov extends State<UpovCharacteristics> {
         height: 5,
       ),
       ExpansionTile(
-        collapsedIconColor: const Color(0xFF064E3B),
-        collapsedTextColor: const Color(0xFF064E3B),
+        collapsedIconColor: primaryColor,
+        collapsedTextColor: primaryColor,
         title: const Text(
           "Time of Flowering",
           style: TextStyle(fontSize: 18.0),

@@ -1,17 +1,13 @@
-import 'dart:io';
-
+import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/navbar/botnavbar.dart';
 import 'package:camellia_cultivar/profilepage.dart';
 import 'package:camellia_cultivar/providers/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong/latlong.dart';
-import 'quizzoptionspage.dart';
 
 import 'camera.dart';
 
@@ -25,6 +21,9 @@ class HomePage extends StatefulWidget {
 class Home extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    Color primaryColor = Theme.of(context).primaryColor;
+    User? user = context.watch<UserProvider>().user;
+
     final PopupController _popupController = PopupController();
     MapController _mapController = MapController();
     double _zoom = 7;
@@ -45,29 +44,31 @@ class Home extends State<HomePage> {
               point: point,
               width: 50,
               height: 50,
-              builder: (context) => const Icon(
+              builder: (context) => Icon(
                 Icons.location_on,
                 size: 60,
-                color: Color(0xFF064E3B),
+                color: primaryColor,
               ),
             ))
         .toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFF064E3B),
+      backgroundColor: primaryColor,
       body: ListView(children: [
         // SliverFixedExtentList(delegate: SliverChildBuilderDelegate((context, index) => ), itemExtent: 50)
         const SizedBox(
-            height: 80,
             child: Padding(
                 padding: EdgeInsets.only(top: 50),
                 child: Center(
                   child: Text('Camellia Cultivar',
-                      style: TextStyle(color: Colors.white, fontSize: 30)),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                      )),
                 ))),
         Container(
             height: 100,
-            color: const Color(0xFF064E3B),
+            color: primaryColor,
             // margin: EdgeInsets.only(left: 50, right: 50),
 
             // const BorderRadius.all(const Radius.circular(8))),
@@ -82,8 +83,8 @@ class Home extends State<HomePage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Text(
-                  ', Sherlock ',
+                Text(
+                  ", ${user?.firstName} ",
                   style: TextStyle(color: Colors.white, fontSize: 20),
                   // textAlign: TextAlign.center,
                 ),
@@ -204,8 +205,8 @@ class Home extends State<HomePage> {
                               },
                               child: Container(
                                   height: 125,
-                                  decoration: const BoxDecoration(
-                                      color: Color(0xFF064E3B),
+                                  decoration: BoxDecoration(
+                                      color: primaryColor,
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(15))),
                                   child: Row(
@@ -237,7 +238,7 @@ class Home extends State<HomePage> {
                                   //     style: TextStyle(color: Colors.white),
                                   //   ),
                                   // ),
-                                  // color: Color(0xFF064E3B),
+                                  // color: primaryColor,
                                   )),
                           // const Padding(padding: EdgeInsets.all(20)),
                           const Divider(
@@ -246,15 +247,15 @@ class Home extends State<HomePage> {
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               Icon(
                                 Icons.location_on_rounded,
-                                color: Color(0xFF064E3B),
+                                color: primaryColor,
                               ),
                               Padding(padding: EdgeInsets.only(left: 10)),
                               Text('Camellia Map',
                                   style: TextStyle(
-                                      fontSize: 20, color: Color(0xFF064E3B)))
+                                      fontSize: 20, color: primaryColor))
                             ],
                           ),
                         ],
@@ -294,16 +295,15 @@ class Home extends State<HomePage> {
                             padding: EdgeInsets.all(50),
                           ),
                           markers: _markers,
-                          polygonOptions: const PolygonOptions(
-                              borderColor: Color(0xFF064E3B),
+                          polygonOptions: PolygonOptions(
+                              borderColor: primaryColor,
                               color: Colors.black12,
                               borderStrokeWidth: 3),
                           builder: (context, markers) {
                             return Container(
                               alignment: Alignment.center,
-                              decoration: const BoxDecoration(
-                                  color: Color(0xFF064E3B),
-                                  shape: BoxShape.circle),
+                              decoration: BoxDecoration(
+                                  color: primaryColor, shape: BoxShape.circle),
                               child: Text(
                                 '${markers.length}',
                                 style: const TextStyle(color: Colors.white),

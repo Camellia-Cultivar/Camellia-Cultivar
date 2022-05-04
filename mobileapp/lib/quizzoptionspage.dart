@@ -7,6 +7,7 @@ class QuizzOptionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
+    Color primaryColor = Theme.of(context).primaryColor;
 
     return Scaffold(
       backgroundColor: const Color(0XFFF6F6F7),
@@ -22,7 +23,7 @@ class QuizzOptionsPage extends StatelessWidget {
                 children: [
                   Text("Quizzes",
                       style: TextStyle(
-                        color: Color(0xFF064E3B),
+                        color: primaryColor,
                         fontSize: screenSize.height / 35,
                       )),
                   SizedBox(
@@ -36,15 +37,15 @@ class QuizzOptionsPage extends StatelessWidget {
                                       builder: (context) => QuizzPage()))
                             },
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              const Color(0xFF064E3B)),
+                          backgroundColor:
+                              MaterialStateProperty.all(primaryColor),
                           shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20.0),
                                   side: const BorderSide(color: Colors.white))),
                         ),
-                        child: Text("Start New Quizz".toUpperCase(),
+                        child: Text("Start New Quiz".toUpperCase(),
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w300))),
@@ -68,10 +69,10 @@ class QuizzOptionsPage extends StatelessWidget {
 //             hintText: "Code",
 //             hintStyle: TextStyle(fontSize: 14),
 //             focusedBorder: UnderlineInputBorder(
-//               borderSide: BorderSide(color: Color(0xFF064E3B)),
+//               borderSide: BorderSide(color: primaryColor),
 //             ),
 //             border: UnderlineInputBorder(
-//               borderSide: BorderSide(color: Color(0xFF064E3B)),
+//               borderSide: BorderSide(color: primaryColor),
 //             ),
 //           ),
 //         )
@@ -82,7 +83,7 @@ class QuizzOptionsPage extends StatelessWidget {
 //         onPressed: () {
 //           Navigator.of(context).pop();
 //         },
-//         child: const Text("Close", style: TextStyle(color: Color(0xFF064E3B))),
+//         child: const Text("Close", style: TextStyle(color: primaryColor)),
 //       ),
 //       TextButton(
 //         onPressed: () {
@@ -90,7 +91,7 @@ class QuizzOptionsPage extends StatelessWidget {
 //               MaterialPageRoute(builder: (context) => const QuizzPage()));
 //         },
 //         child: const Text('Start Quizz',
-//             style: TextStyle(color: Color(0xFF064E3B))),
+//             style: TextStyle(color: primaryColor)),
 //       ),
 //     ],
 //   );
