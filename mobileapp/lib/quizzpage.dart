@@ -103,9 +103,9 @@ class _QuizzPageState extends State<QuizzPage> {
       return;
     }
 
-    List<FormItem> anwsers = form.values.toList();
-    anwsers.removeWhere((item) => item.answer == null || item.answer!.isEmpty);
-    int reputation = anwsers.length;
+    List<FormItem> answers = form.values.toList();
+    answers.removeWhere((item) => item.answer == null || item.answer!.isEmpty);
+    int reputation = answers.length;
 
     user.reputation += reputation;
 

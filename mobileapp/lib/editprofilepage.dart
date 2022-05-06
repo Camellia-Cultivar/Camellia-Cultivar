@@ -52,7 +52,8 @@ class _EditProfilePage extends State<EditProfilePage> {
           final dbHelper = DatabaseHelper.instance;
           await dbHelper.update("users", user.toMap());
           context.read<UserProvider>().setUser(user);
-          Navigator.pop(context);
+          Navigator.pop(context,
+              MaterialPageRoute(builder: (context) => const ProfilePage()));
         } on Exception catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(

@@ -36,9 +36,6 @@ class MainPage extends StatelessWidget {
         primaryColor: const Color(0xFF064E3B),
       ),
       home: const LoginPage(),
-      // routes: {
-      //   "/home": (context) => const HomePage(),
-      // },
       builder: (context, child) {
         return Layout(
           body: child as Widget,

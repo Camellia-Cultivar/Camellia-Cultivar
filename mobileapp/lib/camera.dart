@@ -150,7 +150,8 @@ class Camera extends State<CameraPage> {
                       onPressed: () {
                         if (ownerController.text.isEmpty ||
                             gardenController.text.isEmpty ||
-                            specimen_images.isEmpty) {
+                            specimen_images.isEmpty ||
+                            actualLocation == null) {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                                   backgroundColor: Colors.white,

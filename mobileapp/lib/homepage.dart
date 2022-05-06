@@ -1,8 +1,12 @@
+import 'package:camellia_cultivar/local_auth_api.dart';
+import 'package:camellia_cultivar/login.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/navbar/botnavbar.dart';
 import 'package:camellia_cultivar/profilepage.dart';
 import 'package:camellia_cultivar/providers/user.dart';
+import 'package:camellia_cultivar/utils/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
@@ -18,7 +22,47 @@ class HomePage extends StatefulWidget {
   Home createState() => Home();
 }
 
-class Home extends State<HomePage> {
+class Home extends State<HomePage> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    final isBackground = state == AppLifecycleState.resumed;
+
+    if (isBackground) {
+      const storage = FlutterSecureStorage();
+      String expiresIn = await storage.read(key: "expiresIn") ?? "";
+
+      if (expiresIn.isNotEmpty &&
+          DateTime.now().compareTo(DateTime.parse(expiresIn)) < 0) {
+        if (await LocalAuthApi.hasBiometrics()) {
+          final isAuthenticated = await LocalAuthApi.authenticate();
+
+          if (!isAuthenticated) {
+            User user = context.read<UserProvider>().user as User;
+            await logout(context, user);
+
+            Navigator.popUntil(context, (route) => route.isFirst);
+          }
+        } else {
+          User user = context.read<UserProvider>().user as User;
+          await logout(context, user);
+          Navigator.popUntil(context, (route) => route.isFirst);
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
