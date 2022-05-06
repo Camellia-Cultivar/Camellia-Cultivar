@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:camellia_cultivar/database/database_helper.dart';
 
-import 'homepage.dart';
 import 'navbar/botnavbar.dart';
 
 class FormItem {
@@ -113,10 +112,7 @@ class _QuizzPageState extends State<QuizzPage> {
     await dbHelper.update("users", user.toMap());
     context.read<UserProvider>().setUser(user);
 
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-        (route) => false);
+    Navigator.pop(context);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'navbar/botnavbar.dart';
 
 class QuizzOptionsPage extends StatelessWidget {
+  const QuizzOptionsPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -34,7 +36,7 @@ class QuizzOptionsPage extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => QuizzPage()))
+                                      builder: (context) => const QuizzPage()))
                             },
                         style: ButtonStyle(
                           backgroundColor:

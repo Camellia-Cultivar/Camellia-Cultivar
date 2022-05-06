@@ -1,5 +1,4 @@
 import 'package:camellia_cultivar/local_auth_api.dart';
-import 'package:camellia_cultivar/login.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/navbar/botnavbar.dart';
 import 'package:camellia_cultivar/profilepage.dart';

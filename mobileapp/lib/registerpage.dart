@@ -115,9 +115,6 @@ class _RegisterPageState extends State<RegisterPage> {
           content: Text("Account create successfuly."),
           backgroundColor: Colors.green),
     );
-
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const HomePage()));
   }
 
   @override

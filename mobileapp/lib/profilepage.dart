@@ -5,15 +5,18 @@ import 'package:camellia_cultivar/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:provider/provider.dart';
 import 'package:camellia_cultivar/providers/user.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/local_auth_api.dart';
 import 'package:camellia_cultivar/utils/auth.dart';
+import 'login.dart';
 import 'navbar/botnavbar.dart';
 
 class UserDetailWidget extends StatelessWidget {
-  UserDetailWidget({required Icon this.icon, required String this.text});
+  const UserDetailWidget({Key? key, required this.icon, required this.text})
+      : super(key: key);
 
   final Icon icon;
   final String text;
@@ -42,44 +45,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePage extends State<ProfilePage> {
-  bool _isActiveBiometrics = false;
-  bool _isBiometricsAvailable = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // checkBiometrics();
-    // checkBiometricsAvailability();
-  }
-
-  @override
-  void dispose() async {
-    super.dispose();
-    // final prefs = await SharedPreferences.getInstance();
-    // prefs.setBool('isActiveBiometrics', _isActiveBiometrics);
-
-    // final storage = new FlutterSecureStorage();
-    // await storage.write(
-    //     key: "isActiveBiometrics", value: _isActiveBiometrics.toString());
-  }
-
-  // void checkBiometrics() async {
-  //   // final prefs = await SharedPreferences.getInstance();
-  //   // bool isActiveBiometrics = prefs.getBool('isActiveBiometrics') ?? false;
-
-  //   final storage = new FlutterSecureStorage();
-  //   bool isActiveBiometrics =
-  //       (await storage.read(key: "isActiveBiometrics")) == "true";
-
-  //   setState(() {
-  //     _isActiveBiometrics = isActiveBiometrics;
-  //   });
-  // }
-
-  // void checkBiometricsAvailability() async {
-  //   _isBiometricsAvailable = await LocalAuthApi.hasBiometrics();
-  // }
-
   void handleDelete(BuildContext context, User user) async {
     final dbHelper = DatabaseHelper.instance;
 
@@ -122,14 +87,6 @@ class _ProfilePage extends State<ProfilePage> {
     Color primaryColor = Theme.of(context).primaryColor;
 
     User? user = context.watch<UserProvider>().user;
-
-    if (user == null) {
-      Future.delayed(Duration.zero, () async {
-        Navigator.popUntil(context, (route) => route.isFirst);
-      });
-
-      return const Scaffold();
-    }
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -179,7 +136,7 @@ class _ProfilePage extends State<ProfilePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 UserDetailWidget(
-                                    text: user.name,
+                                    text: user?.name != null ? user!.name : "",
                                     icon: Icon(
                                       Icons.person_outlined,
                                       color: primaryColor,
@@ -190,14 +147,18 @@ class _ProfilePage extends State<ProfilePage> {
                                           fontFamily: 'MaterialIcons'),
                                       color: primaryColor,
                                     ),
-                                    text: user.email),
+                                    text:
+                                        user?.email != null ? user!.email : ""),
                                 UserDetailWidget(
-                                    icon: Icon(
-                                      IconData(0xf3e2,
-                                          fontFamily: 'MaterialIcons'),
-                                      color: primaryColor,
-                                    ),
-                                    text: '${user.reputation} reputation'),
+                                  icon: Icon(
+                                    IconData(0xf3e2,
+                                        fontFamily: 'MaterialIcons'),
+                                    color: primaryColor,
+                                  ),
+                                  text: user?.reputation != null
+                                      ? '${user!.reputation} reputation'
+                                      : "",
+                                )
                               ],
                             ),
                             // SizedBox(
@@ -255,7 +216,7 @@ class _ProfilePage extends State<ProfilePage> {
                                   width: screenSize.width / 1.8,
                                   child: TextButton(
                                       onPressed: () =>
-                                          handleLogout(context, user),
+                                          handleLogout(context, user as User),
                                       style: ButtonStyle(
                                         backgroundColor:
                                             MaterialStateProperty.all(
@@ -281,7 +242,7 @@ class _ProfilePage extends State<ProfilePage> {
                                   width: screenSize.width / 1.8,
                                   child: TextButton(
                                       onPressed: () =>
-                                          handleDelete(context, user),
+                                          handleDelete(context, user as User),
                                       style: ButtonStyle(
                                         backgroundColor:
                                             MaterialStateProperty.all(

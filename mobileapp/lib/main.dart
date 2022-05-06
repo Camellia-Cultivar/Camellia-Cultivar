@@ -1,18 +1,9 @@
-import 'package:camellia_cultivar/extensions/string_apis.dart';
-import 'dart:io';
-
-import 'package:camellia_cultivar/homepage.dart';
 import 'package:camellia_cultivar/layout.dart';
-import 'package:camellia_cultivar/local_auth_api.dart';
 import 'package:camellia_cultivar/login.dart';
-import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/providers/user.dart';
-import 'package:camellia_cultivar/registerpage.dart';
-import 'package:camellia_cultivar/database/database_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
-import 'package:camellia_cultivar/utils/auth.dart';
+import 'package:navigation_history_observer/navigation_history_observer.dart';
 
 void main() {
   runApp(
@@ -31,6 +22,7 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorObservers: [NavigationHistoryObserver()],
       title: 'Camellia Cultivar',
       theme: ThemeData(
         primaryColor: const Color(0xFF064E3B),

@@ -99,7 +99,7 @@ class _BotNavBar extends State<BotNavbar> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          QuizzOptionsPage()));
+                                          const QuizzOptionsPage()));
                               break;
                             case 3:
                               Navigator.push(
