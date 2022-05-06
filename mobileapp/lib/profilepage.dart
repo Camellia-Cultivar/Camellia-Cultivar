@@ -5,7 +5,6 @@ import 'package:camellia_cultivar/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:provider/provider.dart';
 import 'package:camellia_cultivar/providers/user.dart';
 import 'package:camellia_cultivar/model/user.dart';

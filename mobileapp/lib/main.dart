@@ -3,7 +3,6 @@ import 'package:camellia_cultivar/login.dart';
 import 'package:camellia_cultivar/providers/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:navigation_history_observer/navigation_history_observer.dart';
 
 void main() {
   runApp(
@@ -22,7 +21,6 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorObservers: [NavigationHistoryObserver()],
       title: 'Camellia Cultivar',
       theme: ThemeData(
         primaryColor: const Color(0xFF064E3B),

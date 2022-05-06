@@ -1,0 +1,144 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.camellia_cultivar"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="31" />
+10    <!--
+11         Flutter needs it to communicate with the running application
+12         to allow setting breakpoints, to provide hot reload, etc.
+13    -->
+14    <uses-permission android:name="android.permission.INTERNET" />
+14-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:10:5-66
+14-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:10:22-64
+15    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+15-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:3:5-73
+15-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:3:22-71
+16    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+16-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:4:5-79
+16-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:4:22-76
+17    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+17-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:5:5-81
+17-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:5:22-78
+18    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+18-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:6:5-85
+18-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:6:22-82
+19    <uses-permission android:name="android.permission.BLUETOOTH" />
+19-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:7:5-68
+19-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:7:22-65
+20    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+20-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:8:5-74
+20-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:8:22-71
+21    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+21-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:5:5-81
+21-->/home/patricia/GitHubRep/project/mobileapp/android/app/src/main/AndroidManifest.xml:5:22-78
+22    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+22-->[:geolocator_android] /home/patricia/GitHubRep/project/mobileapp/build/geolocator_android/intermediates/library_manifest/debug/AndroidManifest.xml:7:5-77
+22-->[:geolocator_android] /home/patricia/GitHubRep/project/mobileapp/build/geolocator_android/intermediates/library_manifest/debug/AndroidManifest.xml:7:22-74
+23    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+23-->[androidx.biometric:biometric:1.1.0] /home/patricia/.gradle/caches/transforms-2/files-2.1/cbb3d625d33b72056d970fab9ec3f1b4/biometric-1.1.0/AndroidManifest.xml:24:5-72
+23-->[androidx.biometric:biometric:1.1.0] /home/patricia/.gradle/caches/transforms-2/files-2.1/cbb3d625d33b72056d970fab9ec3f1b4/biometric-1.1.0/AndroidManifest.xml:24:22-69
+24
+25    <application
+26        android:name="android.app.Application"
+27        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+27-->[androidx.core:core:1.6.0] /home/patricia/.gradle/caches/transforms-2/files-2.1/122df2e57d294d1a53db26bbc3b813c1/core-1.6.0/AndroidManifest.xml:24:18-86
+28        android:debuggable="true"
+29        android:icon="@mipmap/ic_launcher"
+30        android:label="camellia_cultivar" >
+31        <activity
+32            android:name="com.example.camellia_cultivar.MainActivity"
+33            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+34            android:exported="true"
+35            android:hardwareAccelerated="true"
+36            android:launchMode="singleTop"
+37            android:theme="@style/LaunchTheme"
+38            android:windowSoftInputMode="adjustResize" >
+39
+40            <!--
+41                 Specifies an Android theme to apply to this Activity as soon as
+42                 the Android process has started. This theme is visible to the user
+43                 while the Flutter UI initializes. After that, this theme continues
+44                 to determine the Window background behind the Flutter UI.
+45            -->
+46            <meta-data
+47                android:name="io.flutter.embedding.android.NormalTheme"
+48                android:resource="@style/NormalTheme" />
+49
+50            <intent-filter>
+51                <action android:name="android.intent.action.MAIN" />
+52
+53                <category android:name="android.intent.category.LAUNCHER" />
+54            </intent-filter>
+55        </activity>
+56        <!--
+57             Don't delete the meta-data below.
+58             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+59        -->
+60        <meta-data
+61            android:name="flutterEmbedding"
+62            android:value="2" />
+63
+64        <provider
+64-->[:image_picker_android] /home/patricia/GitHubRep/project/mobileapp/build/image_picker_android/intermediates/library_manifest/debug/AndroidManifest.xml:8:9-16:20
+65            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
+65-->[:image_picker_android] /home/patricia/GitHubRep/project/mobileapp/build/image_picker_android/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-82
+66            android:authorities="com.example.camellia_cultivar.flutter.image_provider"
+66-->[:image_picker_android] /home/patricia/GitHubRep/project/mobileapp/build/image_picker_android/intermediates/library_manifest/debug/AndroidManifest.xml:10:13-74
+67            android:exported="false"
+67-->[:image_picker_android] /home/patricia/GitHubRep/project/mobileapp/build/image_picker_android/intermediates/library_manifest/debug/AndroidManifest.xml:11:13-37
+68            android:grantUriPermissions="true" >
+68-->[:image_picker_android] /home/patricia/GitHubRep/project/mobileapp/build/image_picker_android/intermediates/library_manifest/debug/AndroidManifest.xml:12:13-47
+69            <meta-data
+69-->[:image_picker_android] /home/patricia/GitHubRep/project/mobileapp/build/image_picker_android/intermediates/library_manifest/debug/AndroidManifest.xml:13:13-15:75
+70                android:name="android.support.FILE_PROVIDER_PATHS"
+70-->[:image_picker_android] /home/patricia/GitHubRep/project/mobileapp/build/image_picker_android/intermediates/library_manifest/debug/AndroidManifest.xml:14:17-67
+71                android:resource="@xml/flutter_image_picker_file_paths" />
+71-->[:image_picker_android] /home/patricia/GitHubRep/project/mobileapp/build/image_picker_android/intermediates/library_manifest/debug/AndroidManifest.xml:15:17-72
+72        </provider>
+73
+74        <service
+74-->[:geolocator_android] /home/patricia/GitHubRep/project/mobileapp/build/geolocator_android/intermediates/library_manifest/debug/AndroidManifest.xml:10:9-14:56
+75            android:name="com.baseflow.geolocator.GeolocatorLocationService"
+75-->[:geolocator_android] /home/patricia/GitHubRep/project/mobileapp/build/geolocator_android/intermediates/library_manifest/debug/AndroidManifest.xml:11:13-77
+76            android:enabled="true"
+76-->[:geolocator_android] /home/patricia/GitHubRep/project/mobileapp/build/geolocator_android/intermediates/library_manifest/debug/AndroidManifest.xml:12:13-35
+77            android:exported="false"
+77-->[:geolocator_android] /home/patricia/GitHubRep/project/mobileapp/build/geolocator_android/intermediates/library_manifest/debug/AndroidManifest.xml:13:13-37
+78            android:foregroundServiceType="location" />
+78-->[:geolocator_android] /home/patricia/GitHubRep/project/mobileapp/build/geolocator_android/intermediates/library_manifest/debug/AndroidManifest.xml:14:13-53
+79
+80        <uses-library
+80-->[androidx.window:window:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/03c633e46d75bfb21f082f0417f55161/jetified-window-1.0.0-beta04/AndroidManifest.xml:25:9-27:40
+81            android:name="androidx.window.extensions"
+81-->[androidx.window:window:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/03c633e46d75bfb21f082f0417f55161/jetified-window-1.0.0-beta04/AndroidManifest.xml:26:13-54
+82            android:required="false" />
+82-->[androidx.window:window:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/03c633e46d75bfb21f082f0417f55161/jetified-window-1.0.0-beta04/AndroidManifest.xml:27:13-37
+83        <uses-library
+83-->[androidx.window:window:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/03c633e46d75bfb21f082f0417f55161/jetified-window-1.0.0-beta04/AndroidManifest.xml:28:9-30:40
+84            android:name="androidx.window.sidecar"
+84-->[androidx.window:window:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/03c633e46d75bfb21f082f0417f55161/jetified-window-1.0.0-beta04/AndroidManifest.xml:29:13-51
+85            android:required="false" />
+85-->[androidx.window:window:1.0.0-beta04] /home/patricia/.gradle/caches/transforms-2/files-2.1/03c633e46d75bfb21f082f0417f55161/jetified-window-1.0.0-beta04/AndroidManifest.xml:30:13-37
+86
+87        <activity
+87-->[com.google.android.gms:play-services-base:17.0.0] /home/patricia/.gradle/caches/transforms-2/files-2.1/3679fa9be1d67d14c72169d3353f14d4/jetified-play-services-base-17.0.0/AndroidManifest.xml:23:9-26:75
+88            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+88-->[com.google.android.gms:play-services-base:17.0.0] /home/patricia/.gradle/caches/transforms-2/files-2.1/3679fa9be1d67d14c72169d3353f14d4/jetified-play-services-base-17.0.0/AndroidManifest.xml:24:13-79
+89            android:exported="false"
+89-->[com.google.android.gms:play-services-base:17.0.0] /home/patricia/.gradle/caches/transforms-2/files-2.1/3679fa9be1d67d14c72169d3353f14d4/jetified-play-services-base-17.0.0/AndroidManifest.xml:25:13-37
+90            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+90-->[com.google.android.gms:play-services-base:17.0.0] /home/patricia/.gradle/caches/transforms-2/files-2.1/3679fa9be1d67d14c72169d3353f14d4/jetified-play-services-base-17.0.0/AndroidManifest.xml:26:13-72
+91
+92        <meta-data
+92-->[com.google.android.gms:play-services-basement:17.0.0] /home/patricia/.gradle/caches/transforms-2/files-2.1/a7975ba3cb0c3630bd14453686890431/jetified-play-services-basement-17.0.0/AndroidManifest.xml:23:9-25:69
+93            android:name="com.google.android.gms.version"
+93-->[com.google.android.gms:play-services-basement:17.0.0] /home/patricia/.gradle/caches/transforms-2/files-2.1/a7975ba3cb0c3630bd14453686890431/jetified-play-services-basement-17.0.0/AndroidManifest.xml:24:13-58
+94            android:value="@integer/google_play_services_version" />
+94-->[com.google.android.gms:play-services-basement:17.0.0] /home/patricia/.gradle/caches/transforms-2/files-2.1/a7975ba3cb0c3630bd14453686890431/jetified-play-services-basement-17.0.0/AndroidManifest.xml:25:13-66
+95    </application>
+96
+97</manifest>
