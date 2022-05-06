@@ -1,0 +1,39 @@
+.numbered-list-round {
+    counter-reset: mynum;
+}
+
+.numbered-list-round p {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0.9rem 0;
+}
+
+.numbered-list-round p::before {
+    content: "";
+    height: 1.7em;
+    width: 1.7em;
+    margin-right: 1.2rem;
+    flex: none;
+}
+
+.numbered-list-round p::after {
+    text-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: absolute;
+    flex: none;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    content: counter(mynum);
+    counter-increment: mynum;
+    background-color: var(--accent);
+    color: white;
+    font-size: 1.1em;
+    font-weight: bold;
+    height: 1.7em;
+    width: 1.7em;
+    border-radius: 100%;
+}

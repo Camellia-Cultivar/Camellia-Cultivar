@@ -1,12 +1,15 @@
 import React from "react";
-import Step from "../Step";
+import "./index.css";
 
 function StepList(props) {
     return (
-        <div>
-            { props.steps.map( s => <Step key={s.id} id={s.id} content={s.content} />)}
+        <div className="numbered-list-round">
+            { props.steps.map( s =>
+                <p className="">
+                    {s.content}
+                </p>
+            )}
         </div>
     );
 }
-
 export default StepList;
