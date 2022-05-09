@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.camellia.models.users.AdministratorUser;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
 import lombok.Getter;
