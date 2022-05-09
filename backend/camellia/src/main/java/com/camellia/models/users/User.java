@@ -1,4 +1,4 @@
-package com.camellia.models;
+package com.camellia.models.users;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
+public abstract class User {
     
     @Id
     @GeneratedValue(generator = "sequence-generator")

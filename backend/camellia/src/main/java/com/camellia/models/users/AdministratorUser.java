@@ -1,4 +1,4 @@
-package com.camellia.models;
+package com.camellia.models.users;
 
 import java.util.Set;
 
@@ -8,14 +8,20 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.camellia.models.QuizParameters;
+import com.camellia.models.ReputationParameters;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Table(name = "administrator_user")
+@Getter
+@Setter
 @NoArgsConstructor
-public class AdministratorUser {
+@Table(name = "administrator_user")
+public class AdministratorUser extends User{
     
     @OneToMany(
             fetch = FetchType.EAGER,
