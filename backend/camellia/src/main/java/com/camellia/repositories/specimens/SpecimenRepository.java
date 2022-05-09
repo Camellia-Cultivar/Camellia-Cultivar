@@ -1,5 +1,11 @@
 package com.camellia.repositories.specimens;
 
-public class SpecimenRepository {
+import com.camellia.models.specimens.Specimen;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface SpecimenRepository extends JpaRepository<Specimen, Long>{
     
 }

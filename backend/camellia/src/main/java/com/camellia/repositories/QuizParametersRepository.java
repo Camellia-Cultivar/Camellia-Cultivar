@@ -1,5 +1,11 @@
 package com.camellia.repositories;
 
-public class QuizParametersRepository {
+import com.camellia.models.QuizParameters;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface QuizParametersRepository extends JpaRepository<QuizParameters, Long>{
     
 }
