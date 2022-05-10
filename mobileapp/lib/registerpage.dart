@@ -1,162 +1,264 @@
+import 'package:camellia_cultivar/database/database_helper.dart';
+import 'package:camellia_cultivar/model/user.dart';
 import 'package:flutter/material.dart';
-
+import "package:camellia_cultivar/extensions/string_apis.dart";
 import 'homepage.dart';
+import 'package:camellia_cultivar/utils/auth.dart';
 
-class RegisterPage extends StatelessWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class FormFieldWidget extends StatelessWidget {
+  FormFieldWidget(
+      {required this.text,
+      required this.width,
+      required this.controller,
+      this.enableSuggestions = true,
+      this.validator,
+      this.obscureText = false,
+      this.autocorrect = true});
+
+  final String text;
+  final double width;
+  final TextEditingController controller;
+  final String? Function(String?)? validator;
+  final bool enableSuggestions;
+  final bool obscureText;
+  final bool autocorrect;
 
   @override
   Widget build(BuildContext context) {
+    return SizedBox(
+        width: width,
+        child: Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: TextFormField(
+              decoration: InputDecoration(
+                labelText: text,
+                filled: true,
+                fillColor: const Color(0x1FA4A4A4),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                    borderSide: const BorderSide(color: Color(0x1FA4A4A4))),
+              ),
+              controller: controller,
+              validator: validator,
+              obscureText: obscureText,
+              autocorrect: autocorrect,
+              enableSuggestions: enableSuggestions,
+            )));
+  }
+}
+
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
+
+  @override
+  _RegisterPageState createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+  final FocusNode focusEmail = FocusNode();
+
+  @override
+  void dispose() {
+    super.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+  }
+
+  void handleSubmit() async {
+    final dbHelper = DatabaseHelper.instance;
+    User user = User(
+      id: null as int,
+      firstName: firstNameController.text,
+      email: emailController.text,
+      lastName: lastNameController.text,
+      password: passwordController.text,
+      reputation: 0,
+    );
+
+    try {
+      User? existingUser = await dbHelper.getUser(user.email);
+
+      if (existingUser != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Account already exists! Try with a new email.'),
+              backgroundColor: Colors.red),
+        );
+        return;
+      }
+
+      int id = await dbHelper.insert("users", user.toMap());
+      user.id = id;
+    } catch (_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Failed to create account. Please try again later!'),
+            backgroundColor: Colors.red),
+      );
+      return;
+    }
+
+    await login(context, user);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          content: Text("Account create successfuly."),
+          backgroundColor: Colors.green),
+    );
+
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const HomePage()));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color(0xFFA4A4A4),
+      backgroundColor: const Color(0xFFF5F6F7),
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15.0)
-          ),
-          height: 770,
-          width: 350,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 30, right: 40, bottom: 20), 
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    BackButton(
+              color: Colors.white, borderRadius: BorderRadius.circular(15.0)),
+          height: screenSize.height / 1.2,
+          width: screenSize.width / 1.2,
+          child: Column(children: [
+            Padding(
+                padding: const EdgeInsets.only(top: 20, right: 40),
+                child: Wrap(
+                  spacing: 20,
+                  alignment: WrapAlignment.spaceBetween,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    const BackButton(
                       color: Color(0xFF064E3B),
                     ),
-                    Text("Create Account", style: TextStyle(color: Color(0xFF064E3B), fontSize: 30, fontWeight: FontWeight.w500))
+                    Text("Create Account",
+                        style: TextStyle(
+                            color: const Color(0xFF064E3B),
+                            fontSize: screenSize.height / 35,
+                            fontWeight: FontWeight.w500))
                   ],
-                )
-              ),
-              Padding(padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  SizedBox( // <-- SEE HERE
-                    width: 300,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "First Name",
-                          filled: true,
-                          fillColor: const Color(0x1FA4A4A4),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                            borderSide: const BorderSide(color:Color(0x1FA4A4A4) )
-                          ),
-                        ),
-                      )
-                    )
-                  ),
-                  SizedBox( // <-- SEE HERE
-                    width: 300,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Last Name",
-                          filled: true,
-                          fillColor: const Color(0x1FA4A4A4),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                            borderSide: const BorderSide(color:Color(0x1FA4A4A4) )
-                          ),
-                        ),
-                      )
-                    )
-                  ),
-                  SizedBox( // <-- SEE HERE
-                    width: 300,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Username",
-                          filled: true,
-                          fillColor: const Color(0x1FA4A4A4),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                            borderSide: const BorderSide(color:Color(0x1FA4A4A4) )
-                          ),
-                        ),
-                      )
-                    )
-                  ),
-                  SizedBox( // <-- SEE HERE
-                    width: 300,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Email",
-                          filled: true,
-                          fillColor: const Color(0x1FA4A4A4),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                            borderSide: const BorderSide(color:Color(0x1FA4A4A4) )
-                          ),
-                        ),
-                      )
-                    )
-                  ),
-                  SizedBox( // <-- SEE HERE
-                    width: 300,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Password",
-                          filled: true,
-                          fillColor: const Color(0x1FA4A4A4),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                            borderSide: const BorderSide(color:Color(0x1FA4A4A4) )
-                          ),
-                        ),
-                      )
-                    )
-                  ),
-                  RichText(
-                    text: const TextSpan(
-                      style: TextStyle(
-                        fontSize: 12.0,
-                        color: Colors.black,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(text: 'By registering, you are agreeing with our '),
-                        TextSpan(text: 'Terms and Conditions', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xff064E3B))),
-                      ],
+                )),
+            Padding(
+                padding: EdgeInsets.only(
+                    top: screenSize.height / 20,
+                    right: screenSize.height / 20,
+                    left: screenSize.height / 20),
+                child: Column(
+                  children: [
+                    FormFieldWidget(
+                      text: "First Name",
+                      width: screenSize.width / 1.2,
+                      controller: firstNameController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'First name is required';
+                        }
+                        return null;
+                      },
                     ),
-                    textAlign: TextAlign.center,
-                 ),
-                 const Padding(padding: EdgeInsets.all(30)),
-                  SizedBox(
-                    height: 69,
-                    width: 260,
-                      child: TextButton(
-                        onPressed: ()=>{
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()))
-                        }, 
-                        style:  ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(const Color(0xFF064E3B)),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(150.0),
-                              side: const BorderSide(color: Colors.white)
-                            )
-                          ),
+                    FormFieldWidget(
+                        text: "Last Name",
+                        width: screenSize.width / 1.2,
+                        controller: lastNameController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Last name is required';
+                          }
+                          return null;
+                        }),
+                    FormFieldWidget(
+                      text: "Email",
+                      width: screenSize.width / 1.2,
+                      controller: emailController,
+                      validator: (input) =>
+                          input != null && input.isValidEmail()
+                              ? null
+                              : "Invalid email",
+                    ),
+                    FormFieldWidget(
+                      text: "Password",
+                      width: screenSize.width / 1.2,
+                      obscureText: true,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      controller: passwordController,
+                      validator: (value) {
+                        if ((value == null || value.isEmpty) &&
+                            confirmPasswordController.text.isNotEmpty) {
+                          return 'Password is required!';
+                        }
+                        return null;
+                      },
+                    ),
+                    FormFieldWidget(
+                      text: "Confirm Password",
+                      width: screenSize.width / 1.2,
+                      obscureText: true,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      controller: confirmPasswordController,
+                      validator: (input) =>
+                          passwordController.text.isNotEmpty &&
+                                  passwordController.text != input
+                              ? "Passwords don't match!"
+                              : null,
+                    ),
+                    RichText(
+                      text: const TextSpan(
+                        style: TextStyle(
+                          fontSize: 12.0,
+                          color: Colors.black,
                         ),
-                        child: Text("Register".toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w300))
+                        children: <TextSpan>[
+                          TextSpan(
+                              text:
+                                  'By registering, you are agreeing with our '),
+                          TextSpan(
+                              text: 'Terms and Conditions',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff064E3B))),
+                        ],
                       ),
-                  ),
-                ],
-                )
-              )
-            ]
-          ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Padding(padding: EdgeInsets.all(screenSize.height / 30)),
+                    SizedBox(
+                      height: screenSize.height / 12.5,
+                      width: screenSize.width / 1.8,
+                      child: TextButton(
+                          onPressed: () => {
+                                handleSubmit(),
+                              },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                const Color(0xFF064E3B)),
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(150.0),
+                                    side:
+                                        const BorderSide(color: Colors.white))),
+                          ),
+                          child: Text("Register".toUpperCase(),
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w300))),
+                    ),
+                  ],
+                ))
+          ]),
         ),
       ),
     );

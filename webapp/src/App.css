@@ -37,6 +37,12 @@
   }
 }
 
+#app{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 /* Centered container with margin */
 .container-4\/5{
   width:80% !important;
