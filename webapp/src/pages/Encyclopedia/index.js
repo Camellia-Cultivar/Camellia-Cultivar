@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import {useNavigate} from 'react-router-dom';
 import { AiOutlineSearch } from "react-icons/ai";
 
 import Card from "../../components/Card"
@@ -7,7 +8,9 @@ import camellias from "./camellias"
 
 const Encyclopedia = () => {
 
-    let [page, setPage] = useState(1)
+    let [page, setPage] = useState(1);
+    const navigate = useNavigate();
+
 
 
     const pages = 9;
@@ -33,6 +36,12 @@ const Encyclopedia = () => {
 
     }
 
+    const redirect = (route) => {
+        navigate(route);
+    }
+
+
+
     return (
         <div className="container-4/5 flex flex-col">
             <div className="pt-16 pb-6 ml-4">
@@ -52,7 +61,7 @@ const Encyclopedia = () => {
                 {
                     camellias.map((camellia) => {
                         return (
-                            <Card className="hover:scale-110 hover:shadow" key={camellia.id} image={camellia.image} name={camellia.name} species={camellia.species}></Card>
+                            <Card className="hover:scale-110 hover:shadow" key={camellia.id} image={camellia.image} name={camellia.name} species={camellia.species} redirect={redirect}></Card>
                         )
                     })
                 }
