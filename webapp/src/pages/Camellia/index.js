@@ -58,11 +58,11 @@ export default class Camellia extends Component {
                         </div>
                         <AnimateHeight duration={500} height={this.state.height}>
                         {this.state.moreLoaded &&
-                            <div className="grid justify-between grid-cols-2 mt-8">
+                            <div className="grid gap-2 grid-cols-2 mt-8">
                                 {this.state.camellia.otherImages.map((image) => {
                                     return( 
                                     <div className="flex justify-center">
-                                        <img className="h-40 object-cover" alt="" src={image}></img>
+                                        <img className="h-40 max-w-4/5 object-cover rounded-md shadow" alt="" src={image}></img>
                                     </div>)
                                 })}
                             </div>

@@ -10,7 +10,7 @@ const sample = {
     size:{height:"around 3m", width:"from 91cm to 3m"},
     flower:{form:"Formal double", size:"7cm to 10cm", color:"Crimson"},
     folliage:{type:"Evergreen", size:"5cm to 7cm", surface:"Glossy"},
-    otherImages:["/camellia_jacks2.jpg", "/camellia_jacks3.png",]
+    otherImages:["/camellia_jacks2.jpg", "/camellia_jacks3.png","/camellia_jacks3.png", "/camellia_jacks1.jpg",]
 
 }
 

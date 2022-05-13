@@ -6,6 +6,9 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    maxWidth:{
+      '4/5':'80%',
+    }
   },
   plugins: [
       plugin(function ({ addVariant }) {
