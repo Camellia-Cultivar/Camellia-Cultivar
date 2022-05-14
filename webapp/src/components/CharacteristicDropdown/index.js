@@ -39,8 +39,8 @@ class CharacteristicDropdown extends Component {
                             Object.keys(this.state.details).map((key, i) => {
                                 return (
                                     <div key={i} className="flex w-full justify-between py-2">
-                                        <p className=" capitalize font-semibold">{key}</p>
-                                        <p className=" capitalize">{this.state.details[key]}</p>
+                                        <p className=" capitalize font-semibold text-left mr-1 w-1/2">{key}</p>
+                                        <p className=" capitalize text-right ml-1 w-1/2">{this.state.details[key]}</p>
                                     </div>
                                 )
                             })

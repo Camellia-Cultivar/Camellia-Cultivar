@@ -23,10 +23,12 @@ export default class Camellia extends Component {
         })
     }
 
+
+
     render() {
         return (
-            <div className="mt-16 mb-8 container-4/5 flex justify-between">
-                <div className="grid auto-rows-min w-1/2">
+            <div className="mt-8 sm:mt-16 mb-8 mx-4 sm:container-4/5 flex flex-col md:flex-row justify-between">
+                <div className="grid auto-rows-min md:w-1/2">
                     <div >
                         <p className="text-5xl font-semibold text-emerald-900">
                             {this.state.camellia.name}
@@ -45,12 +47,11 @@ export default class Camellia extends Component {
                         <CharacteristicDropdown characteristic="Flower" down={false} details={this.state.camellia.flower}></CharacteristicDropdown>
                         <CharacteristicDropdown characteristic="Folliage" down={false} details={this.state.camellia.folliage}></CharacteristicDropdown>
                     </div>
-
                 </div>
-                <div className="w-1/3">
+                <div className="md:w-1/3 mt-8 md:mt-0">
                     <div className="flex flex-col">
                         <img className="shadow-md self-center w-11/12 rounded-lg object-cover" src={this.state.camellia.image} alt={this.state.camellia.name}></img>
-                        <CamelliaCategory description={this.state.camellia.species} category="Species/Combination" />
+                        <CamelliaCategory description={this.state.camellia.species} category="Species / Combination" />
                         <CamelliaCategory description={this.state.camellia.scientificName} category="Scientific Name" />
                         <div className="bg-emerald-900/20 mt-8 rounded-full flex items-center justify-center py-4 text-emerald-900 cursor-pointer hover:scale-105" onClick={() => { this.loadMore() }}>
                             <BiImages></BiImages>
@@ -58,11 +59,11 @@ export default class Camellia extends Component {
                         </div>
                         <AnimateHeight duration={500} height={this.state.height}>
                         {this.state.moreLoaded &&
-                            <div className="grid gap-2 grid-cols-2 mt-8">
+                            <div className="grid gap-y-3 gap-x-2 md:gap-x-1 grid-cols-2 md:grid-cols-3 mt-8">
                                 {this.state.camellia.otherImages.map((image) => {
                                     return( 
                                     <div className="flex justify-center">
-                                        <img className="h-40 max-w-4/5 object-cover rounded-md shadow" alt="" src={image}></img>
+                                        <img className="max-h-40 object-cover rounded-md shadow" alt="" src={image}></img>
                                     </div>)
                                 })}
                             </div>
