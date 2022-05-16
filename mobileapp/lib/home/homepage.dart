@@ -4,7 +4,7 @@ import 'package:camellia_cultivar/home/map_page.dart';
 import 'package:camellia_cultivar/local_auth_api.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/navbar/botnavbar.dart';
-import 'package:camellia_cultivar/profilepage.dart';
+import 'package:camellia_cultivar/profile_page.dart';
 import 'package:camellia_cultivar/providers/user.dart';
 import 'package:camellia_cultivar/utils/auth.dart';
 import 'package:carousel_slider/carousel_slider.dart';

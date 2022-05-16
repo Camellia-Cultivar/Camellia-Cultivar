@@ -1,6 +1,6 @@
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/providers/user.dart';
-import 'package:camellia_cultivar/quizzoptionspage.dart';
+import 'package:camellia_cultivar/quiz_options_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:camellia_cultivar/database/database_helper.dart';
@@ -18,14 +18,14 @@ class FormItem {
   }
 }
 
-class QuizzPage extends StatefulWidget {
-  const QuizzPage({Key? key}) : super(key: key);
+class QuizPage extends StatefulWidget {
+  const QuizPage({Key? key}) : super(key: key);
 
   @override
-  _QuizzPageState createState() => _QuizzPageState();
+  _QuizPageState createState() => _QuizPageState();
 }
 
-class _QuizzPageState extends State<QuizzPage> {
+class _QuizPageState extends State<QuizPage> {
   int _currentIndex = 0;
   var data = [];
   var ids = [];
@@ -109,7 +109,7 @@ class _QuizzPageState extends State<QuizzPage> {
     user.reputation += reputation;
 
     final dbHelper = DatabaseHelper.instance;
-    await dbHelper.update("users", user.toMap());
+    await dbHelper.update("users", user.toJson());
     context.read<UserProvider>().setUser(user);
 
     Navigator.pop(context);
@@ -158,7 +158,7 @@ class _QuizzPageState extends State<QuizzPage> {
                             Navigator.pop(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => QuizzOptionsPage()))
+                                    builder: (context) => QuizOptionsPage()))
                           })),
                       icon: const Icon(
                         IconData(0xe16a, fontFamily: 'MaterialIcons'),

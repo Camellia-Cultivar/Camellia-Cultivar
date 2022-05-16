@@ -1,8 +1,8 @@
+import 'package:camellia_cultivar/api/api_service.dart';
 import 'package:camellia_cultivar/database/database_helper.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:flutter/material.dart';
 import "package:camellia_cultivar/extensions/string_apis.dart";
-import 'home/homepage.dart';
 import 'package:camellia_cultivar/utils/auth.dart';
 
 class FormFieldWidget extends StatelessWidget {
@@ -55,6 +55,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final api = APIService();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
@@ -73,19 +74,65 @@ class _RegisterPageState extends State<RegisterPage> {
     confirmPasswordController.dispose();
   }
 
+  // void handleSubmit() async {
+  //   final dbHelper = DatabaseHelper.instance;
+  //   User user = User(
+  //     id: null as int,
+  //     firstName: firstNameController.text,
+  //     email: emailController.text,
+  //     lastName: lastNameController.text,
+  //     password: passwordController.text,
+  //     reputation: 0,
+  //   );
+
+  //   try {
+  //     User? existingUser = await dbHelper.getUser(user.email);
+
+  //     if (existingUser != null) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //             content:
+  //                 Text('Account already exists! Try with a different email.'),
+  //             backgroundColor: Colors.red),
+  //       );
+  //       return;
+  //     }
+
+  //     int id = await dbHelper.insert("users", user.toJson());
+  //     user.id = id;
+  //   } catch (_) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //           content: Text('Failed to create account. Please try again later!'),
+  //           backgroundColor: Colors.red),
+  //     );
+  //     return;
+  //   }
+
+  //   await login(context, user);
+
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     const SnackBar(
+  //         content: Text("Account create successfuly."),
+  //         backgroundColor: Colors.green),
+  //   );
+  // }
+
   void handleSubmit() async {
-    final dbHelper = DatabaseHelper.instance;
+    // TODO: send registered password
+    var password = passwordController.text;
+
     User user = User(
       id: null as int,
       firstName: firstNameController.text,
       email: emailController.text,
       lastName: lastNameController.text,
-      password: passwordController.text,
+      //password: passwordController.text,
       reputation: 0,
     );
 
     try {
-      User? existingUser = await dbHelper.getUser(user.email);
+      User? existingUser = await api.getUser(user.id);
 
       if (existingUser != null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -97,8 +144,8 @@ class _RegisterPageState extends State<RegisterPage> {
         return;
       }
 
-      int id = await dbHelper.insert("users", user.toMap());
-      user.id = id;
+      int uid = await api.createUser(user) as int;
+      user.id = uid;
     } catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

@@ -5,13 +5,13 @@ import 'package:camellia_cultivar/login.dart';
 import 'package:camellia_cultivar/main.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/new_specimen/new_specimen.dart';
-import 'package:camellia_cultivar/profilepage.dart';
+import 'package:camellia_cultivar/profile_page.dart';
 import 'package:camellia_cultivar/providers/user.dart';
-import 'package:camellia_cultivar/quizzoptionspage.dart';
 import 'package:flutter/material.dart';
 import "package:camellia_cultivar/extensions/string_apis.dart";
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'api/api_service.dart';
 import 'navbar/botnavbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -59,6 +59,7 @@ class _EditProfilePage extends State<EditProfilePage> {
       profileImageUrl = baseUrl + azureImgUrl;
     });
   }
+  final api = APIService();
 
   @override
   Widget build(BuildContext context) {
@@ -86,14 +87,32 @@ class _EditProfilePage extends State<EditProfilePage> {
         user.email = emailController.text;
         user.firstName = firstNameController.text;
         user.lastName = lastNameController.text;
-        user.password = passwordController.text.isNotEmpty
-            ? passwordController.text
-            : user.password;
+        // user.password = passwordController.text.isNotEmpty
+        //     ? passwordController.text
+        //     : user.password;
+
+        if (passwordController.text.isNotEmpty) {
+          var password = passwordController.text;
+          await api.updatePassword(user.id, password);
+        }
+
+        // try {
+        //   final dbHelper = DatabaseHelper.instance;
+        //   await dbHelper.update("users", user.toJson());
+        //   context.read<UserProvider>().setUser(user);
+        //   Navigator.pop(context,
+        //       MaterialPageRoute(builder: (context) => const ProfilePage()));
+        // } on Exception catch (e) {
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     const SnackBar(
+        //         content: Text('Failed to submit changes!'),
+        //         backgroundColor: Colors.red),
+        //   );
+        //   return;
+        // }
 
         try {
-          uploadInAzure(user);
-          final dbHelper = DatabaseHelper.instance;
-          await dbHelper.update("users", user.toMap());
+          await api.updateUser(user);
           context.read<UserProvider>().setUser(user);
           Navigator.pop(context,
               MaterialPageRoute(builder: (context) => const ProfilePage()));
@@ -147,22 +166,15 @@ class _EditProfilePage extends State<EditProfilePage> {
                             ),
                             child: Column(
                               children: [
-                                GestureDetector(
-                                  child: SizedBox(
-                                    height: screenSize.height / 8,
-                                    width: screenSize.width / 4,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(90.0),
-                                      child: profileImage == null
-                                          ? Image.network(
-                                              "https://i.imgflip.com/2/1975nj.jpg")
-                                          : Image.file(
-                                              profileImage!,
-                                              fit: BoxFit.fill,
-                                            ),
-                                    ),
+                                SizedBox(
+                                  height: screenSize.height / 8,
+                                  width: screenSize.width / 4,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(90.0),
+                                    child: Image.network(
+                                        user.profileImage as String),
                                   ),
-                                  onTap: _getFromGallery,
+                                  // onTap: _getFromGallery,
                                 ),
                                 Column(
                                     crossAxisAlignment:

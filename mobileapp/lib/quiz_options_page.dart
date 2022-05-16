@@ -1,10 +1,10 @@
-import 'package:camellia_cultivar/quizzpage.dart';
+import 'package:camellia_cultivar/quiz_page.dart';
 import 'package:flutter/material.dart';
 
 import 'navbar/botnavbar.dart';
 
-class QuizzOptionsPage extends StatelessWidget {
-  const QuizzOptionsPage({Key? key}) : super(key: key);
+class QuizOptionsPage extends StatelessWidget {
+  const QuizOptionsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class QuizzOptionsPage extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const QuizzPage()))
+                                      builder: (context) => const QuizPage()))
                             },
                         style: ButtonStyle(
                           backgroundColor:

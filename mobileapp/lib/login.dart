@@ -1,9 +1,9 @@
-import 'package:camellia_cultivar/database/database_helper.dart';
+import 'package:camellia_cultivar/api/api_service.dart';
 import 'package:camellia_cultivar/extensions/string_apis.dart';
 import 'package:camellia_cultivar/home/homepage.dart';
 import 'package:camellia_cultivar/local_auth_api.dart';
 import 'package:camellia_cultivar/model/user.dart';
-import 'package:camellia_cultivar/registerpage.dart';
+import 'package:camellia_cultivar/register_page.dart';
 import 'package:camellia_cultivar/utils/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -16,6 +16,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final api = APIService();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -35,18 +36,57 @@ class _LoginPageState extends State<LoginPage> {
     passwordController.dispose();
   }
 
+  // void handleSubmit(BuildContext context) async {
+  //   setState(() => {
+  //         _authError = false,
+  //       });
+
+  //   if (_formKey.currentState!.validate()) {
+  //     final dbHelper = DatabaseHelper.instance;
+
+  //     User? user;
+
+  //     try {
+  //       user = await dbHelper.getUser(emailController.text);
+  //     } catch (e) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //             content: Text("Failed to authenticate. Please try again!"),
+  //             backgroundColor: Colors.red),
+  //       );
+  //       return;
+  //     }
+
+  //     bool isAuth = user != null && user.password == passwordController.text;
+
+  //     if (isAuth) {
+  //       await login(context, user);
+
+  //       emailController.clear();
+  //       passwordController.clear();
+
+  //       Navigator.push(
+  //           context, MaterialPageRoute(builder: (context) => const HomePage()));
+  //     } else {
+  //       setState(() => {
+  //             _authError = true,
+  //           });
+  //     }
+  //   }
+  // }
+
   void handleSubmit(BuildContext context) async {
     setState(() => {
           _authError = false,
         });
 
     if (_formKey.currentState!.validate()) {
-      final dbHelper = DatabaseHelper.instance;
-
-      User? user;
+      String email = emailController.text;
+      String password = passwordController.text;
+      int? uid;
 
       try {
-        user = await dbHelper.getUser(emailController.text);
+        uid = await api.login(email, password);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -56,16 +96,18 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
 
-      bool isAuth = user != null && user.password == passwordController.text;
+      if (uid != null) {
+        User? user = await api.getUser(uid);
 
-      if (isAuth) {
-        await login(context, user);
+        if (user != null) {
+          await login(context, user);
 
-        emailController.clear();
-        passwordController.clear();
+          emailController.clear();
+          passwordController.clear();
 
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const HomePage()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const HomePage()));
+        }
       } else {
         setState(() => {
               _authError = true,

@@ -1,16 +1,13 @@
+import 'dart:developer';
+
 import 'package:camellia_cultivar/database/database_helper.dart';
-import 'package:camellia_cultivar/editprofilepage.dart';
-import 'package:camellia_cultivar/layout.dart';
-import 'package:camellia_cultivar/main.dart';
+import 'package:camellia_cultivar/edit_profile_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:camellia_cultivar/providers/user.dart';
 import 'package:camellia_cultivar/model/user.dart';
-import 'package:camellia_cultivar/local_auth_api.dart';
 import 'package:camellia_cultivar/utils/auth.dart';
-import 'login.dart';
+import 'api/api_service.dart';
 import 'navbar/botnavbar.dart';
 
 class UserDetailWidget extends StatelessWidget {
@@ -44,12 +41,38 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePage extends State<ProfilePage> {
-  void handleDelete(BuildContext context, User user) async {
-    final dbHelper = DatabaseHelper.instance;
+  final api = APIService();
 
+  // void handleDelete(BuildContext context, User user) async {
+  //   final dbHelper = DatabaseHelper.instance;
+
+  //   try {
+  //     await dbHelper.delete("users", user.id);
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //           content: Text('Failed delete account!'),
+  //           backgroundColor: Colors.red),
+  //     );
+  //     return;
+  //   }
+
+  //   await logout(
+  //     context,
+  //     user,
+  //   );
+
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     const SnackBar(
+  //         content: Text('Sucessfully deletet account!'),
+  //         backgroundColor: Colors.green),
+  //   );
+  // }
+
+  void handleDelete(BuildContext context, User user) async {
     try {
-      await dbHelper.delete("users", user.id);
-    } catch (e) {
+      await api.deleteUser(user.id);
+    } on Exception catch (_, e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Failed delete account!'),
