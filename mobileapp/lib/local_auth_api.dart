@@ -33,6 +33,7 @@ class LocalAuthApi {
         // stickyAuth: true,
       );
     } on PlatformException catch (e) {
+      print(e);
       return false;
     }
   }

@@ -1,8 +1,11 @@
+import 'package:camellia_cultivar/profilepage.dart';
+import 'package:camellia_cultivar/quizzpage.dart';
 import 'package:flutter/material.dart';
 
-import '../camera.dart';
-import '../flower_icon.dart';
-import '../homepage.dart';
+import '../new_specimen/new_specimen.dart';
+import 'new_specimen_icon.dart';
+import '../home/homepage.dart';
+import '../quizzoptionspage.dart';
 import 'gbutton.dart';
 import 'gnav.dart';
 
@@ -19,17 +22,12 @@ class _BotNavBar extends State<BotNavbar> {
   @override
   Widget build(BuildContext context) {
     int _selectedIndex = widget.pageIndex;
-    return /*Align(
-        alignment: FractionalOffset.center,
-        child:*/
-        Stack(
+    return Stack(
       fit: StackFit.passthrough,
-      // alignment: Alignment.center,
       children: [
         Padding(
             padding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
             child: Container(
-              // height: 100,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(150)),
                 color: Colors.white,
@@ -83,27 +81,27 @@ class _BotNavBar extends State<BotNavbar> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const CameraPage()));
+                                          const NewSpecimenPage()));
                               break;
                             case 1:
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const HomePage(
-                                            title: '',
-                                          )));
+                                      builder: (context) => const HomePage()));
                               break;
                             case 2:
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //       builder: (context) => const CameraPage()));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const QuizzOptionsPage()));
                               break;
                             case 3:
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //       builder: (context) => const CameraPage()));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ProfilePage()));
                               break;
                             default:
                               print('Not a valid tab index');
@@ -117,6 +115,5 @@ class _BotNavBar extends State<BotNavbar> {
             ))
       ],
     );
-    // );
   }
 }
