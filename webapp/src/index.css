@@ -2,26 +2,120 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --base-delay: 1.1s;
+    --extra-delay: 0.1s;
+    --small-extra-delay: 0.05s;
+}
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+        "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    position: relative;
+    overflow-x: hidden;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+        monospace;
+}
+
+@layer components {
+    /* Centered container with margin */
+    .container-4\/5 {
+        width: 80% !important;
+        margin-left: 10% !important;
+        margin-right: 10% !important;
+    }
+    
+}
+
+.slider {
+    transform: scaleX(700%);
+    animation-name: slide-in;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+.slider-delayed {
+    transform: scaleX(600%);
+    animation-name: slide-in;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-delay: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+.fade-in-1 {
+  opacity: 0;
+  animation-name: fade-in;
+  animation-duration: 0.6s;
+  animation-timing-function: ease-out;
+  animation-delay: 1.5s;
+  animation-fill-mode: forwards;
+}
+
+.fade-in-2 {
+  opacity: 0;
+  animation-name: fade-in;
+  animation-duration: 0.6s;
+  animation-timing-function: ease-out;
+  animation-delay: 1.7s;
+  animation-fill-mode: forwards;
+}
+.item-fade-in-1 {
+  opacity: 0;
+  animation-name: fade-in;
+  animation-duration: 0.6s;
+  animation-timing-function: ease-out;
+  animation-delay: 1.8s;
+  animation-fill-mode: forwards;
+}
+.item-fade-in-2 {
+  opacity: 0;
+  animation-name: fade-in;
+  animation-duration: 0.6s;
+  animation-timing-function: ease-out;
+  animation-delay: 1.9s;
+  animation-fill-mode: forwards;
+}
+.item-fade-in-3 {
+  opacity: 0;
+  animation-name: fade-in;
+  animation-duration: 0.6s;
+  animation-timing-function: ease-out;
+  animation-delay: 2s;
+  animation-fill-mode: forwards;
+}
+.item-fade-in-4 {
+  opacity: 0;
+  animation-name: fade-in;
+  animation-duration: 0.6s;
+  animation-timing-function: ease-out;
+  animation-delay: 2.1s;
+  animation-fill-mode: forwards;
 }
 
 
-@layer components{
-  /* Centered container with margin */
-.container-4\/5{
-  width:80% !important;
-  margin-left:10% !important;
-  margin-right:10% !important;
+@keyframes slide-in {
+    from {
+        transform: scaleX(600%);
+    }
+    to {
+        transform: scaleX(100%);
+    }
 }
+
+@keyframes fade-in {
+  from{
+    opacity: 0;
+  }
+  to {
+    opacity:1;
+  }
 }
