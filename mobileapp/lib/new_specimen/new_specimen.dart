@@ -104,8 +104,6 @@ class NewSpecimen extends State<NewSpecimenPage> {
 
     specimen_images = [
       imageFile,
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBA5mAFxS9mjuuD-AWAGB_z1676LSGYIBoNA&usqp=CAU',
-      'https://media.istockphoto.com/photos/white-camellia-flower-isolated-on-white-background-picture-id1251528600?k=20&m=1251528600&s=612x612&w=0&h=AW64ZIfakH0ROp3WJeh_Gd5bjaJtOOyokx-NMjAho7E='
     ];
     void _removeimg(int idx) {
       setState(() {
@@ -208,21 +206,6 @@ class NewSpecimen extends State<NewSpecimenPage> {
                                         child: Image.file(specimen_images[i]),
                                       ),
                                   ]),
-                              Positioned(
-                                  bottom: 0,
-                                  right: 20,
-                                  child: MaterialButton(
-                                    color: primaryColor,
-                                    shape: const CircleBorder(),
-                                    onPressed: () {
-                                      _removeimg(currentImg);
-                                    },
-                                    child: const Icon(
-                                      Icons.delete_outline_rounded,
-                                      size: 25,
-                                      color: Color(0xFFE7EEEC),
-                                    ),
-                                  ))
                             ])),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
