@@ -22,45 +22,45 @@ class HomePage extends StatefulWidget {
 }
 
 class Home extends State<HomePage> with WidgetsBindingObserver {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addObserver(this);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance!.addObserver(this);
+  // }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   WidgetsBinding.instance!.removeObserver(this);
+  //   super.dispose();
+  // }
 
-  @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    final isBackground = state == AppLifecycleState.resumed;
+  // @override
+  // Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+  //   final isBackground = state == AppLifecycleState.resumed;
 
-    if (isBackground) {
-      const storage = FlutterSecureStorage();
-      String expiresIn = await storage.read(key: "expiresIn") ?? "";
+  //   if (isBackground) {
+  //     const storage = FlutterSecureStorage();
+  //     String expiresIn = await storage.read(key: "expiresIn") ?? "";
 
-      if (expiresIn.isNotEmpty &&
-          DateTime.now().compareTo(DateTime.parse(expiresIn)) < 0) {
-        if (await LocalAuthApi.hasBiometrics()) {
-          final isAuthenticated = await LocalAuthApi.authenticate();
+  //     if (expiresIn.isNotEmpty &&
+  //         DateTime.now().compareTo(DateTime.parse(expiresIn)) < 0) {
+  //       if (await LocalAuthApi.hasBiometrics()) {
+  //         final isAuthenticated = await LocalAuthApi.authenticate();
 
-          if (!isAuthenticated) {
-            User user = context.read<UserProvider>().user as User;
-            await logout(context, user);
+  //         if (!isAuthenticated) {
+  //           User user = context.read<UserProvider>().user as User;
+  //           await logout(context, user);
 
-            Navigator.popUntil(context, (route) => route.isFirst);
-          }
-        } else {
-          User user = context.read<UserProvider>().user as User;
-          await logout(context, user);
-          Navigator.popUntil(context, (route) => route.isFirst);
-        }
-      }
-    }
-  }
+  //           Navigator.popUntil(context, (route) => route.isFirst);
+  //         }
+  //       } else {
+  //         User user = context.read<UserProvider>().user as User;
+  //         await logout(context, user);
+  //         Navigator.popUntil(context, (route) => route.isFirst);
+  //       }
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
