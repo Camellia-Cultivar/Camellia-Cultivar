@@ -3,9 +3,9 @@ package com.camellia.repositories.users;
 import com.camellia.models.users.RegisteredUser;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+//import org.springframework.stereotype.Repository;
 
-@Repository
+//@Repository
 public interface RegisteredUserRepository extends JpaRepository<RegisteredUser, Long>{
-    
+    RegisteredUser findById(long id); 
 }
