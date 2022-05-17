@@ -14,6 +14,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong/latlong.dart';
 
 import '../new_specimen/new_specimen.dart';
+import 'costum_popup.dart';
+import 'example_popup.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -88,18 +90,31 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
     _markers = _latLngList
         .map((point) => Marker(
               point: point,
-              width: 50,
-              height: 50,
-              builder: (context) => Icon(
-                Icons.location_on,
-                size: 60,
-                color: primaryColor,
-              ),
+              width: 300,
+              height: 300,
+              builder: (context) => GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      infoWindowVisible = !infoWindowVisible;
+                    });
+                  },
+                  child: _buildCustomMarker()),
+              // Icon(
+              //   Icons.location_on,
+              //   size: 60,
+              //   color: primaryColor,
+              // ),
             ))
         .toList();
 
+    Map<Marker, bool> _openPopUp = {};
+
+    for (var element in _markers) {
+      _openPopUp[element] = false;
+    }
+
     recently_uploaded = [
-      'https://www.gardenia.net/storage/app/public/plant_family/detail/57142905_m.jpg',
+      'https://www.significados.com.br/foto/camelia-29.jpg',
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBA5mAFxS9mjuuD-AWAGB_z1676LSGYIBoNA&usqp=CAU',
       'https://media.istockphoto.com/photos/white-camellia-flower-isolated-on-white-background-picture-id1251528600?k=20&m=1251528600&s=612x612&w=0&h=AW64ZIfakH0ROp3WJeh_Gd5bjaJtOOyokx-NMjAho7E='
     ];
@@ -317,19 +332,21 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                     plugins: [
                       MarkerClusterPlugin(),
                     ],
-                    onTap: (_) => _popupController.hidePopup(),
+                    onTap: (_) => setState(() {
+                      infoWindowVisible = false;
+                    }),
                   ),
                   layers: [
                     TileLayerOptions(
                       minZoom: 1,
                       maxZoom: 18,
-                      backgroundColor: Colors.black,
+                      backgroundColor: primaryColor,
                       urlTemplate:
                           'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                       subdomains: ['a', 'b', 'c'],
                     ),
                     MarkerClusterLayerOptions(
-                      maxClusterRadius: 190,
+                      // maxClusterRadius: 190,
                       disableClusteringAtZoom: 16,
                       size: const Size(50, 50),
                       fitBoundsOptions: const FitBoundsOptions(
@@ -359,6 +376,43 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
             ])),
       ]),
       bottomNavigationBar: const BotNavbar(pageIndex: 1),
+    );
+  }
+
+  Stack _buildCustomMarker() {
+    return Stack(
+      children: <Widget>[popup(), marker()],
+    );
+  }
+
+  var infoWindowVisible = false;
+
+  Opacity popup() {
+    return Opacity(
+      opacity: infoWindowVisible ? 1.0 : 0.0,
+      child: Container(
+        alignment: Alignment.bottomCenter,
+        width: 279.0,
+        height: 270.0,
+        decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(5))),
+        child: infoWindowVisible ? CustomPopup() : null,
+      ),
+    );
+  }
+
+  Opacity marker() {
+    return Opacity(
+      child: Container(
+        alignment: Alignment.center,
+        child: const Icon(
+          Icons.location_on_outlined,
+          size: 30,
+          color: Color(0xFF064E3B),
+        ),
+      ),
+      opacity: infoWindowVisible ? 0.0 : 1.0,
     );
   }
 }
