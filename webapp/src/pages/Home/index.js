@@ -1,25 +1,28 @@
-import React, {Component} from 'react';
+import React, { useRef } from 'react';
 import StepList from "../../components/StepList";
+import useIntersection from '../../utilities/useIntersection';
 
 
 // static data (to remove when backend is functional)
 let first_list = [
-    {"id": 1, "content": "Access the Quizzes page"},
-    {"id": 2, "content": "Choose one of the specimen from the questionnaire"},
-    {"id": 3, "content": "Fill in the species/cultivar the specimen belongs to"},
-    {"id": 4, "content": "Complete the quizz and submit"}
+    { "id": 1, "content": "Access the Quizzes page" },
+    { "id": 2, "content": "Choose one of the specimen from the questionnaire" },
+    { "id": 3, "content": "Fill in the species/cultivar the specimen belongs to" },
+    { "id": 4, "content": "Complete the quizz and submit" }
 ];
 
 let second_list = [
-    {"id": 1, "content": "Take as many pictures of it as you can"},
-    {"id": 2, "content": "Fill in some details and characteristics"},
-    {"id": 3, "content": "Submit!"},
+    { "id": 1, "content": "Take as many pictures of it as you can" },
+    { "id": 2, "content": "Fill in some details and characteristics" },
+    { "id": 3, "content": "Submit!" },
 ];
 
-class Home extends Component{
-    
-    
-    render(){return (
+
+
+
+const Home = () => {
+
+    return (
         <div className="bg-stone-100 pb-16">
 
             {/* "Help identify" section */}
@@ -27,9 +30,9 @@ class Home extends Component{
                 <div className="grid col-span-3 mx-8">
                     <span className="font-semibold leading-tight text-4xl fade-in-1"><span className="font-bold">Help identify</span> specimens</span>
                     <span className="text-lg mt-5 ml-7 fade-in-2">Fill in quizzes about what cultivar is a specimen and earn reputation points!</span>
-                    <div className="ml-11"><StepList steps={first_list}/></div>
+                    <div className="ml-11"><StepList steps={first_list} /></div>
                 </div>
-                <div className="col-span-2 justify-self-stretch self-stretch bg-stone-100 slider rounded-l-full"></div>
+                <div className="col-span-2 justify-self-stretch self-stretch bg-stone-100 slider-inverted rounded-l-full"></div>
             </div>
 
             {/* "Get an Identification" section */}
@@ -38,7 +41,7 @@ class Home extends Component{
                 <div className="grid col-span-3 mx-8">
                     <span className="font-semibold leading-tight text-4xl fade-in-1"><span className="font-bold">Get an Identification</span> for your specimen</span>
                     <span className="text-lg mt-5 ml-7 fade-in-2">Found a specimen and can't identify it? You can upload it to our system and other users will help you!</span>
-                    <div className="ml-11"><StepList steps={second_list}/></div>
+                    <div className="ml-11"><StepList steps={second_list} /></div>
                 </div>
             </div>
 
@@ -60,11 +63,11 @@ class Home extends Component{
                         <div className="flex-shrink text-xl font-normal">Specimen photos uploaded</div>
                     </div>
                 </div>
-
             </div>
         </div>
 
 
-    );}
+    );
 }
+
 export default Home;
