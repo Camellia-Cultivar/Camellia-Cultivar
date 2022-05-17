@@ -16,10 +16,10 @@ const Quizzes = () =>{
     return (
         <div className="select-none">
             <div className="grid gap-3 sm:place-items-center grid-flow-row-dense md:place-items-start sm:grid-cols-1 md:grid-cols-5 text-neutral-900 py-10">
-                <div className="col-span-2 justify-self-stretch self-stretch rounded-r-full bg-emerald-500/20"></div>
+                <div className="col-span-2 justify-self-stretch self-stretch rounded-r-full bg-emerald-500/20 slider"></div>
                 <div className="grid col-span-3 mx-5">
-                    <span className="leading-tight text-4xl font-bold">Quizzes</span>
-                    <span className="md:text-lg mt-5 md:ml-3">The more quizzes you answer correctly, the higher your reputation will get!</span>
+                    <span className="leading-tight text-4xl font-bold fade-in-1">Quizzes</span>
+                    <span className="md:text-lg mt-5 md:ml-3 fade-in-2">The more quizzes you answer correctly, the higher your reputation will get!</span>
                     <div className="md:ml-3"><StepList steps={steps}/></div>
                 </div>
                 <div className="col-span-2 justify-self-stretch self-stretch bg-stone-100 rounded-l-full"></div>
