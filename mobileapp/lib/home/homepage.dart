@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:camellia_cultivar/home/map_page.dart';
 import 'package:camellia_cultivar/local_auth_api.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/navbar/botnavbar.dart';
@@ -16,8 +17,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong/latlong.dart';
 
 import '../new_specimen/new_specimen.dart';
-import 'costum_popup.dart';
-import 'example_popup.dart';
+import 'specimen_popup.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -98,29 +98,20 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
     Color primaryColor = Theme.of(context).primaryColor;
     User? user = context.watch<UserProvider>().user;
 
-    final PopupController _popupController = PopupController();
-    MapController _mapController = MapController();
-    double _zoom = 7;
+    // final PopupController _popupController = PopupController();
+    // MapController _mapController = MapController();
+    double _zoom = 1;
 
     _markers = _latLngList
         .map((point) => Marker(
               point: point,
-              width: 200,
-              height: 220,
-              builder: (context) => GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      // infoWindowVisible = !infoWindowVisible;
-                      _openPopUp[point] = !_openPopUp[point]!;
-                      // print("changed to " + _openPopUp[point].toString());
-                    });
-                  },
-                  child: _buildCustomMarker(point)),
-              // Icon(
-              //   Icons.location_on,
-              //   size: 60,
-              //   color: primaryColor,
-              // ),
+              width: 30,
+              height: 30,
+              builder: (context) => Icon(
+                Icons.location_on_outlined,
+                size: 30,
+                color: primaryColor,
+              ),
             ))
         .toList();
 
@@ -333,23 +324,18 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
               ),
               const Padding(padding: EdgeInsets.only(top: 10)),
               SizedBox(
-                height: MediaQuery.of(context).size.height - 140,
+                height: MediaQuery.of(context).size.height / 3,
                 child: FlutterMap(
-                  mapController: _mapController,
                   options: MapOptions(
-                    center: _latLngList[0],
-                    bounds: LatLngBounds.fromPoints(_latLngList),
-                    zoom: _zoom,
-                    plugins: [
-                      MarkerClusterPlugin(),
-                    ],
-                    onTap: (_) => setState(() {
-                      infoWindowVisible = false;
-                      for (LatLng b in _openPopUp.keys) {
-                        _openPopUp[b] = false;
-                      }
-                    }),
-                  ),
+                      center: _latLngList[0],
+                      zoom: _zoom,
+                      plugins: [
+                        MarkerClusterPlugin(),
+                      ],
+                      onTap: (_) => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ShowFullMap()))),
                   layers: [
                     TileLayerOptions(
                       minZoom: 1,
@@ -390,45 +376,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
             ])),
       ]),
       bottomNavigationBar: const BotNavbar(pageIndex: 1),
-    );
-  }
-
-  Stack _buildCustomMarker(LatLng point) {
-    return Stack(
-      children: <Widget>[popup(point), marker(point)],
-    );
-  }
-
-  var infoWindowVisible = false;
-
-  Opacity popup(LatLng point) {
-    // print(_latLngList);
-    // print(_openPopUp[point]);
-    return Opacity(
-      opacity: _openPopUp[point]! ? 1.0 : 0.0,
-      child: Container(
-        alignment: Alignment.bottomCenter,
-        width: 200,
-        height: 250,
-        decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(5))),
-        child: _openPopUp[point]! ? CustomPopup() : null,
-      ),
-    );
-  }
-
-  Opacity marker(LatLng point) {
-    return Opacity(
-      child: Container(
-        alignment: Alignment.center,
-        child: const Icon(
-          Icons.location_on_outlined,
-          size: 30,
-          color: Color(0xFF064E3B),
-        ),
-      ),
-      opacity: _openPopUp[point]! ? 0.0 : 1.0,
     );
   }
 }

@@ -30,6 +30,7 @@ class _SliderShowFullmagesState extends State<SliderShowFullmages> {
 
   @override
   Widget build(BuildContext context) {
+    Color primaryColor = Theme.of(context).primaryColor;
     _current = (_stateChange == false) ? widget.current : _current;
     return Container(
         color: Colors.transparent,
@@ -81,9 +82,7 @@ class _SliderShowFullmagesState extends State<SliderShowFullmages> {
                           vertical: 10.0, horizontal: 5.0),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: (_current == index)
-                            ? const Color(0xFF064E3B)
-                            : Colors.grey,
+                        color: (_current == index) ? primaryColor : Colors.grey,
                       ),
                     );
                   }),

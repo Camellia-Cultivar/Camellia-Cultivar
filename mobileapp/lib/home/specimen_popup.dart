@@ -25,6 +25,7 @@ class CustomPopupState extends State<CustomPopup> {
 
   @override
   Widget build(BuildContext context) {
+    Color primaryColor = Theme.of(context).primaryColor;
     return _buildDialogContent();
   }
 
@@ -66,7 +67,7 @@ class CustomPopupState extends State<CustomPopup> {
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
         Text(
           "Angelina Vieira",
-          style: TextStyle(fontSize: 22),
+          style: TextStyle(fontSize: 20),
         )
       ]),
     );
@@ -78,7 +79,7 @@ class CustomPopupState extends State<CustomPopup> {
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
         Text(
           "C. Japonica",
-          style: TextStyle(fontSize: 15),
+          style: TextStyle(fontSize: 12),
         )
       ]),
     );
