@@ -35,8 +35,8 @@ class CustomPopupState extends State<CustomPopup> {
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(5))),
 
-      width: 279.0,
-      height: 270.0,
+      width: 200,
+      height: 250,
       child: Column(
         children: <Widget>[
           _buildImagesContainer(),
@@ -111,7 +111,7 @@ class CustomPopupState extends State<CustomPopup> {
           child: Image.network(
             list[0],
             fit: BoxFit.fitWidth,
-            height: 170,
+            height: 120,
             width: MediaQuery.of(context).size.width,
           ),
         ));

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:camellia_cultivar/local_auth_api.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/navbar/botnavbar.dart';
@@ -27,8 +29,32 @@ class HomePage extends StatefulWidget {
 class Home extends State<HomePage> with WidgetsBindingObserver {
   List recently_uploaded = [];
 
+  List<LatLng> _latLngList = [];
+  List<Marker> _markers = [];
+
+  late Map<LatLng, bool> _openPopUp;
+
+  Map<LatLng, bool> initOpenPopUp() {
+    Map<LatLng, bool> pop = {};
+    for (var latlng in _latLngList) {
+      pop[latlng] = false;
+    }
+    return pop;
+  }
+
   @override
   void initState() {
+    _latLngList = [
+      LatLng(40.6384943, -8.6540832),
+      LatLng(40.6391863, -8.6563771),
+      LatLng(40.6364017, -8.6532305),
+      LatLng(40.6335806, -8.6519005),
+      LatLng(40, -8),
+      LatLng(41.6335806, -7.6519005),
+      LatLng(40.6335806, -8.6419005),
+      LatLng(39.6335806, -9.0419005)
+    ];
+    _openPopUp = initOpenPopUp();
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
   }
@@ -75,30 +101,21 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
     final PopupController _popupController = PopupController();
     MapController _mapController = MapController();
     double _zoom = 7;
-    List<LatLng> _latLngList = [
-      LatLng(40.6384943, -8.6540832),
-      LatLng(40.6391863, -8.6563771),
-      LatLng(40.6364017, -8.6532305),
-      LatLng(40.6335806, -8.6519005),
-      LatLng(40, -8),
-      LatLng(41.6335806, -7.6519005),
-      LatLng(40.6335806, -8.6419005),
-      LatLng(39.6335806, -9.0419005)
-    ];
-    List<Marker> _markers = [];
 
     _markers = _latLngList
         .map((point) => Marker(
               point: point,
-              width: 300,
-              height: 300,
+              width: 200,
+              height: 220,
               builder: (context) => GestureDetector(
                   onTap: () {
                     setState(() {
-                      infoWindowVisible = !infoWindowVisible;
+                      // infoWindowVisible = !infoWindowVisible;
+                      _openPopUp[point] = !_openPopUp[point]!;
+                      // print("changed to " + _openPopUp[point].toString());
                     });
                   },
-                  child: _buildCustomMarker()),
+                  child: _buildCustomMarker(point)),
               // Icon(
               //   Icons.location_on,
               //   size: 60,
@@ -106,12 +123,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
               // ),
             ))
         .toList();
-
-    Map<Marker, bool> _openPopUp = {};
-
-    for (var element in _markers) {
-      _openPopUp[element] = false;
-    }
 
     recently_uploaded = [
       'https://www.significados.com.br/foto/camelia-29.jpg',
@@ -334,6 +345,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                     ],
                     onTap: (_) => setState(() {
                       infoWindowVisible = false;
+                      for (LatLng b in _openPopUp.keys) {
+                        _openPopUp[b] = false;
+                      }
                     }),
                   ),
                   layers: [
@@ -379,30 +393,32 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
     );
   }
 
-  Stack _buildCustomMarker() {
+  Stack _buildCustomMarker(LatLng point) {
     return Stack(
-      children: <Widget>[popup(), marker()],
+      children: <Widget>[popup(point), marker(point)],
     );
   }
 
   var infoWindowVisible = false;
 
-  Opacity popup() {
+  Opacity popup(LatLng point) {
+    // print(_latLngList);
+    // print(_openPopUp[point]);
     return Opacity(
-      opacity: infoWindowVisible ? 1.0 : 0.0,
+      opacity: _openPopUp[point]! ? 1.0 : 0.0,
       child: Container(
         alignment: Alignment.bottomCenter,
-        width: 279.0,
-        height: 270.0,
+        width: 200,
+        height: 250,
         decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(5))),
-        child: infoWindowVisible ? CustomPopup() : null,
+        child: _openPopUp[point]! ? CustomPopup() : null,
       ),
     );
   }
 
-  Opacity marker() {
+  Opacity marker(LatLng point) {
     return Opacity(
       child: Container(
         alignment: Alignment.center,
@@ -412,7 +428,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
           color: Color(0xFF064E3B),
         ),
       ),
-      opacity: infoWindowVisible ? 0.0 : 1.0,
+      opacity: _openPopUp[point]! ? 0.0 : 1.0,
     );
   }
 }
