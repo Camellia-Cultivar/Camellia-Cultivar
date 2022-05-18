@@ -43,9 +43,20 @@
   flex-direction: column;
 }
 
-/* Centered container with margin */
-.container-4\/5{
-  width:80% !important;
-  margin-left:10%;
-  margin-right:10%;
+
+
+.fade-enter{
+  opacity:0;
+}
+.fade-enter.fade-enter-active{
+  opacity:1;
+  transition: opacity 300ms linear 100ms;
+}
+
+.fade-exit{
+  opacity:1;
+}
+.fade-exit.fade-enter-active{
+  opacity:0;
+  transition: opacity 300ms linear 100ms;
 }
