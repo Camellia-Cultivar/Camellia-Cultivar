@@ -11,6 +11,7 @@ services:
         environment:
             - POSTGRES_USER=camellia
             - POSTGRES_PASSWORD=password
+            - POSTGRES_DB=camellia-cultivar
 
     server:
         build:
@@ -23,7 +24,7 @@ services:
             - db
         environment:
             - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/camellia-cultivar
-            #- SPRING_DATASOURCE_DATABASE=camellia-cultivar
+            - SPRING_DATASOURCE_DATABASE=camellia-cultivar
             - SPRING_DATASOURCE_USERNAME=camellia
             - SPRING_DATASOURCE_PASSWORD=password
-            - SPRING_JPA_HIBERNATE_DDL_AUTO=update  
+            #- SPRING_JPA_HIBERNATE_DDL_AUTO=update  
