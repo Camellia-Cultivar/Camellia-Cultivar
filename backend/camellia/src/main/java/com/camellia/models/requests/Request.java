@@ -28,9 +28,9 @@ import org.hibernate.annotations.Parameter;
 public abstract class Request {
     
     @Id
-    @GeneratedValue(generator = "sequence-generator")
+    @GeneratedValue(generator = "request-sequence-generator")
     @GenericGenerator(
-        name = "sequence-generator",
+        name = "request-sequence-generator",
         strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
         parameters = {
                     @Parameter(name = "sequence_name", value = "request_sequence"),
