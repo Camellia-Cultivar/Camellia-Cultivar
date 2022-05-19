@@ -5,10 +5,12 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
-    maxWidth:{
-      '4/5':'80%',
-    }
+    extend: {
+      maxWidth:{
+        '4/5':'80%',
+      },
+    },
+    
   },
   plugins: [
       plugin(function ({ addVariant }) {
