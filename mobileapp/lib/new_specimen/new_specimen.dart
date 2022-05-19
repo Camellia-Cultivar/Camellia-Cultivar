@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:camellia_cultivar/flower_icon.dart';
+import 'package:camellia_cultivar/navbar/new_specimen_icon.dart';
 import 'package:camellia_cultivar/main.dart';
 import 'package:camellia_cultivar/navbar/botnavbar.dart';
 import 'package:camellia_cultivar/navbar/button.dart';
-import 'package:camellia_cultivar/upov_characteristics.dart';
+import 'package:camellia_cultivar/new_specimen/upov_characteristics.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -16,17 +16,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:latlong/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'homepage.dart';
-// import 'package:flutter/image.dart';
+import '../home/homepage.dart';
 
-class CameraPage extends StatefulWidget {
-  const CameraPage({Key? key}) : super(key: key);
+class NewSpecimenPage extends StatefulWidget {
+  const NewSpecimenPage({Key? key}) : super(key: key);
 
   @override
-  Camera createState() => Camera();
+  NewSpecimen createState() => NewSpecimen();
 }
 
-class Camera extends State<CameraPage> {
+class NewSpecimen extends State<NewSpecimenPage> {
   File? imageFile;
 
   // ignore: non_constant_identifier_names
@@ -74,12 +73,14 @@ class Camera extends State<CameraPage> {
 
   @override
   void dispose() {
+    super.dispose();
     ownerController.dispose();
     gardenController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    Color primaryColor = Theme.of(context).primaryColor;
     final PopupController _popupController = PopupController();
     double _zoom = 7;
     LatLng location = _position == null
@@ -93,18 +94,16 @@ class Camera extends State<CameraPage> {
         point: location,
         width: 100,
         height: 100,
-        builder: (context) => const Icon(
+        builder: (context) => Icon(
           Icons.location_on,
           size: 20,
-          color: Color(0xFF064E3B),
+          color: primaryColor,
         ),
       )
     ];
 
     specimen_images = [
       imageFile,
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBA5mAFxS9mjuuD-AWAGB_z1676LSGYIBoNA&usqp=CAU',
-      'https://media.istockphoto.com/photos/white-camellia-flower-isolated-on-white-background-picture-id1251528600?k=20&m=1251528600&s=612x612&w=0&h=AW64ZIfakH0ROp3WJeh_Gd5bjaJtOOyokx-NMjAho7E='
     ];
     void _removeimg(int idx) {
       setState(() {
@@ -124,59 +123,56 @@ class Camera extends State<CameraPage> {
               borderRadius: BorderRadius.all(Radius.circular(15))),
           child: SingleChildScrollView(
             child: Column(children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Stack(
                 children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Color(0xFF064E3B),
-                      size: 25,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 16.0),
+                        child: Text('New Specimen',
+                            style: TextStyle(color: primaryColor, fontSize: 22),
+                            textAlign: TextAlign.center),
+                      ),
+                    ],
                   ),
-                  const Center(
-                    child: Text('New Specimen',
-                        // textAlign: TextAlign.center,
-                        style:
-                            TextStyle(color: Color(0xFF064E3B), fontSize: 22)),
-                  ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.check,
-                      color: Color(0xFF064E3B),
-                      size: 25,
-                    ),
-                    onPressed: () {
-                      if (ownerController.text.isEmpty ||
-                          gardenController.text.isEmpty ||
-                          specimen_images.isEmpty ||
-                          actualLocation == null) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
+                  Positioned(
+                    right: 0,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.check,
+                        color: primaryColor,
+                        size: 25,
+                      ),
+                      onPressed: () {
+                        if (ownerController.text.isEmpty ||
+                            gardenController.text.isEmpty ||
+                            specimen_images.isEmpty ||
+                            actualLocation == null) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                                  backgroundColor: Colors.white,
+                                  content: Text(
+                                    'Please, fill in the required fields',
+                                    style: TextStyle(color: Colors.red),
+                                  )));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
                                 backgroundColor: Colors.white,
                                 content: Text(
-                                  'Please, fill in the required fields',
-                                  style: TextStyle(color: Colors.red),
-                                )));
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              backgroundColor: Colors.white,
-                              content: Text(
-                                'ID request sent for validation.',
-                                style: TextStyle(color: Colors.black),
-                              )),
-                        );
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const HomePage()));
-                      }
-                    },
-                  ),
+                                  'ID request sent for validation.',
+                                  style: TextStyle(color: Colors.black),
+                                )),
+                          );
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const HomePage()));
+                        }
+                      },
+                    ),
+                  )
                 ],
               ),
               const Padding(padding: EdgeInsets.all(10)),
@@ -202,41 +198,14 @@ class Camera extends State<CameraPage> {
                                     },
                                   ),
                                   items: [
-                                    // for (int i = 0;
-                                    //     i < specimen_images.length;
-                                    //     i++)
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(9),
-                                      child: Image.file(specimen_images[0]),
-                                    ),
-
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(9),
-                                      child: Image.network(specimen_images[1]),
-                                    ),
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(9),
-                                      child: Image.network(specimen_images[2]),
-                                    ),
+                                    for (int i = 0;
+                                        i < specimen_images.length;
+                                        i++)
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(9),
+                                        child: Image.file(specimen_images[i]),
+                                      ),
                                   ]),
-                              Positioned(
-                                  bottom: 0,
-                                  right: 20,
-                                  child: MaterialButton(
-                                    color: const Color(0xFF064E3B),
-                                    shape: const CircleBorder(),
-                                    onPressed: () {
-                                      _removeimg(currentImg);
-                                      // setState(() {
-                                      //   specimen_images.removeAt(currentImg);
-                                      //   print(specimen_images);
-                                    },
-                                    child: const Icon(
-                                      Icons.delete_outline_rounded,
-                                      size: 25,
-                                      color: Color(0xFFE7EEEC),
-                                    ),
-                                  ))
                             ])),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -254,7 +223,7 @@ class Camera extends State<CameraPage> {
                                     color: (Theme.of(context).brightness ==
                                                 Brightness.dark
                                             ? Colors.white
-                                            : const Color(0xFF064E3B))
+                                            : primaryColor)
                                         .withOpacity(currentImg == entry.key
                                             ? 0.9
                                             : 0.4)),
@@ -269,8 +238,8 @@ class Camera extends State<CameraPage> {
                             child: Container(
                                 width: 100,
                                 height: 50,
-                                decoration: const BoxDecoration(
-                                    color: Color(0xFF064E3B),
+                                decoration: BoxDecoration(
+                                    color: primaryColor,
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(15))),
                                 child: Row(
@@ -299,8 +268,8 @@ class Camera extends State<CameraPage> {
                       },
                       child: Container(
                         width: 200,
-                        decoration: const BoxDecoration(
-                            color: Color(0xFF064E3B),
+                        decoration: BoxDecoration(
+                            color: primaryColor,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(15))),
                         child: Padding(
@@ -330,17 +299,17 @@ class Camera extends State<CameraPage> {
                       child: Column(
                     children: [
                       TextFormField(
-                        cursorColor: const Color(0xFF064E3B),
-                        decoration: const InputDecoration(
-                          labelStyle: TextStyle(color: Color(0xFF064E3B)),
+                        cursorColor: primaryColor,
+                        decoration: InputDecoration(
+                          labelStyle: TextStyle(color: primaryColor),
                           enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF064E3B)),
+                            borderSide: BorderSide(color: primaryColor),
                           ),
                           focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF064E3B)),
+                            borderSide: BorderSide(color: primaryColor),
                           ),
                           border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF064E3B)),
+                            borderSide: BorderSide(color: primaryColor),
                           ),
                           labelText: 'Garden',
                         ),
@@ -348,18 +317,18 @@ class Camera extends State<CameraPage> {
                       ),
                       TextFormField(
                         focusNode: myFocusNode,
-                        cursorColor: const Color(0xFF064E3B),
-                        decoration: const InputDecoration(
-                          //Color(0xFF064E3B)
-                          labelStyle: TextStyle(color: Color(0xFF064E3B)),
+                        cursorColor: primaryColor,
+                        decoration: InputDecoration(
+                          //primaryColor
+                          labelStyle: TextStyle(color: primaryColor),
                           enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF064E3B)),
+                            borderSide: BorderSide(color: primaryColor),
                           ),
                           focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF064E3B)),
+                            borderSide: BorderSide(color: primaryColor),
                           ),
                           border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF064E3B)),
+                            borderSide: BorderSide(color: primaryColor),
                           ),
                           labelText: 'Owner',
                         ),
@@ -404,15 +373,15 @@ class Camera extends State<CameraPage> {
                                 padding: EdgeInsets.all(50),
                               ),
                               markers: markers,
-                              polygonOptions: const PolygonOptions(
-                                  borderColor: Color(0xFF064E3B),
+                              polygonOptions: PolygonOptions(
+                                  borderColor: primaryColor,
                                   color: Colors.black12,
                                   borderStrokeWidth: 3),
                               builder: (context, markers) {
                                 return Container(
                                   alignment: Alignment.center,
-                                  decoration: const BoxDecoration(
-                                      color: Color(0xFF064E3B),
+                                  decoration: BoxDecoration(
+                                      color: primaryColor,
                                       shape: BoxShape.circle),
                                   child: Text(
                                     '${markers.length}',
@@ -437,7 +406,7 @@ class Camera extends State<CameraPage> {
                       const Padding(padding: EdgeInsets.all(5)),
                       MaterialButton(
                           padding: const EdgeInsets.fromLTRB(10, 8, 20, 8),
-                          color: const Color(0xFF064E3B),
+                          color: primaryColor,
                           shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15.0))),

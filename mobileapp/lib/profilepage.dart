@@ -3,22 +3,26 @@ import 'package:camellia_cultivar/editprofilepage.dart';
 import 'package:camellia_cultivar/layout.dart';
 import 'package:camellia_cultivar/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:camellia_cultivar/providers/user.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/local_auth_api.dart';
 import 'package:camellia_cultivar/utils/auth.dart';
+import 'login.dart';
 import 'navbar/botnavbar.dart';
 
 class UserDetailWidget extends StatelessWidget {
-  UserDetailWidget({required Icon this.icon, required String this.text});
+  const UserDetailWidget({Key? key, required this.icon, required this.text})
+      : super(key: key);
 
   final Icon icon;
   final String text;
 
   @override
   Widget build(BuildContext context) {
+    Color primaryColor = Theme.of(context).primaryColor;
     return Padding(
         padding: const EdgeInsets.only(bottom: 20),
         child: Wrap(
@@ -26,7 +30,7 @@ class UserDetailWidget extends StatelessWidget {
           children: [
             icon,
             const Padding(padding: EdgeInsets.all(10)),
-            Text(text, style: const TextStyle(color: Color(0xFF064E3B)))
+            Text(text, style: TextStyle(color: primaryColor))
           ],
         ));
   }
@@ -40,44 +44,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePage extends State<ProfilePage> {
-  bool _isActiveBiometrics = false;
-  bool _isBiometricsAvailable = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // checkBiometrics();
-    // checkBiometricsAvailability();
-  }
-
-  @override
-  void dispose() async {
-    super.dispose();
-    // final prefs = await SharedPreferences.getInstance();
-    // prefs.setBool('isActiveBiometrics', _isActiveBiometrics);
-
-    // final storage = new FlutterSecureStorage();
-    // await storage.write(
-    //     key: "isActiveBiometrics", value: _isActiveBiometrics.toString());
-  }
-
-  // void checkBiometrics() async {
-  //   // final prefs = await SharedPreferences.getInstance();
-  //   // bool isActiveBiometrics = prefs.getBool('isActiveBiometrics') ?? false;
-
-  //   final storage = new FlutterSecureStorage();
-  //   bool isActiveBiometrics =
-  //       (await storage.read(key: "isActiveBiometrics")) == "true";
-
-  //   setState(() {
-  //     _isActiveBiometrics = isActiveBiometrics;
-  //   });
-  // }
-
-  // void checkBiometricsAvailability() async {
-  //   _isBiometricsAvailable = await LocalAuthApi.hasBiometrics();
-  // }
-
   void handleDelete(BuildContext context, User user) async {
     final dbHelper = DatabaseHelper.instance;
 
@@ -97,7 +63,11 @@ class _ProfilePage extends State<ProfilePage> {
       user,
     );
 
-    Navigator.popUntil(context, (route) => route.isFirst);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          content: Text('Sucessfully deletet account!'),
+          backgroundColor: Colors.green),
+    );
   }
 
   void handleLogout(BuildContext context, User user) async {
@@ -108,21 +78,14 @@ class _ProfilePage extends State<ProfilePage> {
           content: Text('Logged out from your account!'),
           backgroundColor: Colors.green),
     );
-
-    Navigator.popUntil(context, (route) => route.isFirst);
   }
 
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
+    Color primaryColor = Theme.of(context).primaryColor;
 
     User? user = context.watch<UserProvider>().user;
-
-    if (user == null) {
-      Navigator.pop(
-          context, MaterialPageRoute(builder: (context) => const LoginPage()));
-      return const Scaffold();
-    }
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -138,23 +101,16 @@ class _ProfilePage extends State<ProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
-                        padding: const EdgeInsets.only(right: 60),
-                        child: Wrap(
-                          spacing: 20,
-                          alignment: WrapAlignment.spaceBetween,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            const BackButton(
-                              color: Color(0xFF064E3B),
-                            ),
-                            Text("Profile",
-                                style: TextStyle(
-                                    color: const Color(0xFF064E3B),
-                                    fontSize: screenSize.height / 35,
-                                    fontWeight: FontWeight.w500))
-                          ],
-                        )),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Profile",
+                            style: TextStyle(
+                                color: primaryColor,
+                                fontSize: screenSize.height / 35,
+                                fontWeight: FontWeight.w500))
+                      ],
+                    ),
                     Padding(
                         padding: EdgeInsets.only(
                           top: screenSize.height / 30,
@@ -179,25 +135,29 @@ class _ProfilePage extends State<ProfilePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 UserDetailWidget(
-                                    text: user.name,
-                                    icon: const Icon(
+                                    text: user?.name != null ? user!.name : "",
+                                    icon: Icon(
                                       Icons.person_outlined,
-                                      color: Color(0xFF064E3B),
+                                      color: primaryColor,
                                     )),
                                 UserDetailWidget(
-                                    icon: const Icon(
+                                    icon: Icon(
                                       IconData(0xf018,
                                           fontFamily: 'MaterialIcons'),
-                                      color: Color(0xFF064E3B),
+                                      color: primaryColor,
                                     ),
-                                    text: user.email),
+                                    text:
+                                        user?.email != null ? user!.email : ""),
                                 UserDetailWidget(
-                                    icon: const Icon(
-                                      IconData(0xf3e2,
-                                          fontFamily: 'MaterialIcons'),
-                                      color: Color(0xFF064E3B),
-                                    ),
-                                    text: '${user.reputation} reputation'),
+                                  icon: Icon(
+                                    IconData(0xf3e2,
+                                        fontFamily: 'MaterialIcons'),
+                                    color: primaryColor,
+                                  ),
+                                  text: user?.reputation != null
+                                      ? '${user!.reputation} reputation'
+                                      : "",
+                                )
                               ],
                             ),
                             // SizedBox(
@@ -212,9 +172,9 @@ class _ProfilePage extends State<ProfilePage> {
                             //                 }
                             //             : null,
                             //         value: _isActiveBiometrics,
-                            //         activeColor: const Color(0xFF064E3B),
+                            //         activeColor: const primaryColor,
                             //         activeTrackColor: const Color(0x6F064E3B),
-                            //         inactiveThumbColor: const Color(0xFF064E3B),
+                            //         inactiveThumbColor: const primaryColor,
                             //         inactiveTrackColor: Color(0xFFF5F6F7),
                             //       ),
                             //       const Text("Authenticate with Biometrics")
@@ -240,12 +200,12 @@ class _ProfilePage extends State<ProfilePage> {
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                         150.0),
-                                                side: const BorderSide(
-                                                    color: Color(0xFF064E3B)))),
+                                                side: BorderSide(
+                                                    color: primaryColor))),
                                       ),
                                       child: Text("Edit".toUpperCase(),
-                                          style: const TextStyle(
-                                              color: Color(0xFF064E3B),
+                                          style: TextStyle(
+                                              color: primaryColor,
                                               fontWeight: FontWeight.w300))),
                                 )),
                             Padding(
@@ -255,19 +215,19 @@ class _ProfilePage extends State<ProfilePage> {
                                   width: screenSize.width / 1.8,
                                   child: TextButton(
                                       onPressed: () =>
-                                          handleLogout(context, user),
+                                          handleLogout(context, user as User),
                                       style: ButtonStyle(
                                         backgroundColor:
                                             MaterialStateProperty.all(
-                                                const Color(0xFF064E3B)),
+                                                primaryColor),
                                         shape: MaterialStateProperty.all<
                                                 RoundedRectangleBorder>(
                                             RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                         150.0),
-                                                side: const BorderSide(
-                                                    color: Color(0xFF064E3B)))),
+                                                side: BorderSide(
+                                                    color: primaryColor))),
                                       ),
                                       child: Text("Log out".toUpperCase(),
                                           style: const TextStyle(
@@ -281,7 +241,7 @@ class _ProfilePage extends State<ProfilePage> {
                                   width: screenSize.width / 1.8,
                                   child: TextButton(
                                       onPressed: () =>
-                                          handleDelete(context, user),
+                                          handleDelete(context, user as User),
                                       style: ButtonStyle(
                                         backgroundColor:
                                             MaterialStateProperty.all(

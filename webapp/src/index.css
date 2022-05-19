@@ -16,6 +16,15 @@ code {
     monospace;
 }
 
+@layer components{
+  /* Centered container with margin */
+  .container-4\/5{
+    width:80% !important;
+    margin-left:10% !important;
+    margin-right:10% !important;
+  }
+}
+
 :root {
   --primary: rgb(6, 78, 59);
   --accent: rgb(45 212 191);

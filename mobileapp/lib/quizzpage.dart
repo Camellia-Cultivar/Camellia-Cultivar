@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:camellia_cultivar/database/database_helper.dart';
 
-import 'homepage.dart';
-
 import 'navbar/botnavbar.dart';
 
 class FormItem {
@@ -65,8 +63,6 @@ class _QuizzPageState extends State<QuizzPage> {
 
   Map<int, FormItem> form = {};
 
-  List answers = [];
-
   final cultivarNameController = TextEditingController();
   final FocusNode focusInput = FocusNode();
 
@@ -106,12 +102,24 @@ class _QuizzPageState extends State<QuizzPage> {
       return;
     }
 
-    user.reputation += 2;
+    List<FormItem> answers = form.values.toList();
+    answers.removeWhere((item) => item.answer == null || item.answer!.isEmpty);
+    int reputation = answers.length;
+
+    user.reputation += reputation;
 
     final dbHelper = DatabaseHelper.instance;
     await dbHelper.update("users", user.toMap());
     context.read<UserProvider>().setUser(user);
-    Navigator.popUntil(context, ModalRoute.withName('/home'));
+
+    Navigator.pop(context);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text(
+              'Congratulations! You have received +$reputation reputation.'),
+          backgroundColor: Colors.green),
+    );
 
     // form.entries.forEach((entry) =>
     // answers.add(entry.value.getData())),
@@ -120,6 +128,8 @@ class _QuizzPageState extends State<QuizzPage> {
 
   @override
   Widget build(BuildContext context) {
+    Color primaryColor = Theme.of(context).primaryColor;
+
     var screenSize = MediaQuery.of(context).size;
 
     User? user = context.read<UserProvider>().user;
@@ -174,7 +184,7 @@ class _QuizzPageState extends State<QuizzPage> {
                             color: _currentIndex == index
                                 ? const Color(0x5F064E3B)
                                 : (form[index]?.answer != null
-                                    ? const Color(0xFF064E3B)
+                                    ? primaryColor
                                     : Colors.white),
                             border: Border.all(color: Colors.black),
                           ),
@@ -189,7 +199,7 @@ class _QuizzPageState extends State<QuizzPage> {
                   children: [
                     Text("Name the cultivar",
                         style: TextStyle(
-                            color: Color(0xFF064E3B),
+                            color: primaryColor,
                             fontSize: screenSize.height / 35)),
                     SizedBox(
                       width: screenSize.width / 1.5,
@@ -209,15 +219,13 @@ class _QuizzPageState extends State<QuizzPage> {
                         padding: const EdgeInsets.only(top: 5, bottom: 30),
                         width: screenSize.width / 1.5,
                         child: TextField(
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               hintText: 'Name',
                               focusedBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xFF064E3B)),
+                                borderSide: BorderSide(color: primaryColor),
                               ),
                               border: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xFF064E3B)),
+                                borderSide: BorderSide(color: primaryColor),
                               ),
                             ),
                             controller: cultivarNameController,
@@ -232,8 +240,8 @@ class _QuizzPageState extends State<QuizzPage> {
                           child: TextButton(
                               onPressed: () => handleBack(),
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    const Color(0xFF064E3B)),
+                                backgroundColor:
+                                    MaterialStateProperty.all(primaryColor),
                                 shape: MaterialStateProperty.all<
                                         RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
@@ -258,12 +266,11 @@ class _QuizzPageState extends State<QuizzPage> {
                                     RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(20.0),
-                                        side: const BorderSide(
-                                            color: Color(0xFF064E3B)))),
+                                        side: BorderSide(color: primaryColor))),
                               ),
                               child: Text("Next".toUpperCase(),
-                                  style: const TextStyle(
-                                      color: Color(0xFF064E3B),
+                                  style: TextStyle(
+                                      color: primaryColor,
                                       fontWeight: FontWeight.w300))),
                         ),
                       ],
@@ -276,8 +283,8 @@ class _QuizzPageState extends State<QuizzPage> {
                         child: TextButton(
                             onPressed: () => handleSubmit(user),
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  const Color(0xFF064E3B)),
+                              backgroundColor:
+                                  MaterialStateProperty.all(primaryColor),
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
