@@ -3,10 +3,10 @@ import './index.css';
 
 function QuizCard(prop) {
 
-    return (
-        <div className="md:scroll-mx-6 md:gap-2 snap-center snap-mandatory grid justify-items-stretch rounded-lg bg-emerald-900/10 min-w-max md:min-w-[75%] md:max-w-md lg:max-w-lg px-2 pt-2 pb-6 select-none pop-in" style={{animationDelay:`${prop.delay}ms`}}>
-            <div className="grid grid-cols-4 grid-rows-3 gap-0.5 md:gap-1.5">
-                { prop.images.slice(0, 4).map((link, index) =>
+    // return (
+    //     <div className="md:scroll-mx-6 md:gap-2 snap-center snap-mandatory grid justify-items-stretch rounded-lg bg-emerald-900/10 min-w-max md:min-w-[75%] md:max-w-md lg:max-w-lg px-2 pt-2 pb-6 select-none pop-in" style={{animationDelay:`${prop.delay}ms`}}>
+    //         <div className="grid grid-cols-4 grid-rows-3 gap-0.5 md:gap-1.5">
+    //             { prop.images.slice(0, 4).map((link, index) =>
     if (prop.images.length >= 1) {
         const maxInd = Math.min(prop.images.length, 4)
 
@@ -25,7 +25,6 @@ function QuizCard(prop) {
                 </div>;
         }
         else {
-            console.log(maxInd)
             let basisClass;
 
             // switch needed because dynamic construction of class names does not work
@@ -67,7 +66,7 @@ function QuizCard(prop) {
 
 
         return (
-            <div className={'quiz-card bg-emerald-900/10 snap-center'}>
+            <div className={'quiz-card bg-emerald-900/10 snap-center pop-in'} style={{animationDelay:`${prop.delay}ms`}}>
                 {photoGrid}
                 <div className="justify-self-center relative mt-3.5 w-3/4 group">
                     <input id={"cultivar_input_" + prop.id} className="block py-2 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none outline-none ring-0 focus:border-emerald-900 peer" placeholder=" " type="text"/>
