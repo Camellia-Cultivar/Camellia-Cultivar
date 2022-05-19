@@ -1,0 +1,64 @@
+.quiz-card {
+    border-radius: 0.7rem;
+    padding: 0.4rem 0.4rem 1rem;
+    min-width: max-content;
+    min-height: 15rem;
+}
+
+.quiz-card > div:first-child {
+    border-radius: 0.5rem;
+}
+
+@media only screen and (max-width: 1023px) {
+    .quiz-card > div:first-child {
+        min-width: 50vw;
+        min-height: 40vw;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .quiz-card > div:first-child {
+        min-height: 12rem;
+    }
+}
+
+.quiz-card > div:first-child {
+    height: 75%;
+    width: 100%;
+}
+
+.quiz-card > div:first-child > .grid > div {
+    isolation: isolate;
+    position: relative;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.quiz-card > .grid-non-symmetrical{
+    grid-template-columns: 3fr 1fr;
+    justify-items: stretch;
+    align-items: stretch;
+}
+
+.quiz-card > .grid-non-symmetrical > div:first-child{
+    grid-row: 1 / span 3;
+}
+
+.quiz-card > div:first-child > .grid > div:not(:empty)::after {
+    content: "";
+    background: var(--primary);
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.85;
+    mix-blend-mode: multiply;
+    border-radius: inherit;
+}
+
+.quiz-card > div:nth-child(2) {
+    margin: 0.7rem auto;
+}
