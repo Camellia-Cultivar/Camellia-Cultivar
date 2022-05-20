@@ -13,15 +13,10 @@ import com.camellia.models.Quiz;
 import com.camellia.models.specimens.Specimen;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @Table(name = "registered_user")
 public class RegisteredUser extends User{
@@ -54,4 +49,62 @@ public class RegisteredUser extends User{
     )
     @JsonIgnoreProperties("registered_user")
     private Set<Quiz> quizzes;
+
+
+    public double getReputation() {
+        return this.reputation;
+    }
+
+    public void setReputation(double reputation) {
+        this.reputation = reputation;
+    }
+
+    public boolean isVerified() {
+        return this.verified;
+    }
+
+    public boolean getVerified() {
+        return this.verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+    public boolean isAuto_approval() {
+        return this.auto_approval;
+    }
+
+    public boolean getAuto_approval() {
+        return this.auto_approval;
+    }
+
+    public void setAuto_approval(boolean auto_approval) {
+        this.auto_approval = auto_approval;
+    }
+
+    public Set<Specimen> getSpecimens() {
+        return this.specimens;
+    }
+
+    public void setSpecimens(Set<Specimen> specimens) {
+        this.specimens = specimens;
+    }
+
+    public Set<Quiz> getQuizzes() {
+        return this.quizzes;
+    }
+
+    public void setQuizzes(Set<Quiz> quizzes) {
+        this.quizzes = quizzes;
+    }
+
+
+    public String profile() {
+        return "{" + super.profile() + 
+            ", " + "\"reputation\":" + getReputation() +
+            ", " + "\"auto_approval\":" + isAuto_approval()  +
+            "}";
+    }
+    
 }

@@ -1,8 +1,9 @@
 import React from "react";
 
 function QuizCard(prop) {
+
     return (
-        <div className="md:scroll-mx-6 md:gap-2 snap-center snap-mandatory grid justify-items-stretch rounded-lg bg-emerald-900/10 min-w-max md:min-w-[75%] md:max-w-md lg:max-w-lg px-2 pt-2 pb-6 select-none">
+        <div className="md:scroll-mx-6 md:gap-2 snap-center snap-mandatory grid justify-items-stretch rounded-lg bg-emerald-900/10 min-w-max md:min-w-[75%] md:max-w-md lg:max-w-lg px-2 pt-2 pb-6 select-none pop-in" style={{animationDelay:`${prop.delay}ms`}}>
             <div className="grid grid-cols-4 grid-rows-3 gap-0.5 md:gap-1.5">
                 { prop.images.slice(0, 4).map((link, index) =>
                     <div

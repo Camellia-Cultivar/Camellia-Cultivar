@@ -34,14 +34,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @NoArgsConstructor
 public abstract class Specimen {
     
     @Id
-    @GeneratedValue(generator = "sequence-generator")
+    @GeneratedValue(generator = "specimen-sequence-generator")
     @GenericGenerator(
-        name = "sequence-generator",
+        name = "specimen-sequence-generator",
         strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
         parameters = {
                     @Parameter(name = "sequence_name", value = "specimen_sequence"),

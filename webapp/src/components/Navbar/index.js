@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Link, NavLink, useNavigate} from 'react-router-dom';
-import {IoEnterOutline} from 'react-icons/io5';
 
 const Navbar = () =>{
 

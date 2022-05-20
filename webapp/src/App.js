@@ -10,6 +10,7 @@ import Navbar from './components/Navbar'
 
 import './App.css';
 import Encyclopedia from './pages/Encyclopedia';
+import Camellia from './pages/Camellia';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
               <Route path="/login" element={<Login />}/>
               <Route path="/quizzes" element={<Quizzes />}/>
               <Route path="/encyclopedia" element={<Encyclopedia />} />
+              <Route path="/encyclopedia/camellia" element={<Camellia />} />
               <Route path="/register" element={<Register />}/>
               <Route path="/about" element={<About />}/>
           </Routes>

@@ -34,7 +34,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
         .pickImage(source: ImageSource.camera, imageQuality: 100);
     setState(() {
       specimen_images.add(File(pickedFile!.path));
-      currentImg = specimen_images.length - 1;
+      if (specimen_images.length == 1) currentImg = specimen_images.length - 1;
     });
   }
 
@@ -104,9 +104,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
     void _removeimg() {
       setState(() {
         specimen_images.removeAt(currentImg);
-        currentImg = (currentImg == specimen_images.length)
-            ? currentImg - 1
-            : currentImg;
+        if (currentImg == specimen_images.length) currentImg--;
       });
     }
 

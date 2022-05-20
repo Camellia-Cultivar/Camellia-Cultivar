@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import {useNavigate} from 'react-router-dom';
 import { AiOutlineSearch } from "react-icons/ai";
 
 import Card from "../../components/Card"
@@ -7,7 +8,9 @@ import camellias from "./camellias"
 
 const Encyclopedia = () => {
 
-    let [page, setPage] = useState(1)
+    let [page, setPage] = useState(1);
+    const navigate = useNavigate();
+
 
 
     const pages = 9;
@@ -33,6 +36,12 @@ const Encyclopedia = () => {
 
     }
 
+    const redirect = (route) => {
+        navigate(route);
+    }
+
+
+
     return (
         <div className="container-4/5 flex flex-col">
             <div className="pt-16 pb-6 ml-4">
@@ -41,18 +50,18 @@ const Encyclopedia = () => {
             <div className="self-center flex flex-col w-full pt-4">
                 <div className="flex w-full ">
                     <input placeholder="Search for a cultivar" className=" rounded-3xl border-2 px-3 py-2 shadow w-11/12 mr-2 md:mr-4 sm:text-base md:text-xl h-full focus:border-emerald-900"></input>
-                    <button className="bg-emerald-900 text-white text-2xl px-4 md:px-6 py-1 rounded-3xl active:scale-110 hover:scale-105"><AiOutlineSearch></AiOutlineSearch></button>
+                    <button className="bg-emerald-900 text-white text-2xl px-4 md:px-6 py-1 rounded-3xl active:scale-95 hover:scale-105"><AiOutlineSearch></AiOutlineSearch></button>
                 </div>
                 <div className=" flex md:justify-start mt-4">
-                    <button className="bg-emerald-900 text-white font-light text-base md:text-lg px-4 md:px-6 py-1 mx-1 md:mx-4 rounded-3xl active:scale-110 hover:scale-105">Filter By</button>
-                    <button className="bg-emerald-900 text-white font-light text-base md:text-lg px-4 md:px-6 py-1 mx-1 md:mx-4 rounded-3xl active:scale-110 hover:scale-105">Sort By</button>
+                    <button className="bg-emerald-900 text-white font-light text-base md:text-lg px-4 md:px-6 py-1 mx-1 md:mx-4 rounded-3xl active:scale-95 hover:scale-105">Filter By</button>
+                    <button className="bg-emerald-900 text-white font-light text-base md:text-lg px-4 md:px-6 py-1 mx-1 md:mx-4 rounded-3xl active:scale-95 hover:scale-105">Sort By</button>
                 </div>
             </div>
             <div className="grid sm:grid-cols-2 sm:gap-x-4 md:grid-cols-3 md:grid-rows-3 md:gap-x-8 gap-y-10 mt-10">
                 {
                     camellias.map((camellia) => {
                         return (
-                            <Card className="hover:scale-110 hover:shadow" key={camellia.id} image={camellia.image} name={camellia.name} species={camellia.species}></Card>
+                            <Card className="hover:scale-110 hover:shadow transition-transform duration-75 ease-linear" key={camellia.id} image={camellia.image} name={camellia.name} species={camellia.species} redirect={redirect}></Card>
                         )
                     })
                 }
