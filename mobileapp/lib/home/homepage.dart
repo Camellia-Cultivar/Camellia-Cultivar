@@ -66,34 +66,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
   }
 
   @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    final isBackground = state == AppLifecycleState.resumed;
-
-    if (isBackground) {
-      const storage = FlutterSecureStorage();
-      String expiresIn = await storage.read(key: "expiresIn") ?? "";
-
-      if (expiresIn.isNotEmpty &&
-          DateTime.now().compareTo(DateTime.parse(expiresIn)) < 0) {
-        if (await LocalAuthApi.hasBiometrics()) {
-          final isAuthenticated = await LocalAuthApi.authenticate();
-
-          if (!isAuthenticated) {
-            User user = context.read<UserProvider>().user as User;
-            await logout(context, user);
-
-            Navigator.popUntil(context, (route) => route.isFirst);
-          }
-        } else {
-          User user = context.read<UserProvider>().user as User;
-          await logout(context, user);
-          Navigator.popUntil(context, (route) => route.isFirst);
-        }
-      }
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
     User? user = context.watch<UserProvider>().user;

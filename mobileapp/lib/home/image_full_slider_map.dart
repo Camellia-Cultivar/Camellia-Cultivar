@@ -5,8 +5,12 @@ import 'package:flutter/material.dart';
 class SliderShowFullmages extends StatefulWidget {
   final List listImagesModel;
   final int current;
+  final bool isNetworkImg;
   const SliderShowFullmages(
-      {Key? key, required this.listImagesModel, required this.current})
+      {Key? key,
+      required this.listImagesModel,
+      required this.current,
+      required this.isNetworkImg})
       : super(key: key);
   @override
   _SliderShowFullmagesState createState() => _SliderShowFullmagesState();
@@ -15,6 +19,7 @@ class SliderShowFullmages extends StatefulWidget {
 class _SliderShowFullmagesState extends State<SliderShowFullmages> {
   int _current = 0;
   bool _stateChange = false;
+  bool _isNetworkImg = false;
   @override
   void initState() {
     super.initState();
@@ -32,6 +37,8 @@ class _SliderShowFullmagesState extends State<SliderShowFullmages> {
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
     _current = (_stateChange == false) ? widget.current : _current;
+    _isNetworkImg = widget.isNetworkImg;
+
     return Container(
         color: Colors.transparent,
         child: Scaffold(
@@ -46,6 +53,7 @@ class _SliderShowFullmagesState extends State<SliderShowFullmages> {
               children: <Widget>[
                 CarouselSlider(
                   options: CarouselOptions(
+                      enableInfiniteScroll: false,
                       autoPlay: false,
                       height: MediaQuery.of(context).size.height / 1.3,
                       viewportFraction: 1.0,
@@ -64,10 +72,15 @@ class _SliderShowFullmagesState extends State<SliderShowFullmages> {
                           ClipRRect(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(0.0)),
-                            child: Image.network(
-                              url,
-                              fit: BoxFit.fill,
-                            ),
+                            child: _isNetworkImg
+                                ? Image.network(
+                                    url,
+                                    fit: BoxFit.fill,
+                                  )
+                                : Image.file(
+                                    url,
+                                    fit: BoxFit.fill,
+                                  ),
                           )
                         ]);
                   }),

@@ -106,8 +106,11 @@ class CustomPopupState extends State<CustomPopup> {
         child: InkWell(
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    SliderShowFullmages(listImagesModel: list, current: idx)));
+                builder: (context) => SliderShowFullmages(
+                      listImagesModel: list,
+                      current: idx,
+                      isNetworkImg: true,
+                    )));
           },
           child: Image.network(
             list[0],

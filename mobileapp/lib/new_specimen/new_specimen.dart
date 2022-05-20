@@ -17,6 +17,7 @@ import 'package:latlong/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../home/homepage.dart';
+import '../home/image_full_slider_map.dart';
 
 class NewSpecimenPage extends StatefulWidget {
   const NewSpecimenPage({Key? key}) : super(key: key);
@@ -26,16 +27,14 @@ class NewSpecimenPage extends StatefulWidget {
 }
 
 class NewSpecimen extends State<NewSpecimenPage> {
-  File? imageFile;
-
-  // ignore: non_constant_identifier_names
   List specimen_images = [];
 
   void _getFromCamera() async {
     XFile? pickedFile = await ImagePicker()
         .pickImage(source: ImageSource.camera, imageQuality: 100);
     setState(() {
-      imageFile = File(pickedFile!.path);
+      specimen_images.add(File(pickedFile!.path));
+      currentImg = specimen_images.length - 1;
     });
   }
 
@@ -102,20 +101,15 @@ class NewSpecimen extends State<NewSpecimenPage> {
       )
     ];
 
-    specimen_images = [
-      imageFile,
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBA5mAFxS9mjuuD-AWAGB_z1676LSGYIBoNA&usqp=CAU',
-      'https://media.istockphoto.com/photos/white-camellia-flower-isolated-on-white-background-picture-id1251528600?k=20&m=1251528600&s=612x612&w=0&h=AW64ZIfakH0ROp3WJeh_Gd5bjaJtOOyokx-NMjAho7E='
-    ];
-    void _removeimg(int idx) {
+    void _removeimg() {
       setState(() {
-        specimen_images.removeAt(idx);
+        specimen_images.removeAt(currentImg);
+        currentImg = (currentImg == specimen_images.length)
+            ? currentImg - 1
+            : currentImg;
       });
     }
 
-    // print(specimen_images);
-
-    // _getFromCamera();
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6F7),
       body: Container(
@@ -178,7 +172,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
                 ],
               ),
               const Padding(padding: EdgeInsets.all(10)),
-              imageFile != null
+              specimen_images.isNotEmpty
                   ? Column(
                       children: [
                         SizedBox(
@@ -200,18 +194,27 @@ class NewSpecimen extends State<NewSpecimenPage> {
                                     },
                                   ),
                                   items: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(9),
-                                      child: Image.file(imageFile!),
-                                    ),
-                                    for (int i = 1;
+                                    for (int i = 0;
                                         i < specimen_images.length;
                                         i++)
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(9),
-                                        child:
-                                            Image.network(specimen_images[i]),
-                                      ),
+                                      GestureDetector(
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(9),
+                                          child: Image.file(specimen_images[i]),
+                                        ),
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SliderShowFullmages(
+                                                        listImagesModel:
+                                                            specimen_images,
+                                                        current: currentImg,
+                                                        isNetworkImg: false,
+                                                      )));
+                                        },
+                                      )
                                   ]),
                               Positioned(
                                   bottom: 0,
@@ -220,7 +223,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
                                     color: primaryColor,
                                     shape: const CircleBorder(),
                                     onPressed: () {
-                                      _removeimg(currentImg);
+                                      _removeimg();
                                     },
                                     child: const Icon(
                                       Icons.delete_outline_rounded,
