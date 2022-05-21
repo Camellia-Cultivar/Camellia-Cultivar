@@ -1,4 +1,4 @@
-package com.camellia.models;
+package com.camellia.models.cultivars;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 
+import com.camellia.models.Quiz;
 import com.camellia.models.specimens.ReferenceSpecimen;
 import com.camellia.models.specimens.ToIdentifySpecimen;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -38,7 +39,7 @@ public class Cultivar {
     private long cultivar_id;
 
     @Column(name = "species")
-    private String specie;
+    private String species;
 
     @Column(name = "epithet")
     private String epithet;
@@ -81,4 +82,36 @@ public class Cultivar {
     )
     @MapKeyJoinColumn(name = "specimen_id")
     private Map<ToIdentifySpecimen, Integer> cultivar_votes = new HashMap<>();
+
+    public long getCultivar_id() {
+        return cultivar_id;
+    }
+
+    public void setCultivar_id(long cultivar_id) {
+        this.cultivar_id = cultivar_id;
+    }
+
+    public String getSpecies() {
+        return species;
+    }
+
+    public void setSpecies(String species) {
+        this.species = species;
+    }
+
+    public String getEpithet() {
+        return epithet;
+    }
+
+    public void setEpithet(String epithet) {
+        this.epithet = epithet;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
