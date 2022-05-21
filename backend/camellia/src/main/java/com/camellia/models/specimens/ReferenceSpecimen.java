@@ -6,7 +6,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.camellia.models.Cultivar;
+import com.camellia.models.cultivars.Cultivar;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
 import lombok.Getter;

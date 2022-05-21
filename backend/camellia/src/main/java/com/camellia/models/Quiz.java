@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.camellia.models.cultivars.Cultivar;
 import com.camellia.models.requests.IdentificationRequest;
 import com.camellia.models.specimens.Specimen;
 import com.camellia.models.users.RegisteredUser;

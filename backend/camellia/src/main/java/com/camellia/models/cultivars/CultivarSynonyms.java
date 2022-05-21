@@ -1,4 +1,4 @@
-package com.camellia.models;
+package com.camellia.models.cultivars;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,4 +34,28 @@ public class CultivarSynonyms {
     @JoinColumn( referencedColumnName = "cultivar_id", name="cultivar_id", nullable=false)
     @JsonIncludeProperties("cultivar_id")
     private Cultivar cultivar;
+
+    public long getCultivarSynonymId() {
+        return cultivar_synonym_id;
+    }
+
+    public void setCultivarSynonymSd(long cultivar_synonym_id) {
+        this.cultivar_synonym_id = cultivar_synonym_id;
+    }
+
+    public String getSynonym() {
+        return synonym;
+    }
+
+    public void setSynonym(String synonym) {
+        this.synonym = synonym;
+    }
+
+    public Cultivar getCultivar() {
+        return cultivar;
+    }
+
+    public void setCultivar(Cultivar cultivar) {
+        this.cultivar = cultivar;
+    }
 }
