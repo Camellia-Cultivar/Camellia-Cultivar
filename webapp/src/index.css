@@ -3,9 +3,11 @@
 @tailwind utilities;
 
 :root {
-    --base-delay: 1.1s;
-    --extra-delay: 0.1s;
-    --small-extra-delay: 0.05s;
+  --base-delay: 1.1s;
+  --extra-delay: 0.1s;
+  --small-extra-delay: 0.05s;
+  --primary: rgb(6, 78, 59);
+  --accent: rgb(45 212 191);
 }
 
 body {
@@ -31,6 +33,11 @@ code {
         margin-left: 10% !important;
         margin-right: 10% !important;
     }
+}
+
+:root {
+  --primary: rgb(6, 78, 59);
+  --accent: rgb(45 212 191);
 }
 
 .slider {

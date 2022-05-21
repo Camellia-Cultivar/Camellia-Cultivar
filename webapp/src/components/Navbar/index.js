@@ -27,7 +27,7 @@ const Navbar = () =>{
             <nav className="flex bg-emerald-900 lg:px-2 py-2 md:py-4 lg:py-5 text-stone-200 select-none">
                 <div className="container flex flex-wrap justify-between items-center mx-auto">
                     <Link to={"/"} className="flex items-center" onClick={() => closeMenu()}>
-                        <img src="logo192.png" className="ml-2 lg:ml-0 md:mr-3 h-10 md:h-9" alt="Logo"/>
+                        <img src="logo.svg" className="ml-2 lg:ml-0 md:mr-3 h-10 md:h-9 w-9" alt="Logo"/>
                         <span
                             className="hidden md:flex whitespace-nowrap self-center text-2xl font-bold dark:text-white">Camellia Cultivar</span>
                     </Link>
