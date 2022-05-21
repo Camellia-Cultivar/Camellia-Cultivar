@@ -20,15 +20,15 @@ const Register = () => {
                             <input className="bg-stone-100 rounded-xl border-2 px-2 py-1" type="text" id="ln"></input>
                         </div>
                     </div>
-                    <label className="mt-3 md:mt-2 ml-2 font-semibold text-sm mb-0.5 md:text-base " htmlFor='fn'>Username</label>
-                    <input className="bg-stone-100 rounded-xl border-2 px-2 py-1" type="text" id="Username"></input>
-                    <label className="mt-3 md:mt-2 ml-2 font-semibold text-sm mb-0.5 md:text-base " htmlFor='fn'>Email</label>
-                    <input className="bg-stone-100 rounded-xl border-2 px-2 py-1" type="email" id="Email"></input>
-                    <label className="mt-3 md:mt-2 ml-2 font-semibold text-sm mb-0.5 md:text-base " htmlFor='fn'>Password</label>
-                    <input className="bg-stone-100 rounded-xl border-2 px-2 py-1" type="password" id="Password"></input>
-                    <label className="mt-3 md:mt-2 ml-2 font-semibold text-sm mb-0.5 md:text-base " htmlFor='fn'>Repeat Password</label>
-                    <input className="bg-stone-100 rounded-xl border-2 px-2 py-1" type="password" id="Confirm Password"></input>
-                    <button className="bg-emerald-900 rounded-3xl w-3/4 self-center mt-6 mb-2 py-2 max-w-sm"><span className="text-lg text-white">GET STARTED</span></button>
+                    <label className="mt-3 md:mt-2 ml-2 font-semibold text-sm mb-0.5 md:text-base " htmlFor='username'>Username</label>
+                    <input className="bg-stone-100 rounded-xl border-2 px-2 py-1" type="text" id="username"></input>
+                    <label className="mt-3 md:mt-2 ml-2 font-semibold text-sm mb-0.5 md:text-base " htmlFor='email'>Email</label>
+                    <input className="bg-stone-100 rounded-xl border-2 px-2 py-1" type="email" id="email"></input>
+                    <label className="mt-3 md:mt-2 ml-2 font-semibold text-sm mb-0.5 md:text-base " htmlFor='password'>Password</label>
+                    <input className="bg-stone-100 rounded-xl border-2 px-2 py-1" type="password" id="password"></input>
+                    <label className="mt-3 md:mt-2 ml-2 font-semibold text-sm mb-0.5 md:text-base " htmlFor='confirm-password'>Repeat Password</label>
+                    <input className="bg-stone-100 rounded-xl border-2 px-2 py-1" type="password" id="confirm-password"></input>
+                    <button className="bg-emerald-900 rounded-3xl w-3/4 self-center mt-6 mb-2 py-2 max-w-sm active:scale-95"><span className="text-lg text-white">GET STARTED</span></button>
                 </div>
             </div>
             <BallDecoration className="hidden xl:contents "></BallDecoration>

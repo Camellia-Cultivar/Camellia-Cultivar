@@ -14,7 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 
-import com.camellia.models.Cultivar;
+import com.camellia.models.cultivars.Cultivar;
 import com.camellia.models.requests.IdentificationRequest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

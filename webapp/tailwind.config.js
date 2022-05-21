@@ -14,6 +14,7 @@ module.exports = {
       }
       
     },
+
   },
   plugins: [
       plugin(function ({ addVariant }) {
