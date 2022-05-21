@@ -21,6 +21,7 @@ import com.camellia.models.Country;
 import com.camellia.models.Quiz;
 import com.camellia.models.characteristics.CharacteristicOption;
 import com.camellia.models.users.RegisteredUser;
+import com.camellia.models.users.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
@@ -74,9 +75,9 @@ public abstract class Specimen {
     private double garden;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn( referencedColumnName = "user_id", name="user_id", nullable=false)
+    @JoinColumn( referencedColumnName = "userId", name="user_id", nullable=false)
     @JsonIncludeProperties("user_id")
-    private RegisteredUser registered_user;
+    private User registered_user;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn( referencedColumnName = "country_id", name="country_id", nullable=false)
