@@ -34,11 +34,17 @@ import lombok.Setter;
 public class Cultivar {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
     private long cultivar_id;
 
-    @Column(name = "specie")
+    @Column(name = "species")
     private String specie;
+
+    @Column(name = "epithet")
+    private String epithet;
+
+    @Column(name = "description", columnDefinition="TEXT")
+    private String description;
 
     @OneToMany(
         fetch = FetchType.EAGER,
