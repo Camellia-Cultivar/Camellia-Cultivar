@@ -1,28 +1,49 @@
 package com.camellia.services.users;
 
-import com.camellia.repositories.users.RegisteredUserRepository;
+import java.util.List;
+
 import com.camellia.models.users.RegisteredUser;
+import com.camellia.repositories.users.RegisteredUserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
+
 
 @Service
 public class RegisteredUserService {
     @Autowired
     private RegisteredUserRepository repository;
 
-    public String addRegisteredUser( RegisteredUser user){
-        this.repository.save(user);
-        return "success";
+//    public String login(RegisteredUser user){
+//        RegisteredUser savedUser = this.repository.findByEmail(user.getEmail());
+//        if(savedUser != null){
+//            if(savedUser.getPassword().equals(user.getPassword()))
+//                return "user_id:";
+//            else
+//                return "status: login failed";
+//        }
+//        else
+//            return "User not found";
+//    }
+
+    public ResponseEntity<String> addRegisteredUser( RegisteredUser user){
+        try{
+            this.repository.save(user);
+        } catch(  DataIntegrityViolationException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data. User was not created");
+        }
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body("User Added");
     }
 
-    public String getUserProfile(long id){
-        
-        return this.repository.findById(id).profile();
+    public ResponseEntity<String> getUserProfile(long id){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.repository.findById(id).profile());
     }
 
     public Page<RegisteredUser> getRegisteredUsers(Pageable pageable) {
@@ -39,10 +60,10 @@ public class RegisteredUserService {
 
     public String editProfile(RegisteredUser tempUser){
         RegisteredUser user = this.repository.findByEmail(tempUser.getEmail());
-        user.setProfile_photo(tempUser.getProfile_photo());
-        user.setFirst_name(tempUser.getFirst_name());
-        user.setLast_name(tempUser.getLast_name());
-        user.setEmail(tempUser.getEmail());
+        user.setProfilePhoto(tempUser.getProfilePhoto());
+        user.setFirstName(tempUser.getFirstName());
+        user.setLastName(tempUser.getLastName());
+        //user.setEmail(tempUser.getEmail());
         user.setPassword(tempUser.getPassword());
         this.repository.save(user);
         return user.profile();

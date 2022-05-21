@@ -14,6 +14,7 @@ import com.camellia.models.cultivars.Cultivar;
 import com.camellia.models.requests.IdentificationRequest;
 import com.camellia.models.specimens.Specimen;
 import com.camellia.models.users.RegisteredUser;
+import com.camellia.models.users.User;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
 import lombok.Getter;
@@ -37,9 +38,9 @@ public class Quiz {
 
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn( referencedColumnName = "user_id", name="registered_user", nullable=false)
+    @JoinColumn( referencedColumnName = "userId", name="registered_user", nullable=false)
     @JsonIncludeProperties("registered_user")
-    private RegisteredUser registered_user;
+    private User registered_user;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn( referencedColumnName = "specimen_id", name="specimen_id", nullable=false)
