@@ -45,4 +45,13 @@ public class ToIdentifySpecimen extends Specimen{
     )
     @MapKeyJoinColumn(name = "cultivar_id")
     private Map<Cultivar, Integer> cultivar_votes = new HashMap<>();
+
+    public Map<Cultivar, Integer> getCultivar_votes() {
+        return cultivar_votes;
+    }
+
+    public void setCultivar_votes(Map<Cultivar, Integer> cultivar_votes) {
+        this.cultivar_votes = cultivar_votes;
+    }
+
 }

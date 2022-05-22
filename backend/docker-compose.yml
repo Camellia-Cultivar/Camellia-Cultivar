@@ -28,3 +28,7 @@ services:
             - SPRING_DATASOURCE_USERNAME=camellia
             - SPRING_DATASOURCE_PASSWORD=password
             #- SPRING_JPA_HIBERNATE_DDL_AUTO=update  
+
+#docker exec -it [container id] bash
+#psql -h localhost -p 5432 -d camellia-cultivar -U camellia -W
+#password
