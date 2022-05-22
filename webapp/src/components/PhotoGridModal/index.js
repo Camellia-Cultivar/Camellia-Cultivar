@@ -9,11 +9,10 @@ class PhotoGridModal extends React.Component {
             >
                 <div className="flex flex-col items-end sm:items-center justify-center min-h-full p-4 text-white text-center text-lg sm:p-0">
                     <div className="relative container bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8">
-                        <div className="grid grid-cols-6 justify-items-stretch px-4 pt-5 pb-4 sm:p-6 sm:pb-4 h-[75vh]"
+                        <div className="grid grid-cols-6 justify-items-stretch px-4 pt-5 sm:p-6 h-[75vh]"
                              onClick={(e) => e.stopPropagation()}
                         >
                             <div>
-
                                 {this.props.photosArray.map((link, index, row) =>
                                     <div
                                         key={this.props.id + "-image-" + index}
@@ -36,14 +35,17 @@ class PhotoGridModal extends React.Component {
                                 <TransformWrapper
                                     minScale={0.1}
                                     maxScale={20}
+                                    centerOnInit={true}
+                                    wheel={{step: 0.5}}
                                 >
                                     <TransformComponent
-                                        centerOnInit={true}
-                                        wrapperStyle={{ width: "100%", height: "100%", backgroundColor: "black"}}
+                                        wrapperStyle={{ width: "100%", height: "100%", backgroundColor: "rgb(6 78 59 / 0.1)"}}
                                     >
                                         <img
+                                            style={{height: "calc(75vh - 3rem)"}}
                                             src={`${this.props.photosArray[this.props.currentPhotoIndex]}`}
-                                         alt={"Enlarged image"}></img>
+                                            alt={"Enlarged image"}
+                                        />
                                     </TransformComponent>
                                 </TransformWrapper>
                             </div>
