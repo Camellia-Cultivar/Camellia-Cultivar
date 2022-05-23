@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Card = ({ className, image, name, species, identifications, redirect }) => {
+const Card = ({ className, image, name, species, redirect }) => {
 
     return (
         <div className={"rounded-lg " + className} onClick={()=>{redirect(`camellia`)}}>

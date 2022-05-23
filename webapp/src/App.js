@@ -11,6 +11,7 @@ import Navbar from './components/Navbar'
 import './App.css';
 import Encyclopedia from './pages/Encyclopedia';
 import Camellia from './pages/Camellia';
+import Moderation from './pages/Moderation';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Navbar/>
           <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/moderation" element={<Moderation />} />
               <Route path="/login" element={<Login />}/>
               <Route path="/quizzes" element={<Quizzes />}/>
               <Route path="/encyclopedia" element={<Encyclopedia />} />
