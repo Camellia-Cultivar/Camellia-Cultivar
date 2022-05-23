@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -20,6 +21,8 @@ public class RegisteredUserService {
     @Autowired
     private RegisteredUserRepository repository;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 //    public String login(RegisteredUser user){
 //        RegisteredUser savedUser = this.repository.findByEmail(user.getEmail());
 //        if(savedUser != null){
@@ -34,6 +37,7 @@ public class RegisteredUserService {
 
     public ResponseEntity<String> addRegisteredUser( RegisteredUser user){
         try{
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             this.repository.save(user);
         } catch(  DataIntegrityViolationException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data. User was not created");

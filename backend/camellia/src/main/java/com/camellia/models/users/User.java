@@ -1,11 +1,14 @@
 package com.camellia.models.users;
 
+import java.beans.Transient;
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -36,7 +39,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="user_type", discriminatorType = DiscriminatorType.STRING)
-public class User {
+public class User implements Serializable{
     
     @Id
     @GeneratedValue(generator = "user-sequence-generator")
@@ -266,6 +269,10 @@ public class User {
         this.quizParameters = quizParameters;
     }
 
+    @Transient
+    public String getDecriminatorValue() {
+        return this.getClass().getAnnotation(DiscriminatorValue.class).value();
+    }
 
     public String profile(){
         return "\"profile_image\":" + getProfilePhoto() +

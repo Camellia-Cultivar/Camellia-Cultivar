@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users/")
+@RequestMapping("/api/users")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -35,12 +35,13 @@ public class UserController {
     @Autowired
     private AdministratorUserService administratorUserService;
 
-    @GetMapping
+    @GetMapping(value="/login")
     public ResponseEntity<String> verifyLogin(@Valid @RequestBody User user){
+        System.out.println("login");
         return userService.login(user);
     }
 
-    @PostMapping(value="/")
+    @PostMapping(value="/signup")
     public ResponseEntity<String> createUser(@Valid @RequestBody RegisteredUser user){
         System.out.println("create");
         return registeredUserService.addRegisteredUser(user);
