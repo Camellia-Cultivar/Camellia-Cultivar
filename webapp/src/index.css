@@ -33,6 +33,10 @@ code {
         margin-left: 10% !important;
         margin-right: 10% !important;
     }
+  .current{
+ border: 3px solid;
+ border-color: rgb(16 185 129);
+}
 }
 
 :root {
