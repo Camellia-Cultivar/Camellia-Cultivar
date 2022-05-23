@@ -3,6 +3,7 @@ package com.camellia.models.users;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
@@ -20,26 +21,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "administrator_user")
+//@Table(name = "administrator_user")
+@DiscriminatorValue("ADMIN")
 public class AdministratorUser extends User{
     
-    @OneToMany(
-            fetch = FetchType.EAGER,
-            mappedBy = "admin_user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    @JsonIgnoreProperties("admin_user")
-    private Set<ReputationParameters> reputationParameters;
-
-
-    @OneToMany(
-        fetch = FetchType.EAGER,
-        mappedBy = "admin_user",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
-    @JsonIgnoreProperties("admin_user")
-    private Set<QuizParameters> quizParameters;
 
 }

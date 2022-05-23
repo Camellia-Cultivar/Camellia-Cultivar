@@ -21,6 +21,7 @@ import com.camellia.models.Country;
 import com.camellia.models.Quiz;
 import com.camellia.models.characteristics.CharacteristicOption;
 import com.camellia.models.users.RegisteredUser;
+import com.camellia.models.users.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
@@ -34,14 +35,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @NoArgsConstructor
 public abstract class Specimen {
     
     @Id
-    @GeneratedValue(generator = "sequence-generator")
+    @GeneratedValue(generator = "specimen-sequence-generator")
     @GenericGenerator(
-        name = "sequence-generator",
+        name = "specimen-sequence-generator",
         strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
         parameters = {
                     @Parameter(name = "sequence_name", value = "specimen_sequence"),
@@ -74,9 +75,9 @@ public abstract class Specimen {
     private double garden;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn( referencedColumnName = "user_id", name="user_id", nullable=false)
+    @JoinColumn( referencedColumnName = "userId", name="user_id", nullable=false)
     @JsonIncludeProperties("user_id")
-    private RegisteredUser registered_user;
+    private User registered_user;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn( referencedColumnName = "country_id", name="country_id", nullable=false)

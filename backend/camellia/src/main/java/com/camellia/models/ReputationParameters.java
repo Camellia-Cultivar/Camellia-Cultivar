@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.camellia.models.users.AdministratorUser;
+import com.camellia.models.users.User;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
 import lombok.Getter;
@@ -40,8 +41,8 @@ public class ReputationParameters {
     private double weight_user_total_values;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn( referencedColumnName = "user_id", name="user_id", nullable=false)
+    @JoinColumn( referencedColumnName = "userId", name="user_id", nullable=false)
     @JsonIncludeProperties("user_id")
-    private AdministratorUser admin_user;
+    private User admin_user;
     
 }

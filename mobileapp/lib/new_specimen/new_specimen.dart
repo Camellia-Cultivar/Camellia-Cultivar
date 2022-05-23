@@ -17,6 +17,7 @@ import 'package:latlong/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../home/homepage.dart';
+import '../home/image_full_slider_map.dart';
 
 class NewSpecimenPage extends StatefulWidget {
   const NewSpecimenPage({Key? key}) : super(key: key);
@@ -26,16 +27,14 @@ class NewSpecimenPage extends StatefulWidget {
 }
 
 class NewSpecimen extends State<NewSpecimenPage> {
-  File? imageFile;
-
-  // ignore: non_constant_identifier_names
   List specimen_images = [];
 
   void _getFromCamera() async {
     XFile? pickedFile = await ImagePicker()
         .pickImage(source: ImageSource.camera, imageQuality: 100);
     setState(() {
-      imageFile = File(pickedFile!.path);
+      specimen_images.add(File(pickedFile!.path));
+      if (specimen_images.length == 1) currentImg = specimen_images.length - 1;
     });
   }
 
@@ -102,18 +101,13 @@ class NewSpecimen extends State<NewSpecimenPage> {
       )
     ];
 
-    specimen_images = [
-      imageFile,
-    ];
-    void _removeimg(int idx) {
+    void _removeimg() {
       setState(() {
-        specimen_images.removeAt(idx);
+        specimen_images.removeAt(currentImg);
+        if (currentImg == specimen_images.length) currentImg--;
       });
     }
 
-    // print(specimen_images);
-
-    // _getFromCamera();
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6F7),
       body: Container(
@@ -176,7 +170,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
                 ],
               ),
               const Padding(padding: EdgeInsets.all(10)),
-              imageFile != null
+              specimen_images.isNotEmpty
                   ? Column(
                       children: [
                         SizedBox(
@@ -201,11 +195,40 @@ class NewSpecimen extends State<NewSpecimenPage> {
                                     for (int i = 0;
                                         i < specimen_images.length;
                                         i++)
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(9),
-                                        child: Image.file(specimen_images[i]),
-                                      ),
+                                      GestureDetector(
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(9),
+                                          child: Image.file(specimen_images[i]),
+                                        ),
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SliderShowFullmages(
+                                                        listImagesModel:
+                                                            specimen_images,
+                                                        current: currentImg,
+                                                        isNetworkImg: false,
+                                                      )));
+                                        },
+                                      )
                                   ]),
+                              Positioned(
+                                  bottom: 0,
+                                  right: 20,
+                                  child: MaterialButton(
+                                    color: primaryColor,
+                                    shape: const CircleBorder(),
+                                    onPressed: () {
+                                      _removeimg();
+                                    },
+                                    child: const Icon(
+                                      Icons.delete_outline_rounded,
+                                      size: 25,
+                                      color: Color(0xFFE7EEEC),
+                                    ),
+                                  ))
                             ])),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
