@@ -1,14 +1,21 @@
+import 'dart:io';
+
 import 'package:camellia_cultivar/database/database_helper.dart';
 import 'package:camellia_cultivar/login.dart';
 import 'package:camellia_cultivar/main.dart';
 import 'package:camellia_cultivar/model/user.dart';
+import 'package:camellia_cultivar/new_specimen/new_specimen.dart';
 import 'package:camellia_cultivar/profilepage.dart';
 import 'package:camellia_cultivar/providers/user.dart';
 import 'package:camellia_cultivar/quizzoptionspage.dart';
 import 'package:flutter/material.dart';
 import "package:camellia_cultivar/extensions/string_apis.dart";
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'navbar/botnavbar.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'new_specimen/new_specimen.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
@@ -18,6 +25,17 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePage extends State<EditProfilePage> {
+  File? profileImage;
+  final _picker = ImagePicker();
+  Future<void> _getFromGallery() async {
+    XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        profileImage = File(pickedFile.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
@@ -104,15 +122,22 @@ class _EditProfilePage extends State<EditProfilePage> {
                             ),
                             child: Column(
                               children: [
-                                SizedBox(
-                                  height: screenSize.height / 8,
-                                  width: screenSize.width / 4,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(90.0),
-                                    child: Image.network(
-                                      "https://i.imgflip.com/2/1975nj.jpg",
+                                GestureDetector(
+                                  child: SizedBox(
+                                    height: screenSize.height / 8,
+                                    width: screenSize.width / 4,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(90.0),
+                                      child: profileImage == null
+                                          ? Image.network(
+                                              "https://i.imgflip.com/2/1975nj.jpg")
+                                          : Image.file(
+                                              profileImage!,
+                                              fit: BoxFit.fill,
+                                            ),
                                     ),
                                   ),
+                                  onTap: _getFromGallery,
                                 ),
                                 Column(
                                     crossAxisAlignment:
