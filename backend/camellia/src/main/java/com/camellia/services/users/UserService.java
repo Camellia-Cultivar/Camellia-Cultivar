@@ -6,6 +6,9 @@ import com.camellia.repositories.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,27 +25,30 @@ public class UserService {
     @Autowired
     private AdministratorUserService administratorUserService;
 
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
     public ResponseEntity<String> login(User user){
+        if(!emailVerification(user.getEmail()))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Login failed");
+
         User savedUser = this.repository.findByEmail(user.getEmail());
+
         if(savedUser != null){
-            if(savedUser.getPassword().equals(user.getPassword()))
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body( "userId: ".concat(savedUser.getUserId() + ""));
-            else
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Login failed");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body( "userId: ".concat(savedUser.getUserId() + ""));
         }
         else
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Login failed");
     }
 
-//    public ResponseEntity<String> addUser( User user){
-//        System.out.println("add");
-//        this.repository.save(user);
-//        return ResponseEntity.status(HttpStatus.ACCEPTED).body("success");
-//    }
-
     public ResponseEntity<String> getUserProfile(long id){
+        User attemptingUser = repository.findById(id);
         try{
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.repository.findById(id).profile());
+
+        if(!emailVerification(attemptingUser.getEmail()))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not retrieve profile");
+        else
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.repository.findByEmail(attemptingUser.getEmail()).profile());
         } catch (NullPointerException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
@@ -50,6 +56,9 @@ public class UserService {
 
 
     public ResponseEntity<String> editProfile(User tempUser){
+        if(!emailVerification(tempUser.getEmail()))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid user profile");
+
         User user;
         try{
             user = this.repository.findByEmail(tempUser.getEmail());
@@ -59,9 +68,15 @@ public class UserService {
         user.setProfilePhoto(tempUser.getProfilePhoto());
         user.setFirstName(tempUser.getFirstName());
         user.setLastName(tempUser.getLastName());
-        //user.setEmail(tempUser.getEmail());
         user.setPassword(tempUser.getPassword());
         this.repository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(user.profile());
+    }
+
+    public boolean emailVerification(String email){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth.getName().equals(email))
+            return true;
+        return false;
     }
 }

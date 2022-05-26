@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,23 +42,26 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     // Reads the JWT from the Authorization header, and then uses JWT to validate the token
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        String token = request.getHeader(SecurityConstants.HEADER_STRING);
+        try{
+            String token = request.getHeader(SecurityConstants.HEADER_STRING);
 
-        if (token != null) {
-            // parse the token.
-            String user = JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET.getBytes()))
-                    .build()
-                    .verify(token.replace(SecurityConstants.TOKEN_PREFIX, ""))
-                    .getSubject();
+            if (token != null) {
+                // parse the token.
+                String user = JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET.getBytes()))
+                        .build()
+                        .verify(token.replace(SecurityConstants.TOKEN_PREFIX, ""))
+                        .getSubject();
+                if (user != null) {
+                    // new arraylist means authorities
+                    return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+                }
 
-            if (user != null) {
-                // new arraylist means authorities
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+                return null;
             }
 
             return null;
+        } catch(TokenExpiredException e){
+            return null;
         }
-
-        return null;
     }
 }

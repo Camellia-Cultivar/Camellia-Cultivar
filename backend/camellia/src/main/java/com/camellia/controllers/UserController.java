@@ -12,6 +12,8 @@ import com.camellia.services.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +37,7 @@ public class UserController {
     @Autowired
     private AdministratorUserService administratorUserService;
 
-    @GetMapping(value="/login")
+    @GetMapping(value="")
     public ResponseEntity<String> verifyLogin(@Valid @RequestBody User user){
         System.out.println("login");
         return userService.login(user);
@@ -52,7 +54,7 @@ public class UserController {
         return userService.getUserProfile(id);
     }
 
-    @PutMapping(value="/{id}")
+    @PutMapping(value="")
     public ResponseEntity<String> editProfile(@Valid @RequestBody User tempUser){
         return this.userService.editProfile( tempUser );
     }
