@@ -14,6 +14,7 @@ import com.camellia.models.users.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -32,8 +33,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
-                                                HttpServletResponse response) throws AuthenticationException {
-        System.out.println("auth attempt");
+                                                HttpServletResponse response) throws AuthenticationException{
         try {
             User creds = new ObjectMapper().readValue(request.getInputStream(), User.class);
 
@@ -41,6 +41,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getPassword(), new ArrayList<>())
             );
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InternalAuthenticationServiceException e){
             throw new RuntimeException(e);
         }
     }
@@ -55,9 +57,10 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
                 .sign(Algorithm.HMAC512(SecurityConstants.SECRET.getBytes()));
 
-        String body = ((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername() + " " + token;
 
-        System.out.println("here");
+        String email = ((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername();                               
+        String body = email + " " + token;
+
         response.getWriter().write(body);
         response.getWriter().flush();
     }

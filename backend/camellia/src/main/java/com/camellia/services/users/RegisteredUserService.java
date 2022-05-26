@@ -37,11 +37,16 @@ public class RegisteredUserService {
 
     public ResponseEntity<String> addRegisteredUser( RegisteredUser user){
         try{
+            if(repository.findByEmail(user.getEmail()) != null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exists");
+
+            }
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             this.repository.save(user);
         } catch(  DataIntegrityViolationException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data. User was not created");
         }
+        
         
         return ResponseEntity.status(HttpStatus.CREATED).body("User Added");
     }
