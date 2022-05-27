@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.InheritanceType;
 
 import com.camellia.models.Country;
+import com.camellia.models.Photo;
 import com.camellia.models.Quiz;
 import com.camellia.models.characteristics.CharacteristicOption;
 import com.camellia.models.users.RegisteredUser;
@@ -59,8 +60,8 @@ public abstract class Specimen {
     private String owner;
 
     // File System link
-    @Column(name = "photographs_link", nullable = false)
-    private String photographs_link;
+    @OneToMany(mappedBy = "specimen")
+    private Set<Photo> photographs;
 
     @Column(name = "address", nullable = false)
     private String address;
