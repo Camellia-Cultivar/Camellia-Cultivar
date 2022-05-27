@@ -79,4 +79,8 @@ public class UserService {
             return true;
         return false;
     }
+
+    public Long getUserCount() {
+        return repository.count();
+    }
 }

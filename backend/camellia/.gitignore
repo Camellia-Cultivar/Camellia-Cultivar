@@ -3,8 +3,9 @@
 /.mvn
 ... 
 
-#vs code
+# ide files
 .vscode/settings.json
+.idea
 
 
 

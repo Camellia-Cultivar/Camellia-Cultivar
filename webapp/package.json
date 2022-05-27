@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^0.27.2",
     "mapbox-gl": "^2.8.2",
     "npm": "^8.10.0",
     "react": "^18.0.0",
@@ -30,6 +31,7 @@
       "react-app/jest"
     ]
   },
+  "proxy": "http://localhost:8085",
   "browserslist": {
     "production": [
       ">0.2%",
