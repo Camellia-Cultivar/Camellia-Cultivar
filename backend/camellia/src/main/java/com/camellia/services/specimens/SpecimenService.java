@@ -26,4 +26,8 @@ public class SpecimenService {
     public Specimen getSpecimenById(long id) {
         return repository.findById((long) id);
     }
+
+    public Long getSpecimenCount() {
+        return repository.count();
+    }
 }

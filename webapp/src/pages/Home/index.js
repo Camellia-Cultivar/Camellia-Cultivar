@@ -1,6 +1,7 @@
-import React, { useRef } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import StepList from "../../components/StepList";
 import useIntersection from '../../utilities/useIntersection';
+import axios from "axios";
 
 
 // static data (to remove when backend is functional)
@@ -19,8 +20,22 @@ let second_list = [
 
 
 
-
 const Home = () => {
+    const [achievements, setAchievements] = useState(
+        {
+            specimenCount: 0,
+            userCount: 0
+        }
+    );
+
+
+    let specimen_registered = axios.get('/api/achievements')
+        .then(function (response) {
+            // handle success
+            setAchievements(response.data);
+        });
+
+
 
     return (
         <div className="bg-stone-100 pb-16">
@@ -51,11 +66,11 @@ const Home = () => {
                     <span className="col-span-2 md:col-span-3 font-medium text-3xl fade-in">What we have <span className="font-bold">achieved</span></span>
 
                     <div className="flex flex-col justify-center border-4 rounded-lg border-emerald-900 p-4 aspect-[4/3] fade-in">
-                        <span className="text-3xl font-bold">10000+</span>
-                        <span className="text-xl font-normal">Specimens identified</span>
+                        <span className="text-3xl font-bold">{ achievements.specimenCount }</span>
+                        <span className="text-xl font-normal">Specimens registered</span>
                     </div>
                     <div className="flex flex-col justify-center border-4 rounded-lg border-emerald-900 p-4 aspect-[4/3] fade-in">
-                        <span className="text-3xl font-bold">3000+</span>
+                        <span className="text-3xl font-bold">{ achievements.userCount }</span>
                         <span className="text-xl font-normal">Registered Users</span>
                     </div>
                     <div className="flex flex-col justify-center border-4 rounded-lg border-emerald-900 p-4 aspect-[4/3] fade-in">
