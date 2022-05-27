@@ -12,6 +12,7 @@ import './App.css';
 import Encyclopedia from './pages/Encyclopedia';
 import Camellia from './pages/Camellia';
 import Moderation from './pages/Moderation';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
               <Route path="/encyclopedia/camellia" element={<Camellia />} />
               <Route path="/register" element={<Register />}/>
               <Route path="/about" element={<About />}/>
+              <Route path="/profile" element={<Profile />}/>
           </Routes>
       </BrowserRouter>
   );
