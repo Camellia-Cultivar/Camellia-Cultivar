@@ -28,4 +28,8 @@ public class CultivarService {
     public Optional<Cultivar> getCultivarById(Long id) {
         return repository.findById(id);
     }
+
+    public Cultivar getCultivarByName(String name){
+        return repository.findByName(name);
+    }
 }

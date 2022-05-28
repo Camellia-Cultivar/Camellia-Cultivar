@@ -8,38 +8,28 @@ let scrl = React.createRef();
 // slide scroll to neighbor child
 //  direction = -1
 //  direction =  1
-const slide = (direction=1) => {
+const slide = (direction = 1) => {
     scrl.current.scrollLeft += direction * scrl.current.scrollWidth / scrl.current.children.length;
 };
 
-const Quizzes = () =>{
+const Quizzes = () => {
     return (
         <div className="select-none">
             <div className=
-                     "grid gap-3 grid-flow-row-dense
-                     sm:place-items-center sm:grid-cols-1
-                     md:place-items-start md:grid-cols-5
-                     py-10
-                     text-neutral-900"
+                "grid gap-3 grid-flow-row-dense sm:place-items-center sm:grid-cols-1 md:place-items-start md:grid-cols-5 py-10 text-neutral-900"
             >
                 <div className=
-                         "col-span-2 justify-self-stretch self-stretch rounded-r-full bg-emerald-500/20 slider"
+                    "col-span-2 justify-self-stretch self-stretch rounded-r-full bg-emerald-500/20 slider"
                 ></div>
                 <div className="grid col-span-3 mx-5">
-                    <span className="leading-tight text-4xl font-bold fade-in" style={{animationDelay:`1000ms`}}>Quizzes</span>
-                    <span className="md:text-lg mt-5 md:ml-3 fade-in" style={{animationDelay:`1100ms`}}>The more quizzes you answer correctly, the higher your reputation will get!</span>
-                    <div className="md:ml-3"><StepList baseDelay={1100} steps={steps}/></div>
+                    <span className="leading-tight text-4xl font-bold fade-in" style={{ animationDelay: `1000ms` }}>Quizzes</span>
+                    <span className="md:text-lg mt-5 md:ml-3 fade-in" style={{ animationDelay: `1100ms` }}>The more quizzes you answer correctly, the higher your reputation will get!</span>
+                    <div className="md:ml-3"><StepList baseDelay={1100} steps={steps} /></div>
                 </div>
                 <div className="col-span-2 justify-self-stretch self-stretch bg-stone-100 rounded-l-full"></div>
             </div>
             <div ref={scrl}
-                 className=
-                     "relative
-                     flex w-full
-                     pb-4 md:gap-4
-                     scroll-smooth snap-x snap-mandatory overflow-x-scroll
-                     lg:overflow-x-auto lg:flex-none lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:mx-auto lg:max-w-screen-md lg:gap-x-8 lg:gap-y-3.5 lg:px-0
-                     xl:max-w-screen-lg fade-in" style={{animationDelay:`1400ms`}}
+                className="relative flex w-full pb-4 md:gap-4 scroll-smooth snap-x snap-mandatory overflow-x-scroll lg:overflow-x-auto lg:flex-none lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:mx-auto lg:max-w-screen-md lg:gap-x-8 lg:gap-y-3.5 lg:px-0 xl:max-w-screen-lg fade-in" style={{ animationDelay: `1400ms` }}
             >
                 {/* "<" Button */}
                 <div className="z-50 lg:hidden flex items-center sticky left-0 bg-gradient-to-r from-neutral-900/5 md:px-4">
@@ -49,7 +39,7 @@ const Quizzes = () =>{
                         </svg>
                     </div>
                 </div>
-                {quizzes.map((quiz, index) => <QuizCard delay={1400 + index*100} key={"quiz_card_" + index} id={quiz.id} images={quiz.images} />)}
+                {quizzes.map((quiz, index) => <QuizCard delay={1400 + index * 100} key={"quiz_card_" + index} id={quiz.id} images={quiz.images} />)}
 
                 <div className="lg:hidden flex items-center sticky right-0 bg-gradient-to-l from-neutral-900/5 md:px-4">
                     {/* ">" Button */}
@@ -60,7 +50,7 @@ const Quizzes = () =>{
                     </div>
                 </div>
             </div>
-            <div className="grid items-center pt-5 pb-10 fade-in" style={{animationDelay:`1400ms`}}>
+            <div className="grid items-center pt-5 pb-10 fade-in" style={{ animationDelay: `1400ms` }}>
                 <button type="submit" className="mx-auto bg-emerald-900 text-white hover:ring-2 ring-offset-1 ring-teal-500 rounded-lg px-7 py-2 text-lg font-semibold">Submit</button>
             </div>
         </div>
@@ -72,9 +62,9 @@ export default Quizzes;
 // static data (remove when API is connected)
 
 let steps = [
-    {"id": 1, "content": 'The quizz will have 9 specimens to identify'},
-    {"id": 2, "content": 'You can identify each specimen by inserting the name of it\'s species/cultivar'},
-    {"id": 3, "content": 'Submit your answers even if you can not identify all the specimens!'}
+    { "id": 1, "content": 'The quizz will have 9 specimens to identify' },
+    { "id": 2, "content": 'You can identify each specimen by inserting the name of it\'s species/cultivar' },
+    { "id": 3, "content": 'Submit your answers even if you can not identify all the specimens!' }
 ];
 
 let quizzes = [
