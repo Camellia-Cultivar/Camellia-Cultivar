@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
 import StepList from "../../components/StepList";
-import useIntersection from '../../utilities/useIntersection';
 import axios from "axios";
 
 
