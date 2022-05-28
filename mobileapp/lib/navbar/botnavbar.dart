@@ -1,8 +1,7 @@
+import 'package:camellia_cultivar/new_specimen/uploaded_specimens_page.dart';
 import 'package:camellia_cultivar/profile_page.dart';
-import 'package:camellia_cultivar/quiz_page.dart';
 import 'package:flutter/material.dart';
 
-import '../new_specimen/new_specimen.dart';
 import 'new_specimen_icon.dart';
 import '../home/homepage.dart';
 import '../quiz_options_page.dart';
@@ -81,7 +80,7 @@ class _BotNavBar extends State<BotNavbar> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const NewSpecimenPage()));
+                                          const UploadedSpecimensPage()));
                               break;
                             case 1:
                               Navigator.push(

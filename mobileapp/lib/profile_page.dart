@@ -1,6 +1,4 @@
-import 'dart:developer';
-
-import 'package:camellia_cultivar/database/database_helper.dart';
+import 'package:camellia_cultivar/cultivar_page.dart';
 import 'package:camellia_cultivar/edit_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -115,8 +113,11 @@ class _ProfilePage extends State<ProfilePage> {
       backgroundColor: const Color(0xFFF5F6F7),
       body: Center(
           child: Container(
-              height: screenSize.height / 1.2,
-              width: screenSize.width / 1.2,
+              margin: EdgeInsets.fromLTRB(
+                  screenSize.width / 15.7,
+                  screenSize.height / 20.6,
+                  screenSize.width / 15.7,
+                  screenSize.height / 20.6),
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15.0)),
@@ -165,7 +166,7 @@ class _ProfilePage extends State<ProfilePage> {
                                     )),
                                 UserDetailWidget(
                                     icon: Icon(
-                                      IconData(0xf018,
+                                      const IconData(0xf018,
                                           fontFamily: 'MaterialIcons'),
                                       color: primaryColor,
                                     ),
@@ -173,7 +174,7 @@ class _ProfilePage extends State<ProfilePage> {
                                         user?.email != null ? user!.email : ""),
                                 UserDetailWidget(
                                   icon: Icon(
-                                    IconData(0xf3e2,
+                                    const IconData(0xf3e2,
                                         fontFamily: 'MaterialIcons'),
                                     color: primaryColor,
                                   ),
@@ -214,6 +215,7 @@ class _ProfilePage extends State<ProfilePage> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
+                                                        //const EditProfilePage()))
                                                         const EditProfilePage()))
                                           },
                                       style: ButtonStyle(

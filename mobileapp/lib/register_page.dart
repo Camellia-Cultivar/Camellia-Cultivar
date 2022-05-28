@@ -1,5 +1,4 @@
 import 'package:camellia_cultivar/api/api_service.dart';
-import 'package:camellia_cultivar/database/database_helper.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:flutter/material.dart';
 import "package:camellia_cultivar/extensions/string_apis.dart";
@@ -119,7 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
   // }
 
   void handleSubmit() async {
-    // TODO: send registered password
+    //TODO: send registered password
     var password = passwordController.text;
 
     User user = User(
@@ -127,7 +126,6 @@ class _RegisterPageState extends State<RegisterPage> {
       firstName: firstNameController.text,
       email: emailController.text,
       lastName: lastNameController.text,
-      //password: passwordController.text,
       reputation: 0,
     );
 
@@ -146,6 +144,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
       int uid = await api.createUser(user) as int;
       user.id = uid;
+
+      await api.updatePassword(user.id, password);
+      
     } catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -180,7 +181,8 @@ class _RegisterPageState extends State<RegisterPage> {
           width: screenSize.width / 1.2,
           child: Column(children: [
             Padding(
-                padding: const EdgeInsets.only(top: 20, right: 40),
+                padding:
+                    EdgeInsets.only(top: 20, right: screenSize.width / 9.82),
                 child: Wrap(
                   spacing: 20,
                   alignment: WrapAlignment.spaceBetween,
@@ -198,7 +200,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 )),
             Padding(
                 padding: EdgeInsets.only(
-                    top: screenSize.height / 20,
+                    top: screenSize.height / 30,
                     right: screenSize.height / 20,
                     left: screenSize.height / 20),
                 child: Column(
@@ -280,7 +282,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    Padding(padding: EdgeInsets.all(screenSize.height / 30)),
+                    Padding(padding: EdgeInsets.all(screenSize.height / 45)),
                     SizedBox(
                       height: screenSize.height / 12.5,
                       width: screenSize.width / 1.8,

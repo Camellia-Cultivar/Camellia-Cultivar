@@ -1,61 +1,34 @@
 import 'package:camellia_cultivar/api/api_service.dart';
-import 'package:camellia_cultivar/model/question.dart';
+import 'package:camellia_cultivar/home/homepage.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/providers/user.dart';
-import 'package:camellia_cultivar/quiz_options_page.dart';
+import 'package:camellia_cultivar/quiz_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:camellia_cultivar/database/database_helper.dart';
 
-class FormItem {
-  int? specimen_id;
-  String? answer;
+class UniqueQuizPage extends StatefulWidget {
+  final int? specimenId;
 
-  FormItem(this.specimen_id, this.answer);
+  final String image;
 
-  Map<String, dynamic> getData() {
-    return {"specimen_id": specimen_id, "answer": answer};
-  }
-}
-
-class QuizPage extends StatefulWidget {
-  const QuizPage({Key? key}) : super(key: key);
+  const UniqueQuizPage({Key? key, required this.specimenId, required this.image}) : super(key: key);
 
   @override
-  _QuizPageState createState() => _QuizPageState();
+  _UniqueQuizPageState createState() => _UniqueQuizPageState();
 }
 
-class _QuizPageState extends State<QuizPage> {
-  int _currentIndex = 0;
-  var ids = [];
+class _UniqueQuizPageState extends State<UniqueQuizPage> {
   final api = APIService();
 
-  List<Question> json = [
-    Question(specimenId: 22, images: [
-      "https://wikiimg.tojsiabtv.com/wikipedia/commons/thumb/e/e9/Camellia_japonica_NBG.jpg/1200px-Camellia_japonica_NBG.jpg"]),
-    Question(specimenId: 34, images: [
-      "https://www.portaldojardim.com/pdj/wp-content/uploads/Yuletide-1.jpg",
-      "https://mosarte.com.au/wp-content/uploads/2019/03/CamelliaSasanquaCROP-HR-scaled.jpg"]),
-    Question(specimenId: 60, images: [
-      "https://www.awanursery.co.nz/wp-content/uploads/Camellia-sasanqua-Silver-Dollar-April-2018.jpg"
-    ]),
-    Question(specimenId: 61, images: [
-      "https://www.flowerpower.com.au/media/catalog/product/9/3/9319762001561.jpg",
-      "https://m.planfor.pt/Donnees_Site/Produit/Images/1650/camelia-do-japao-margaret-davis_PT_500_0019398.jpg"
-    ]),
-    Question(specimenId: 70, images: [
-      "https://2.bp.blogspot.com/-Crmwaof6HG8/U0PZFm8m5BI/AAAAAAAAYEY/xTyVTtlS3Vs/s1600/camelia+black+lace.jpg"
-    ]),
-    Question(specimenId: 79, images: [
-      "https://i.pinimg.com/originals/fe/e1/7c/fee17cec0daf2921c9f488162f901255.jpg"
-    ])
-  ];
 
   List<String> lst = <String>[
     'C. Japonica April Dawn',
     'C. Japonica Debutante',
     'C. Sasanqua Mine No Uki',
   ];
+
+
 
   List<T> map<T>(List data, Function handler) {
     List<T> result = [];
@@ -79,23 +52,12 @@ class _QuizPageState extends State<QuizPage> {
   @override
   void initState() {
     super.initState();
-    ids = List<int>.generate(json.length, (i) => i);
-  }
-
-  void handleNext() {
-    setState(() => {
-          if (_currentIndex < json.length - 1) {_currentIndex++},
-        });
-  }
-
-  void handleBack() {
-    setState(() => {if (_currentIndex > 0) _currentIndex--});
   }
 
   void handleEditingComplete() {
     setState(() {
-      form[_currentIndex] =
-          FormItem(json[_currentIndex].toJson()["specimenId"], _cultivarNameController?.text);
+      form[widget.specimenId!] =
+          FormItem(widget.specimenId, _cultivarNameController?.text);
     });
     _focusInput?.unfocus();
   }
@@ -136,7 +98,7 @@ class _QuizPageState extends State<QuizPage> {
 
     User? user = context.read<UserProvider>().user;
 
-    _cultivarNameController?.text = form[_currentIndex]?.answer ?? "";
+    _cultivarNameController?.text = form[widget.specimenId]?.answer ?? "";
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6F7),
@@ -162,37 +124,13 @@ class _QuizPageState extends State<QuizPage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const QuizOptionsPage()))
+                                        const HomePage()))
                           })),
                       icon: const Icon(
                         IconData(0xe16a, fontFamily: 'MaterialIcons'),
                         size: 30,
                       ),
                     )
-                  ],
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: map<Widget>(ids, (index, url) {
-                        return Container(
-                          width: screenSize.width / 40,
-                          height: screenSize.height / 20,
-                          margin: const EdgeInsets.symmetric(horizontal: 2.0),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: _currentIndex == index
-                                ? const Color(0x5F064E3B)
-                                : (form[index]?.answer != null
-                                    ? primaryColor
-                                    : Colors.white),
-                            border: Border.all(color: Colors.black),
-                          ),
-                        );
-                      }),
-                    ),
                   ],
                 ),
                 Column(
@@ -203,23 +141,16 @@ class _QuizPageState extends State<QuizPage> {
                         style: TextStyle(
                             color: primaryColor,
                             fontSize: screenSize.height / 35)),
-                    Padding(padding: EdgeInsets.all(10)),
+                    const Padding(padding: EdgeInsets.all(30)),
                     SizedBox(
                       width: screenSize.width / 1.5,
                       height: screenSize.height / 3,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: json[_currentIndex].toJson()["images"].length,
-                          itemBuilder: (BuildContext context, int position) {
-                            List<String>? images =
-                                json[_currentIndex].toJson()["images"];
-                            return Image.network(images![position],
+                      child: Image.network(widget.image,
                                 width: screenSize.width / 1.5,
-                                fit: BoxFit.fitHeight);
-                          }),
+                                fit: BoxFit.fitHeight)
                     ),
                     Container(
-                        padding: const EdgeInsets.only(top: 5, bottom: 30),
+                        padding: const EdgeInsets.only(top: 20, bottom: 20),
                         width: screenSize.width / 1.5,
                         child: Autocomplete<String>(
                           fieldViewBuilder: (BuildContext context,
@@ -248,50 +179,6 @@ class _QuizPageState extends State<QuizPage> {
                             });
                           },
                         )),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          height: screenSize.height / 14.5,
-                          width: screenSize.width / 3.5,
-                          child: TextButton(
-                              onPressed: () => handleBack(),
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(primaryColor),
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        side: const BorderSide(
-                                            color: Colors.white))),
-                              ),
-                              child: Text("Back".toUpperCase(),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w300))),
-                        ),
-                        SizedBox(
-                          height: screenSize.height / 14.5,
-                          width: screenSize.width / 3.5,
-                          child: TextButton(
-                              onPressed: () => handleNext(),
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        side: BorderSide(color: primaryColor))),
-                              ),
-                              child: Text("Next".toUpperCase(),
-                                  style: TextStyle(
-                                      color: primaryColor,
-                                      fontWeight: FontWeight.w300))),
-                        ),
-                      ],
-                    ),
                     Padding(
                       padding: const EdgeInsets.only(top: 40),
                       child: SizedBox(
@@ -309,7 +196,7 @@ class _QuizPageState extends State<QuizPage> {
                                       side: const BorderSide(
                                           color: Colors.white))),
                             ),
-                            child: Text("Submit Quizz".toUpperCase(),
+                            child: Text("Submit Quiz".toUpperCase(),
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w300))),

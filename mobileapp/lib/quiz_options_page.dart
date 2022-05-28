@@ -15,11 +15,15 @@ class QuizOptionsPage extends StatelessWidget {
       backgroundColor: const Color(0XFFF6F6F7),
       body: Center(
           child: Container(
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                   color: const Color(0x0F064E3B),
                   borderRadius: BorderRadius.circular(15.0)),
-              height: screenSize.height / 1.2,
-              width: screenSize.width / 1.2,
+              margin: EdgeInsets.fromLTRB(
+                  screenSize.width / 15.7,
+                  screenSize.height / 20.6,
+                  screenSize.width / 15.7,
+                  screenSize.height / 20.6),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

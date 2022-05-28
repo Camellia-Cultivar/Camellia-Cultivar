@@ -7,4 +7,7 @@ class APIConstants {
   static String editProfileEndpoint = "/editprofile";
   static String editPasswordEndpoint = "/editpassword";
   static String deleteProfileEndpoint = "/deleteprofile";
+  static String cultivarEdpoint = "/cultivar";
+  static String uploadedSpecimensEndpoint = "/uploaded";
+  static String recentlyUploadedSpecimensEndpoint = "/recentlyuploaded";
 }

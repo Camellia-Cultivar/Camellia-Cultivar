@@ -131,75 +131,118 @@ class _EditProfilePage extends State<EditProfilePage> {
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFFF5F6F7),
       body: Center(
-          child: Form(
-              key: _formKey,
-              child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15.0)),
-                  height: screenSize.height / 1.2,
-                  width: screenSize.width / 1.2,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                            padding: const EdgeInsets.only(right: 60),
-                            child: Wrap(
-                              spacing: 20,
-                              alignment: WrapAlignment.spaceBetween,
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: [
-                                BackButton(
-                                  color: primaryColor,
+          child: SingleChildScrollView(
+              child: Column(children: [
+        Form(
+            key: _formKey,
+            child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15.0)),
+                height: screenSize.height / 1.3,
+                width: screenSize.width / 1.2,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.only(right: 60),
+                          child: Wrap(
+                            spacing: 20,
+                            alignment: WrapAlignment.spaceBetween,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              BackButton(
+                                color: primaryColor,
+                              ),
+                              Text("Edit Profile",
+                                  style: TextStyle(
+                                      color: primaryColor,
+                                      fontSize: screenSize.height / 35,
+                                      fontWeight: FontWeight.w500))
+                            ],
+                          )),
+                      Padding(
+                          padding: EdgeInsets.only(
+                            top: screenSize.height / 30,
+                          ),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: screenSize.height / 8,
+                                width: screenSize.width / 4,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(90.0),
+                                  child: Image.network(
+                                      user.profileImage as String),
                                 ),
-                                Text("Edit Profile",
-                                    style: TextStyle(
-                                        color: primaryColor,
-                                        fontSize: screenSize.height / 35,
-                                        fontWeight: FontWeight.w500))
-                              ],
-                            )),
-                        Padding(
-                            padding: EdgeInsets.only(
-                              top: screenSize.height / 30,
-                            ),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: screenSize.height / 8,
-                                  width: screenSize.width / 4,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(90.0),
-                                    child: Image.network(
-                                        user.profileImage as String),
-                                  ),
-                                  // onTap: _getFromGallery,
-                                ),
-                                Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 20),
-                                        child: SizedBox(
+                              ),
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 20),
+                                      child: SizedBox(
+                                        width: screenSize.width / 1.8,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Icon(
+                                              Icons.person_outlined,
+                                              color: primaryColor,
+                                            ),
+                                            const Padding(
+                                                padding: EdgeInsets.all(10)),
+                                            SizedBox(
+                                                width: screenSize.width / 2.5,
+                                                child: TextFormField(
+                                                  decoration: InputDecoration(
+                                                    hintText: "First Name",
+                                                    focusedBorder:
+                                                        UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: primaryColor),
+                                                    ),
+                                                    border:
+                                                        UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: primaryColor),
+                                                    ),
+                                                  ),
+                                                  controller:
+                                                      firstNameController,
+                                                  validator: (value) {
+                                                    if (value == null ||
+                                                        value.isEmpty) {
+                                                      return 'First name is required';
+                                                    }
+                                                    return null;
+                                                  },
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 20),
+                                      child: SizedBox(
                                           width: screenSize.width / 1.8,
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: [
-                                              Icon(
-                                                Icons.person_outlined,
-                                                color: primaryColor,
-                                              ),
-                                              const Padding(
-                                                  padding: EdgeInsets.all(10)),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      right: screenSize.width /
+                                                          10)),
                                               SizedBox(
                                                   width: screenSize.width / 2.5,
                                                   child: TextFormField(
                                                     decoration: InputDecoration(
-                                                      hintText: "First Name",
+                                                      hintText: "Last Name",
                                                       focusedBorder:
                                                           UnderlineInputBorder(
                                                         borderSide: BorderSide(
@@ -214,20 +257,129 @@ class _EditProfilePage extends State<EditProfilePage> {
                                                       ),
                                                     ),
                                                     controller:
-                                                        firstNameController,
+                                                        lastNameController,
                                                     validator: (value) {
                                                       if (value == null ||
                                                           value.isEmpty) {
-                                                        return 'First name is required';
+                                                        return 'Last name is required';
                                                       }
                                                       return null;
                                                     },
                                                   )),
                                             ],
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
+                                          )),
+                                    ),
+                                    Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 20),
+                                        child: SizedBox(
+                                            width: screenSize.width / 1.8,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Icon(
+                                                  const IconData(0xf018,
+                                                      fontFamily:
+                                                          'MaterialIcons'),
+                                                  color: primaryColor,
+                                                ),
+                                                const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(10)),
+                                                SizedBox(
+                                                    width:
+                                                        screenSize.width / 2.5,
+                                                    child: TextFormField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                        hintText: "Email",
+                                                        focusedBorder:
+                                                            UnderlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color:
+                                                                  primaryColor),
+                                                        ),
+                                                        border:
+                                                            UnderlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color:
+                                                                  primaryColor),
+                                                        ),
+                                                      ),
+                                                      controller:
+                                                          emailController,
+                                                      validator: (input) =>
+                                                          input != null &&
+                                                                  input
+                                                                      .isValidEmail()
+                                                              ? null
+                                                              : "Invalid email",
+                                                    )),
+                                              ],
+                                            ))),
+                                    Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 20),
+                                        child: SizedBox(
+                                            width: screenSize.width / 1.8,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Icon(
+                                                  const IconData(0xf052b,
+                                                      fontFamily:
+                                                          'MaterialIcons'),
+                                                  color: primaryColor,
+                                                ),
+                                                const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(10)),
+                                                SizedBox(
+                                                    width:
+                                                        screenSize.width / 2.5,
+                                                    child: TextFormField(
+                                                      obscureText: true,
+                                                      enableSuggestions: false,
+                                                      autocorrect: false,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        hintText:
+                                                            "New Password",
+                                                        hintStyle:
+                                                            const TextStyle(
+                                                                fontSize: 14),
+                                                        focusedBorder:
+                                                            UnderlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color:
+                                                                  primaryColor),
+                                                        ),
+                                                        border:
+                                                            UnderlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color:
+                                                                  primaryColor),
+                                                        ),
+                                                      ),
+                                                      controller:
+                                                          passwordController,
+                                                      validator: (value) {
+                                                        if ((value == null ||
+                                                                value
+                                                                    .isEmpty) &&
+                                                            confirmPasswordController
+                                                                .text
+                                                                .isNotEmpty) {
+                                                          return 'Password is required!';
+                                                        }
+                                                        return null;
+                                                      },
+                                                    )),
+                                              ],
+                                            ))),
+                                    Padding(
                                         padding:
                                             const EdgeInsets.only(bottom: 20),
                                         child: SizedBox(
@@ -245,9 +397,16 @@ class _EditProfilePage extends State<EditProfilePage> {
                                                     width:
                                                         screenSize.width / 2.5,
                                                     child: TextFormField(
+                                                      obscureText: true,
+                                                      enableSuggestions: false,
+                                                      autocorrect: false,
                                                       decoration:
                                                           InputDecoration(
-                                                        hintText: "Last Name",
+                                                        hintText:
+                                                            "Confirm Password",
+                                                        hintStyle:
+                                                            const TextStyle(
+                                                                fontSize: 14),
                                                         focusedBorder:
                                                             UnderlineInputBorder(
                                                           borderSide: BorderSide(
@@ -262,215 +421,47 @@ class _EditProfilePage extends State<EditProfilePage> {
                                                         ),
                                                       ),
                                                       controller:
-                                                          lastNameController,
-                                                      validator: (value) {
-                                                        if (value == null ||
-                                                            value.isEmpty) {
-                                                          return 'Last name is required';
-                                                        }
-                                                        return null;
-                                                      },
+                                                          confirmPasswordController,
+                                                      validator: (input) => passwordController
+                                                                  .text
+                                                                  .isNotEmpty &&
+                                                              passwordController
+                                                                      .text !=
+                                                                  input
+                                                          ? "Passwords don't match!"
+                                                          : null,
                                                     )),
                                               ],
-                                            )),
-                                      ),
-                                      Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 20),
-                                          child: SizedBox(
-                                              width: screenSize.width / 1.8,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Icon(
-                                                    const IconData(0xf018,
-                                                        fontFamily:
-                                                            'MaterialIcons'),
-                                                    color: primaryColor,
-                                                  ),
-                                                  const Padding(
-                                                      padding:
-                                                          EdgeInsets.all(10)),
-                                                  SizedBox(
-                                                      width: screenSize.width /
-                                                          2.5,
-                                                      child: TextFormField(
-                                                        decoration:
-                                                            InputDecoration(
-                                                          hintText: "Email",
-                                                          focusedBorder:
-                                                              UnderlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color:
-                                                                    primaryColor),
-                                                          ),
-                                                          border:
-                                                              UnderlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color:
-                                                                    primaryColor),
-                                                          ),
-                                                        ),
-                                                        controller:
-                                                            emailController,
-                                                        validator: (input) =>
-                                                            input != null &&
-                                                                    input
-                                                                        .isValidEmail()
-                                                                ? null
-                                                                : "Invalid email",
-                                                      )),
-                                                ],
-                                              ))),
-                                      Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 20),
-                                          child: SizedBox(
-                                              width: screenSize.width / 1.8,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Icon(
-                                                    const IconData(0xf052b,
-                                                        fontFamily:
-                                                            'MaterialIcons'),
-                                                    color: primaryColor,
-                                                  ),
-                                                  const Padding(
-                                                      padding:
-                                                          EdgeInsets.all(10)),
-                                                  SizedBox(
-                                                      width: screenSize.width /
-                                                          2.5,
-                                                      child: TextFormField(
-                                                        obscureText: true,
-                                                        enableSuggestions:
-                                                            false,
-                                                        autocorrect: false,
-                                                        decoration:
-                                                            InputDecoration(
-                                                          hintText:
-                                                              "New Password",
-                                                          hintStyle:
-                                                              const TextStyle(
-                                                                  fontSize: 14),
-                                                          focusedBorder:
-                                                              UnderlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color:
-                                                                    primaryColor),
-                                                          ),
-                                                          border:
-                                                              UnderlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color:
-                                                                    primaryColor),
-                                                          ),
-                                                        ),
-                                                        controller:
-                                                            passwordController,
-                                                        validator: (value) {
-                                                          if ((value == null ||
-                                                                  value
-                                                                      .isEmpty) &&
-                                                              confirmPasswordController
-                                                                  .text
-                                                                  .isNotEmpty) {
-                                                            return 'Password is required!';
-                                                          }
-                                                          return null;
-                                                        },
-                                                      )),
-                                                ],
-                                              ))),
-                                      Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 20),
-                                          child: SizedBox(
-                                              width: screenSize.width / 1.8,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                          right:
-                                                              screenSize.width /
-                                                                  10)),
-                                                  SizedBox(
-                                                      width: screenSize.width /
-                                                          2.5,
-                                                      child: TextFormField(
-                                                        obscureText: true,
-                                                        enableSuggestions:
-                                                            false,
-                                                        autocorrect: false,
-                                                        decoration:
-                                                            InputDecoration(
-                                                          hintText:
-                                                              "Confirm Password",
-                                                          hintStyle:
-                                                              const TextStyle(
-                                                                  fontSize: 14),
-                                                          focusedBorder:
-                                                              UnderlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color:
-                                                                    primaryColor),
-                                                          ),
-                                                          border:
-                                                              UnderlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color:
-                                                                    primaryColor),
-                                                          ),
-                                                        ),
-                                                        controller:
-                                                            confirmPasswordController,
-                                                        validator: (input) => passwordController
-                                                                    .text
-                                                                    .isNotEmpty &&
-                                                                passwordController
-                                                                        .text !=
-                                                                    input
-                                                            ? "Passwords don't match!"
-                                                            : null,
-                                                      )),
-                                                ],
-                                              ))),
-                                    ]),
-                                const Padding(
-                                    padding: EdgeInsets.only(top: 20)),
-                                SizedBox(
-                                  height: screenSize.height / 12.5,
-                                  width: screenSize.width / 1.8,
-                                  child: TextButton(
-                                      onPressed: () =>
-                                          {handleSubmit(context, user)},
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                primaryColor),
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        150.0),
-                                                side: const BorderSide(
-                                                    color: Colors.white))),
-                                      ),
-                                      child: Text("Save Changes".toUpperCase(),
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w300))),
-                                ),
-                              ],
-                            ))
-                      ])))),
-      bottomNavigationBar: const BotNavbar(pageIndex: 3),
+                                            ))),
+                                  ]),
+                              const Padding(padding: EdgeInsets.only(top: 20)),
+                              SizedBox(
+                                height: screenSize.height / 12.5,
+                                width: screenSize.width / 1.8,
+                                child: TextButton(
+                                    onPressed: () =>
+                                        {handleSubmit(context, user)},
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              primaryColor),
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(150.0),
+                                              side: const BorderSide(
+                                                  color: Colors.white))),
+                                    ),
+                                    child: Text("Save Changes".toUpperCase(),
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w300))),
+                              ),
+                            ],
+                          ))
+                    ])))
+      ]))),
     );
   }
 }

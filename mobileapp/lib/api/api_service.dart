@@ -2,8 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:camellia_cultivar/model/question.dart';
+import 'package:camellia_cultivar/model/uploaded_specimen.dart';
 import 'package:http/http.dart' as http;
 
+import '../quiz_page.dart';
 import 'api_constants.dart';
 import '../model/user.dart';
 
@@ -13,7 +16,6 @@ Map<int, User> mockUser = {
       firstName: "John",
       lastName: "Doe",
       email: "jd@ua.pt",
-      //password: "12345",
       reputation: 0,
       profileImage: "https://i.imgflip.com/2/1975nj.jpg")
 };
@@ -78,7 +80,7 @@ class APIService {
     return user.id;
   }
 
-  // TODO: Use try-catch when using this function
+  //TODO: Use try-catch when using this function
   Future<void> updateUser(User user) async {
     mockUser.remove(user.id);
     mockUser[user.id] = user;
@@ -100,7 +102,7 @@ class APIService {
     // }
   }
 
-  // TODO: Use try-catch when using this function
+  //TODO: Use try-catch when using this function
   Future<void> deleteUser(int uid) async {
     mockUser.remove(uid);
     // try {
@@ -129,10 +131,103 @@ class APIService {
     //       },
     //       body: body);
     //   if (response.statusCode != 200) {
-    //     throw Exception("Update of profile did not suceed!");
+    //     throw Exception("Update of password did not suceed!");
     //   }
     // } catch (e) {
     //   log(e.toString());
     // }
+  }
+
+  Future<Map<String, dynamic>?> getCultivarInformation(int cultivarId) async {
+    try {
+      var url = Uri.parse(
+          APIConstants.baseUrl + APIConstants.cultivarEdpoint + "/$cultivarId");
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
+  Future<List<UploadedSpecimen>?> getUploadedSpecimens(int uid) async {
+    List<UploadedSpecimen> lst = [];
+    try {
+      var url = Uri.parse(APIConstants.baseUrl +
+          APIConstants.uploadedSpecimensEndpoint +
+          "/$uid");
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        for (dynamic o in json.decode(response.body)) {
+          lst.add(UploadedSpecimen.fromJson(json.decode(o)));
+        }
+        return lst;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
+
+  Future<List<Question>?> getQuiz() async {
+    List<Question> lst = [];
+
+    try {
+      var url = Uri.parse(APIConstants.baseUrl + APIConstants.quizEndpoint);
+      var response = await http.get(url);
+      if(response.statusCode == 200) {
+        for(dynamic o in json.decode(response.body)) {
+          lst.add(Question.fromJson(json.decode(o)));
+        }
+        return lst;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
+
+  Future<void> setQuizAnswers(int uid, List<FormItem> answers) async {
+    List<Map<String, dynamic>> lst = [];
+
+    for(FormItem i in answers) {
+      lst.add(i.getData());
+    }
+
+    try {
+      var url = Uri.parse(APIConstants.baseUrl+APIConstants.quizEndpoint);
+      var obj = {"uid": uid, "answers": lst};
+      var body = jsonEncode(obj);
+      var response = await http.post(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          },
+          body: body);
+      if (response.statusCode != 200) {
+        throw Exception("Submission of quiz answers did not suceed!");
+      } 
+
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>?> getRecentlyUploadedSpecimens() async {
+
+    try {
+      var url = Uri.parse(APIConstants.baseUrl+APIConstants.recentlyUploadedSpecimensEndpoint);
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      }
+      return null;
+
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }
