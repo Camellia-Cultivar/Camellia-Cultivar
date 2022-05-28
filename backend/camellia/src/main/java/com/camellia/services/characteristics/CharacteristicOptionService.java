@@ -1,7 +1,7 @@
 package com.camellia.services.characteristics;
 
 import com.camellia.repositories.characteristics.CharacteristicOptionRepository;
-import com.camellia.models.characteristics.CharacteristicOption;
+import com.camellia.models.characteristics.CharacteristicValue;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,15 +15,15 @@ public class CharacteristicOptionService {
     @Autowired
     private CharacteristicOptionRepository repository;
 
-    public Page<CharacteristicOption> getCharacteristicOptions(Pageable pageable) {
+    public Page<CharacteristicValue> getCharacteristicOptions(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
-    public List<CharacteristicOption> getCharacteristicOptions() {
+    public List<CharacteristicValue> getCharacteristicOptions() {
         return repository.findAll();
     }
 
-    public CharacteristicOption getCharacteristicOptionById(long id) {
+    public CharacteristicValue getCharacteristicOptionById(long id) {
         return repository.findById((long) id);
     }
 }

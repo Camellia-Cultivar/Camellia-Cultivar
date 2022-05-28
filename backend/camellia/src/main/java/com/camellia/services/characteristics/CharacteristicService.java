@@ -24,6 +24,6 @@ public class CharacteristicService {
     }
 
     public Characteristic getCharacteristicById(long id) {
-        return repository.findById((long) id);
+        return repository.findById(id);
     }
 }

@@ -20,8 +20,7 @@ import javax.persistence.InheritanceType;
 import com.camellia.models.Country;
 import com.camellia.models.Photo;
 import com.camellia.models.Quiz;
-import com.camellia.models.characteristics.CharacteristicOption;
-//import com.camellia.models.users.RegisteredUser;
+import com.camellia.models.characteristics.CharacteristicValue;
 import com.camellia.models.users.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
@@ -98,7 +97,7 @@ public abstract class Specimen {
     @JoinTable(
         name = "specimen_contains_option", 
         joinColumns = @JoinColumn(name = "specimen_id"), 
-        inverseJoinColumns = @JoinColumn(name = "characteristic_option_id")
+        inverseJoinColumns = @JoinColumn(name = "characteristic_value_id")
     )
-    Set<CharacteristicOption> characteristic_options;
+    Set<CharacteristicValue> characteristic_options;
 }
