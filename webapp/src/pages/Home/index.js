@@ -24,7 +24,8 @@ const Home = () => {
     const [achievements, setAchievements] = useState(
         {
             specimenCount: 0,
-            userCount: 0
+            userCount: 0,
+            photoCount: 0
         }
     );
 
@@ -74,7 +75,7 @@ const Home = () => {
                         <span className="text-xl font-normal">Registered Users</span>
                     </div>
                     <div className="flex flex-col justify-center border-4 rounded-lg border-emerald-900 p-4 aspect-[4/3] fade-in">
-                        <span className="text-3xl font-bold">3000+</span>
+                        <span className="text-3xl font-bold">{ achievements.photoCount }</span>
                         <div className="flex-shrink text-xl font-normal">Specimen photos uploaded</div>
                     </div>
                 </div>
