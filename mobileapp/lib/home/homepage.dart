@@ -55,12 +55,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
     _latLngList = [
       LatLng(40.6384943, -8.6540832),
       LatLng(40.6391863, -8.6563771),
-      LatLng(40.6364017, -8.6532305),
-      LatLng(40.6335806, -8.6519005),
-      LatLng(40, -8),
-      LatLng(41.6335806, -7.6519005),
-      LatLng(40.6335806, -8.6419005),
-      LatLng(39.6335806, -9.0419005)
+      LatLng(40.6364017, -8.6532305)
     ];
     _openPopUp = initOpenPopUp();
     super.initState();
@@ -292,6 +287,10 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                     ],
                   ),
                 ),
+              ),
+              Padding(padding: const EdgeInsets.only(top: 10, bottom: 5), 
+                child: Text("Click to see specimens", 
+                  style: TextStyle(color: Colors.grey[500]))
               ),
               const Padding(padding: EdgeInsets.only(top: 10)),
               SizedBox(

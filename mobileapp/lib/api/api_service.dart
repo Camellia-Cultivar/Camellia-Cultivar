@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:camellia_cultivar/model/coordinates.dart';
 import 'package:camellia_cultivar/model/question.dart';
 import 'package:camellia_cultivar/model/uploaded_specimen.dart';
 import 'package:http/http.dart' as http;
+import 'package:latlong/latlong.dart';
 
 import '../quiz_page.dart';
 import 'api_constants.dart';
@@ -216,7 +218,7 @@ class APIService {
     }
   }
 
-  Future<Map<String, dynamic>?> getRecentlyUploadedSpecimens() async {
+  Future<List<Map<String, dynamic>?>?> getRecentlyUploadedSpecimens() async {
 
     try {
       var url = Uri.parse(APIConstants.baseUrl+APIConstants.recentlyUploadedSpecimensEndpoint);
@@ -230,4 +232,27 @@ class APIService {
       log(e.toString());
     }
   }
+
+
+  Future<List<Map<String, dynamic>?>?> getMapSpecimens() async {
+
+    List<Map<String, dynamic>> lst = [];
+
+    try {
+      var url = Uri.parse(APIConstants.baseUrl+APIConstants.mapSpecimensEndpoint);
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        for(dynamic obj in json.decode(response.body)) {
+          LatLng coordinates = LatLng(double.parse(obj["lat"]), double.parse(obj["long"]));
+          Map<String, dynamic> new_obj = {"coords" : coordinates, "name": obj["name"], "image": obj["image"], "camellia_id": obj["camellia_id"]};
+          lst.add(new_obj);
+        }
+      }
+      return lst;
+
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  } 
 }

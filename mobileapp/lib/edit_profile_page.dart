@@ -76,7 +76,7 @@ class _EditProfilePage extends State<EditProfilePage> {
 
     final firstNameController = TextEditingController(text: user.firstName);
     final lastNameController = TextEditingController(text: user.lastName);
-    final emailController = TextEditingController(text: user.email);
+    //final emailController = TextEditingController(text: user.email);
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
 
@@ -84,7 +84,7 @@ class _EditProfilePage extends State<EditProfilePage> {
 
     void handleSubmit(BuildContext context, User user) async {
       if (_formKey.currentState!.validate()) {
-        user.email = emailController.text;
+        //user.email = emailController.text;
         user.firstName = firstNameController.text;
         user.lastName = lastNameController.text;
         // user.password = passwordController.text.isNotEmpty
@@ -269,55 +269,55 @@ class _EditProfilePage extends State<EditProfilePage> {
                                             ],
                                           )),
                                     ),
-                                    Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 20),
-                                        child: SizedBox(
-                                            width: screenSize.width / 1.8,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Icon(
-                                                  const IconData(0xf018,
-                                                      fontFamily:
-                                                          'MaterialIcons'),
-                                                  color: primaryColor,
-                                                ),
-                                                const Padding(
-                                                    padding:
-                                                        EdgeInsets.all(10)),
-                                                SizedBox(
-                                                    width:
-                                                        screenSize.width / 2.5,
-                                                    child: TextFormField(
-                                                      decoration:
-                                                          InputDecoration(
-                                                        hintText: "Email",
-                                                        focusedBorder:
-                                                            UnderlineInputBorder(
-                                                          borderSide: BorderSide(
-                                                              color:
-                                                                  primaryColor),
-                                                        ),
-                                                        border:
-                                                            UnderlineInputBorder(
-                                                          borderSide: BorderSide(
-                                                              color:
-                                                                  primaryColor),
-                                                        ),
-                                                      ),
-                                                      controller:
-                                                          emailController,
-                                                      validator: (input) =>
-                                                          input != null &&
-                                                                  input
-                                                                      .isValidEmail()
-                                                              ? null
-                                                              : "Invalid email",
-                                                    )),
-                                              ],
-                                            ))),
+                                    // Padding(
+                                    //     padding:
+                                    //         const EdgeInsets.only(bottom: 20),
+                                    //     child: SizedBox(
+                                    //         width: screenSize.width / 1.8,
+                                    //         child: Row(
+                                    //           mainAxisAlignment:
+                                    //               MainAxisAlignment.start,
+                                    //           children: [
+                                    //             Icon(
+                                    //               const IconData(0xf018,
+                                    //                   fontFamily:
+                                    //                       'MaterialIcons'),
+                                    //               color: primaryColor,
+                                    //             ),
+                                    //             const Padding(
+                                    //                 padding:
+                                    //                     EdgeInsets.all(10)),
+                                    //             SizedBox(
+                                    //                 width:
+                                    //                     screenSize.width / 2.5,
+                                    //                 child: TextFormField(
+                                    //                   decoration:
+                                    //                       InputDecoration(
+                                    //                     hintText: "Email",
+                                    //                     focusedBorder:
+                                    //                         UnderlineInputBorder(
+                                    //                       borderSide: BorderSide(
+                                    //                           color:
+                                    //                               primaryColor),
+                                    //                     ),
+                                    //                     border:
+                                    //                         UnderlineInputBorder(
+                                    //                       borderSide: BorderSide(
+                                    //                           color:
+                                    //                               primaryColor),
+                                    //                     ),
+                                    //                   ),
+                                    //                   controller:
+                                    //                       emailController,
+                                    //                   validator: (input) =>
+                                    //                       input != null &&
+                                    //                               input
+                                    //                                   .isValidEmail()
+                                    //                           ? null
+                                    //                           : "Invalid email",
+                                    //                 )),
+                                    //           ],
+                                    //         ))),
                                     Padding(
                                         padding:
                                             const EdgeInsets.only(bottom: 20),

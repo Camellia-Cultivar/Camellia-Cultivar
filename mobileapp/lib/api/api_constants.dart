@@ -10,4 +10,5 @@ class APIConstants {
   static String cultivarEdpoint = "/cultivar";
   static String uploadedSpecimensEndpoint = "/uploaded";
   static String recentlyUploadedSpecimensEndpoint = "/recentlyuploaded";
+  static String mapSpecimensEndpoint = "/mapspecimens";
 }

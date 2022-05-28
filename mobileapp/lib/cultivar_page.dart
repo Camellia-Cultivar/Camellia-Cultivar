@@ -17,7 +17,9 @@ Map<String, dynamic> json = {
 };
 
 class CultivarPage extends StatefulWidget {
-  const CultivarPage({Key? key}) : super(key: key);
+  final int specimenId;
+
+  const CultivarPage({Key? key, id, required this.specimenId}) : super(key: key);
 
   @override
   State<CultivarPage> createState() => _CultivarPage();
@@ -169,7 +171,7 @@ class _CultivarPage extends State<CultivarPage> {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => SliderShowFullmages(
                                           listImagesModel: json["photos"],
-                                          current: 0)))
+                                          current: 0, isNetworkImg: true)))
                                 },
                             child: Wrap(
                               crossAxisAlignment: WrapCrossAlignment.center,

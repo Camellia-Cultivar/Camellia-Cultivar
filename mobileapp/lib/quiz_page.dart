@@ -5,7 +5,6 @@ import 'package:camellia_cultivar/providers/user.dart';
 import 'package:camellia_cultivar/quiz_options_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:camellia_cultivar/database/database_helper.dart';
 
 class FormItem {
   int? specimen_id;
