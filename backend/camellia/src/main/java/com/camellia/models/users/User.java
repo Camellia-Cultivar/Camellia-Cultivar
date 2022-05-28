@@ -15,7 +15,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -75,6 +74,8 @@ public class User implements Serializable{
     @Column(name = "reputation", nullable = false)
     private double reputation;
 
+    @Column(name = "verification_code", length = 64)
+    private String verificationCode;
 
     @Column(name = "verified", nullable = false)
     private boolean verified;
@@ -274,7 +275,15 @@ public class User implements Serializable{
         return this.getClass().getAnnotation(DiscriminatorValue.class).value();
     }
 
-    public String profile(){
+    public String getVerificationCode() {
+        return this.verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public String getProfile(){
         return "\"profile_image\":" + getProfilePhoto() +
             ", " + "\"first_name\":"  +  getFirstName() + 
             ", " + "\"last_name\":" + getLastName() + 

@@ -1,18 +1,10 @@
 package com.camellia.models.users;
 
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
-import com.camellia.models.Quiz;
-import com.camellia.models.specimens.Specimen;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.NoArgsConstructor;
 
@@ -40,8 +32,8 @@ public class RegisteredUser extends User{
     }
    
 
-    public String profile() {
-        return "{" + super.profile() + 
+    public String getProfile() {
+        return "{" + super.getProfile() + 
             ", " + "\"auto_approval\":" + isAutoApproval()  +
             "}";
     }

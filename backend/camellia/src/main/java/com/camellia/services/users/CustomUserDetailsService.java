@@ -32,7 +32,9 @@ public class CustomUserDetailsService implements UserDetailsService{
         return userDetails;
     }
 
+    
     private GrantedAuthority getAuthorities(User user){
         return new SimpleGrantedAuthority(user.getDecriminatorValue());
     }
+    
 }
