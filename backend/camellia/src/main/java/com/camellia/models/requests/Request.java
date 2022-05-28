@@ -10,8 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
-import com.camellia.models.users.ModeratorUser;
-import com.camellia.models.users.RegisteredUser;
+
 import com.camellia.models.users.User;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 

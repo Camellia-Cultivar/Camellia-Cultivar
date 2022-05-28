@@ -47,6 +47,9 @@ public class Cultivar {
     @Column(name = "description", columnDefinition="TEXT")
     private String description;
 
+    @Column(name = "name")
+    private String name;
+
     @OneToMany(
         fetch = FetchType.EAGER,
         mappedBy = "cultivar",
@@ -83,6 +86,8 @@ public class Cultivar {
     @MapKeyJoinColumn(name = "specimen_id")
     private Map<ToIdentifySpecimen, Integer> cultivar_votes = new HashMap<>();
 
+
+
     public long getCultivar_id() {
         return cultivar_id;
     }
@@ -114,4 +119,14 @@ public class Cultivar {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getName(){
+        return name;
+    }
+
+    public void setName(String name){
+        this.name=name;
+    }
+
+    
 }

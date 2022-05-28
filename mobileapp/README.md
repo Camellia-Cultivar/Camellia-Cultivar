@@ -1,16 +1,10 @@
 # camellia_cultivar
 
-A new Flutter project.
 
-## Getting Started
+## Cloud keys
 
-This project is a starting point for a Flutter application.
+To upload files in the azure cloud: 
+| Storage account name | Connection String for AZURE | Container name |
+-----------------------|-----------------------------|----------------|
+| camelliacultivarstorage2 | DefaultEndpointsProtocol=https;AccountName=camelliacultivarstorage2;AccountKey=kPhGXW18u8dybJNKeMLHjmBd3F8ta3MC0ORiAibQyX5dURLBENCZdsmhT0qOI3OEbRUFE8KLHPRf+AStvoq0XQ==;EndpointSuffix=core.windows.net | imagestorage|
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

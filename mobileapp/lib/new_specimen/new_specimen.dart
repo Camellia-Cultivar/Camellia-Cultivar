@@ -15,9 +15,16 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 
 import '../home/homepage.dart';
 import '../home/image_full_slider_map.dart';
+import 'package:azblob/azblob.dart';
+import 'package:mime/mime.dart';
+import 'package:path/path.dart';
+
+import '../model/user.dart';
+import '../providers/user.dart';
 
 class NewSpecimenPage extends StatefulWidget {
   const NewSpecimenPage({Key? key}) : super(key: key);
@@ -28,6 +35,7 @@ class NewSpecimenPage extends StatefulWidget {
 
 class NewSpecimen extends State<NewSpecimenPage> {
   List specimen_images = [];
+  List specimen_images_urls = [];
 
   void _getFromCamera() async {
     XFile? pickedFile = await ImagePicker()
@@ -77,6 +85,29 @@ class NewSpecimen extends State<NewSpecimenPage> {
     gardenController.dispose();
   }
 
+  Future<void> uploadInAzure(User user) async {
+    var storage = AzureStorage.parse(
+        'DefaultEndpointsProtocol=https;AccountName=camelliacultivarstorage2;AccountKey=kPhGXW18u8dybJNKeMLHjmBd3F8ta3MC0ORiAibQyX5dURLBENCZdsmhT0qOI3OEbRUFE8KLHPRf+AStvoq0XQ==;EndpointSuffix=core.windows.net');
+    var baseUrl = 'https://camelliacultivarstorage2.blob.core.windows.net';
+    var urls = [];
+
+    for (File f in specimen_images) {
+      var azureImgUrl = '/imagestorage/${user.id}/${basename(f.path)}';
+      var content = await f.readAsBytes();
+      String? contentType = lookupMimeType(basename(f.path));
+
+      urls.add(baseUrl + azureImgUrl);
+
+      await storage.putBlob(azureImgUrl,
+          bodyBytes: content,
+          contentType: contentType,
+          type: BlobType.BlockBlob);
+    }
+    setState(() {
+      specimen_images_urls = urls;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
@@ -107,6 +138,8 @@ class NewSpecimen extends State<NewSpecimenPage> {
         if (currentImg == specimen_images.length) currentImg--;
       });
     }
+
+    User? user = context.watch<UserProvider>().user;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6F7),
@@ -151,6 +184,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
                                     style: TextStyle(color: Colors.red),
                                   )));
                         } else {
+                          uploadInAzure(user!);
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                                 backgroundColor: Colors.white,

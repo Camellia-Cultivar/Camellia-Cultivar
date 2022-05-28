@@ -17,6 +17,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'new_specimen/new_specimen.dart';
 
+import 'package:azblob/azblob.dart';
+import 'package:mime/mime.dart';
+import 'package:path/path.dart';
+
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
 
@@ -34,6 +38,26 @@ class _EditProfilePage extends State<EditProfilePage> {
         profileImage = File(pickedFile.path);
       });
     }
+  }
+
+  late String profileImageUrl;
+
+  Future<void> uploadInAzure(User user) async {
+    var storage = AzureStorage.parse(
+        'DefaultEndpointsProtocol=https;AccountName=camelliacultivarstorage2;AccountKey=kPhGXW18u8dybJNKeMLHjmBd3F8ta3MC0ORiAibQyX5dURLBENCZdsmhT0qOI3OEbRUFE8KLHPRf+AStvoq0XQ==;EndpointSuffix=core.windows.net');
+    var baseUrl = 'https://camelliacultivarstorage2.blob.core.windows.net';
+
+    var azureImgUrl =
+        '/imagestorage/${user.id}/${basename(profileImage!.path)}';
+    var content = await profileImage!.readAsBytes();
+    String? contentType = lookupMimeType(basename(profileImage!.path));
+
+    await storage.putBlob(azureImgUrl,
+        bodyBytes: content, contentType: contentType, type: BlobType.BlockBlob);
+
+    setState(() {
+      profileImageUrl = baseUrl + azureImgUrl;
+    });
   }
 
   @override
@@ -67,6 +91,7 @@ class _EditProfilePage extends State<EditProfilePage> {
             : user.password;
 
         try {
+          uploadInAzure(user);
           final dbHelper = DatabaseHelper.instance;
           await dbHelper.update("users", user.toMap());
           context.read<UserProvider>().setUser(user);

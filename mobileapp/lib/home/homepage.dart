@@ -124,17 +124,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                   ", ${user?.firstName} ",
                   style: const TextStyle(color: Colors.white, fontSize: 20),
                 ),
-                IconButton(
-                  iconSize: 40,
-                  icon: const Icon(Icons.account_circle_outlined),
-                  color: Colors.white,
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ProfilePage()));
-                  },
-                )
               ],
             )),
         Container(
@@ -158,7 +147,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                       const Padding(padding: EdgeInsets.all(5)),
                       CarouselSlider(
                         options: CarouselOptions(
-                            aspectRatio: 1.3,
+                            aspectRatio: 1.4,
                             viewportFraction: 0.8,
                             autoPlay: true,
                             enableInfiniteScroll: false,
