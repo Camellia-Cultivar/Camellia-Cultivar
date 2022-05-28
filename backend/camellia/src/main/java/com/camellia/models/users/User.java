@@ -288,6 +288,7 @@ public class User implements Serializable{
             ", " + "\"first_name\":"  +  getFirstName() + 
             ", " + "\"last_name\":" + getLastName() + 
             ", " + "\"email\":" + getEmail() + 
-            ", " + "\"reputation\":" + getReputation(); 
+            ", " + "\"reputation\":" + getReputation()+
+            ", " + "\"verified\":" + getVerified(); 
         }
 }
