@@ -81,7 +81,7 @@ public class SpecimenController {
         //apagar specimen do repository de to_identify_specimen
     }
 
-    @PostMapping("api/v1/specimen/{id]/addvote/{c_name}")
+    @PostMapping("api/v1/specimen/{id}/addvote/{c_name}")
     public void addVote(@PathVariable("id") long id, @PathVariable("c_name") String c_name){
         Cultivar cultivar = cultivarService.getCultivarByName(c_name);
         ToIdentifySpecimen specimen = toId_specimen_service.getToIdentifySpecimenById(id);
