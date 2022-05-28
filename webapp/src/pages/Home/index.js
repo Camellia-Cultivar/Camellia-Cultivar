@@ -1,6 +1,5 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useState } from 'react';
 import StepList from "../../components/StepList";
-import useIntersection from '../../utilities/useIntersection';
 import axios from "axios";
 
 
@@ -23,14 +22,14 @@ let second_list = [
 const Home = () => {
     const [achievements, setAchievements] = useState(
         {
-            specimenCount: 0,
-            userCount: 0,
-            photoCount: 0
+            specimenCount: -1,
+            userCount: -1,
+            photoCount: -1
         }
     );
 
 
-    let specimen_registered = axios.get('/api/achievements')
+    axios.get('/api/public/achievements')
         .then(function (response) {
             // handle success
             setAchievements(response.data);
