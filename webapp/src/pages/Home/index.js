@@ -52,22 +52,29 @@ const Home = () => {
             if (loggedInUser) {
                 dispatch(signIn());
                 const user = JSON.parse(localStorage.getItem("userToken"));
-                console.log(user.loginToken)
-                axios.get(`/api/users/${user.userId}`, {
-                    headers: {
-                        "Authorization": `Bearer ${user.loginToken}`,
-                    }
-                })
-                    .then(function (response) {
-                        console.log(response);
-                        dispatch(signedIn(response.data));
-    
-    
+                if(user.expiry > Date.now()) {
+                    axios.get(`/api/users/${user.userId}`, {
+                        headers: {
+                            "Authorization": `Bearer ${user.loginToken}`,
+                        }
                     })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            }
+                        .then(function (response) {
+                            console.log(response);
+                            dispatch(signedIn(response.data));
+        
+        
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                } else {
+                    localStorage.removeItem("userToken");
+                    dispatch(signOut());
+                    
+                }
+
+                }
+                
         }, []);
 
 

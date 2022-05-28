@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { tokenTtl } from '../../utilities/ttl';
 
 const LoginCard = (props) => {
 
@@ -16,7 +17,7 @@ const LoginCard = (props) => {
             .then(function (response) {
                 console.log(response);
                 if((response.status === 200 || response.status === 201) && window.localStorage){
-                    const token ={userId:response.data.split(' ')[0],loginToken:response.data.split(' ')[1] }
+                    const token ={userId:response.data.split(' ')[0],loginToken:response.data.split(' ')[1], expiry:Date.now()+tokenTtl}
                     localStorage.setItem("userToken", JSON.stringify(token));
                     props.navigate("/")
                 }
@@ -42,9 +43,9 @@ const LoginCard = (props) => {
                         <input id="password" className=" border-b-2 focus:outline-none focus:border-b-2 focus:border-b-emerald-600 w-full peer" type="text" placeholder=""></input>
                         <label className="absolute left-0 cursor-text text-black/50 transform peer-focus:-translate-y-5 peer-focus:-translate-x-1 -translate-y-5 -translate-x-1 peer-focus:scale-90 peer-focus:text-emerald-900 peer-focus:font-semibold duration-300" htmlFor="password">Password</label>
                     </div>
-                    <div className="mx-4 mt-4 md:mt-1">
+                    {/* <div className="mx-4 mt-4 md:mt-1">
                         <input className="accent-emerald-900" type="checkbox" id="remember"></input> <label className="text-sm font-medium" htmlFor="remember">Remember Me</label>
-                    </div>
+                    </div> */}
                 </div>
                 <button onClick={() => loginUser()} className="bg-emerald-900 rounded-3xl w-3/4 self-center mt-10 md:mt-6 mb-4 md:mb-2 py-2 max-w-sm active:scale-95"><span className="text-lg text-white">LOGIN</span></button>
                 <p onClick={() => redirect("/register")} className="self-center mt-4 md:mt-2 hover:font-semibold text-base md:text-sm underline underline-offset-1 cursor-pointer">Don't have an account? Sign Up</p>
