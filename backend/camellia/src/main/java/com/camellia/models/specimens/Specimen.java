@@ -20,7 +20,7 @@ import javax.persistence.InheritanceType;
 import com.camellia.models.Country;
 import com.camellia.models.Quiz;
 import com.camellia.models.characteristics.CharacteristicOption;
-import com.camellia.models.users.RegisteredUser;
+//import com.camellia.models.users.RegisteredUser;
 import com.camellia.models.users.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;

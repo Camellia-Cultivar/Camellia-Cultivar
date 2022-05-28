@@ -14,4 +14,6 @@ public interface CultivarRepository extends JpaRepository<Cultivar, Long>{
     Optional<Cultivar> findById(Long id);
 
     List<Cultivar> findTop5ByEpithetStartsWithIgnoreCase(String subString);
+
+    Cultivar findByName(String name);
 }
