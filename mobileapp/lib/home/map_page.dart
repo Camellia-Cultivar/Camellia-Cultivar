@@ -158,7 +158,7 @@ class _ShowFullMapState extends State<ShowFullMap> {
                   // maxClusterRadius: 190,
                   disableClusteringAtZoom: 16,
                   size: const Size(50, 50),
-                  fitBoundsOptions: const FitBoundsOptions(
+                  fitBoundsOptions:  const FitBoundsOptions(
                     padding: EdgeInsets.all(50),
                   ),
                   markers: _markers,

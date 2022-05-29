@@ -140,7 +140,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(top: 16.0),
+                            padding: const EdgeInsets.only(top: 16.0),
                             child: Text('New Specimen',
                                 style: TextStyle(
                                     color: primaryColor, fontSize: 22),
@@ -275,7 +275,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
                                     height: 50,
                                     decoration: BoxDecoration(
                                         color: primaryColor,
-                                        borderRadius: BorderRadius.all(
+                                        borderRadius: const BorderRadius.all(
                                             Radius.circular(15))),
                                     child: Row(
                                       mainAxisAlignment:
@@ -307,7 +307,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
                             decoration: BoxDecoration(
                                 color: primaryColor,
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(15))),
+                                    const BorderRadius.all(Radius.circular(15))),
                             child: Padding(
                                 padding: const EdgeInsets.all(20),
                                 child: Column(
