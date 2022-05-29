@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import StepList from "../../components/StepList";
+import { useDispatch } from 'react-redux';
 import axios from "axios";
+
+import { signIn, signOut, signedIn } from '../../redux/actions'
+
+
+import StepList from "../../components/StepList";
 
 
 // static data (to remove when backend is functional)
@@ -27,13 +33,43 @@ const Home = () => {
             photoCount: -1
         }
     );
+    const [fetchedAchievements, setFetchedAchievements] = useState(false)
 
 
     axios.get('/api/public/achievements')
         .then(function (response) {
             // handle success
-            setAchievements(response.data);
+            if (!fetchedAchievements) {
+                setAchievements(response.data);
+                setFetchedAchievements(!fetchedAchievements);
+            }
         });
+
+
+    const dispatch = useDispatch();
+
+        useEffect(() => {
+            const loggedInUser = localStorage.getItem("userToken");
+            if (loggedInUser) {
+                dispatch(signIn());
+                const user = JSON.parse(localStorage.getItem("userToken"));
+                console.log(user.loginToken)
+                axios.get(`/api/users/${user.userId}`, {
+                    headers: {
+                        "Authorization": `Bearer ${user.loginToken}`,
+                    }
+                })
+                    .then(function (response) {
+                        console.log(response);
+                        dispatch(signedIn(response.data));
+    
+    
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        }, []);
 
 
 
@@ -43,8 +79,8 @@ const Home = () => {
             {/* "Help identify" section */}
             <div className="grid gap-3 sm:place-items-center grid-flow-row-dense md:place-items-end sm:grid-cols-1 md:grid-cols-5 bg-emerald-900 text-white py-16">
                 <div className="grid col-span-3 mx-8">
-                    <span className="font-medium leading-tight text-4xl fade-in" style={{animationDelay:`1000ms`}}><span className="font-bold">Help identify</span> specimens</span>
-                    <span className="text-lg mt-5 ml-7 fade-in" style={{animationDelay:`1100ms`}}>Fill in quizzes about what cultivar is a specimen and earn reputation points!</span>
+                    <span className="font-medium leading-tight text-4xl fade-in" style={{ animationDelay: `1000ms` }}><span className="font-bold">Help identify</span> specimens</span>
+                    <span className="text-lg mt-5 ml-7 fade-in" style={{ animationDelay: `1100ms` }}>Fill in quizzes about what cultivar is a specimen and earn reputation points!</span>
                     <div className="ml-11 text-lg py-3"><StepList baseDelay={1100} steps={first_list} /></div>
                 </div>
                 <div className="col-span-2 justify-self-stretch self-stretch bg-stone-100 slider-inverted rounded-l-full"></div>
@@ -54,8 +90,8 @@ const Home = () => {
             <div className="grid gap-3 sm:place-items-center grid-flow-row-dense md:place-items-start sm:grid-cols-1 md:grid-cols-5 text-neutral-900 py-16">
                 <div className="col-span-2 justify-self-stretch self-stretch rounded-r-full bg-emerald-900 slider"></div>
                 <div className="grid col-span-3 mx-8">
-                    <span className="font-medium leading-tight text-4xl fade-in" style={{animationDelay:`1000ms`}}><span className="font-bold">Get an Identification</span> for your specimen</span>
-                    <span className="text-lg mt-5 ml-7 fade-in" style={{animationDelay:`1100ms`}}>Found a specimen and can't identify it? You can upload it to our system and other users will help you!</span>
+                    <span className="font-medium leading-tight text-4xl fade-in" style={{ animationDelay: `1000ms` }}><span className="font-bold">Get an Identification</span> for your specimen</span>
+                    <span className="text-lg mt-5 ml-7 fade-in" style={{ animationDelay: `1100ms` }}>Found a specimen and can't identify it? You can upload it to our system and other users will help you!</span>
                     <div className="ml-11 text-lg py-3"><StepList baseDelay={1100} steps={second_list} /></div>
                 </div>
             </div>
@@ -66,15 +102,15 @@ const Home = () => {
                     <span className="col-span-2 md:col-span-3 font-medium text-3xl fade-in">What we have <span className="font-bold">achieved</span></span>
 
                     <div className="flex flex-col justify-center border-4 rounded-lg border-emerald-900 p-4 aspect-[4/3] fade-in">
-                        <span className="text-3xl font-bold">{ achievements.specimenCount }</span>
+                        <span className="text-3xl font-bold">{achievements.specimenCount}</span>
                         <span className="text-xl font-normal">Specimens registered</span>
                     </div>
                     <div className="flex flex-col justify-center border-4 rounded-lg border-emerald-900 p-4 aspect-[4/3] fade-in">
-                        <span className="text-3xl font-bold">{ achievements.userCount }</span>
+                        <span className="text-3xl font-bold">{achievements.userCount}</span>
                         <span className="text-xl font-normal">Registered Users</span>
                     </div>
                     <div className="flex flex-col justify-center border-4 rounded-lg border-emerald-900 p-4 aspect-[4/3] fade-in">
-                        <span className="text-3xl font-bold">{ achievements.photoCount }</span>
+                        <span className="text-3xl font-bold">{achievements.photoCount}</span>
                         <div className="flex-shrink text-xl font-normal">Specimen photos uploaded</div>
                     </div>
                 </div>
