@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/achievements")
+@RequestMapping("/api/public/achievements")
 public class AchievementsController {
 
     @Autowired
