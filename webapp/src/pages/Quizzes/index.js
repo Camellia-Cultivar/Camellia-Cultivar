@@ -62,7 +62,7 @@ export default Quizzes;
 // static data (remove when API is connected)
 
 let steps = [
-    { "id": 1, "content": 'The quizz will have 9 specimens to identify' },
+    { "id": 1, "content": 'The quizz will have 6 specimens to identify' },
     { "id": 2, "content": 'You can identify each specimen by inserting the name of it\'s species/cultivar' },
     { "id": 3, "content": 'Submit your answers even if you can not identify all the specimens!' }
 ];

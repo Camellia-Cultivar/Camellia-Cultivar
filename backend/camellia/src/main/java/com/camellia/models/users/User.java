@@ -284,10 +284,11 @@ public class User implements Serializable{
     }
 
     public String getProfile(){
-        return "\"profile_image\":" + getProfilePhoto() +
-            ", " + "\"first_name\":"  +  getFirstName() + 
-            ", " + "\"last_name\":" + getLastName() + 
-            ", " + "\"email\":" + getEmail() + 
-            ", " + "\"reputation\":" + getReputation(); 
+        return "\"profile_image\":\"" + getProfilePhoto() +
+            "\", " + "\"first_name\":\""  +  getFirstName() + 
+            "\", " + "\"last_name\":\"" + getLastName() + 
+            "\", " + "\"email\":\"" + getEmail() + 
+            "\", " + "\"reputation\":" + getReputation()+
+            ", " + "\"verified\":" + getVerified(); 
         }
 }
