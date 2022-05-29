@@ -18,7 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 
-import com.camellia.models.Quiz;
+import com.camellia.models.QuizAnswer;
 import com.camellia.models.specimens.ReferenceSpecimen;
 import com.camellia.models.specimens.ToIdentifySpecimen;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -66,7 +66,7 @@ public class Cultivar {
         orphanRemoval = true
     )
     @JsonIgnoreProperties("cultivar")
-    private Set<Quiz> quizzes;
+    private Set<QuizAnswer> quizAnswers;
 
 
     @OneToMany(

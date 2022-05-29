@@ -1,9 +1,7 @@
 package com.camellia.controllers;
 
 import com.camellia.models.specimens.*;
-import com.camellia.models.Country;
 import com.camellia.models.cultivars.Cultivar;
-import com.camellia.services.CountryService;
 import com.camellia.services.specimens.*;
 import com.camellia.services.cultivars.CultivarService;
 
@@ -21,7 +19,7 @@ import java.util.*;
 //adicionar @CrossOrigin se der erro de CORS
 
 @RestController
-@CrossOrigin
+@RequestMapping("/api/specimens")
 public class SpecimenController {
     
     @Autowired
@@ -34,11 +32,7 @@ public class SpecimenController {
     private ToIdentifySpecimenService toId_specimen_service;
 
     @Autowired
-    private CountryService countryService;
-
-    @Autowired
     private CultivarService cultivarService;
-    
 
     @GetMapping("/api/v1/specimens")
     public Page<Specimen> getAllSpecimens(Pageable pageable) {
@@ -53,12 +47,6 @@ public class SpecimenController {
     @GetMapping("/api/v1/specimen/{id}")
     public Specimen getSpecimen(@PathVariable long id){
         return specimen_service.getSpecimenById(id);
-    }
-
-    @GetMapping("/api/v1/specimen/{country}")
-    public List<Specimen> getSpecimenByCountry(@PathVariable long country_id){
-        Country country = countryService.getCountryById(country_id);
-        return specimen_service.getSpecimenByCountry(country);
     }
 
     @PostMapping("/api/v1/specimens")
@@ -80,19 +68,19 @@ public class SpecimenController {
         //transferir detalhes do to_identify_specimen para reference_specimen
         //apagar specimen do repository de to_identify_specimen
     }
-
-    @PostMapping("api/v1/specimen/{id}/addvote/{c_name}")
-    public void addVote(@PathVariable("id") long id, @PathVariable("c_name") String c_name){
-        Cultivar cultivar = cultivarService.getCultivarByName(c_name);
-        ToIdentifySpecimen specimen = toId_specimen_service.getToIdentifySpecimenById(id);
-        Map<Cultivar, Integer> votes = specimen.getCultivar_votes();
-        if (votes.containsKey(cultivar)){
-            votes.put(cultivar, votes.get(cultivar)+1);
-        }else{
-            votes.put(cultivar, 1);
-        }
-        toId_specimen_service.updateVotes(specimen, votes);
-    }
+//
+//    @PostMapping("api/v1/specimen/{id}/addvote/{c_name}")
+//    public void addVote(@PathVariable("id") long id, @PathVariable("c_name") String c_name){
+//        Cultivar cultivar = cultivarService.getCultivarByName(c_name);
+//        ToIdentifySpecimen specimen = toId_specimen_service.getToIdentifySpecimenById(id);
+//        Map<Cultivar, Float> votes = specimen.getCultivarProbabilities();
+//        if (votes.containsKey(cultivar)){
+//            votes.put(cultivar, votes.get(cultivar)+1);
+//        }else{
+//            votes.put(cultivar, 1);
+//        }
+//        toId_specimen_service.updateVotes(specimen, Float);
+//    }
 
 
 
