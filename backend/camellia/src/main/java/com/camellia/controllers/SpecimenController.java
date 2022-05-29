@@ -68,6 +68,8 @@ public class SpecimenController {
         //transferir detalhes do to_identify_specimen para reference_specimen
         //apagar specimen do repository de to_identify_specimen
     }
+
+
 //
 //    @PostMapping("api/v1/specimen/{id}/addvote/{c_name}")
 //    public void addVote(@PathVariable("id") long id, @PathVariable("c_name") String c_name){

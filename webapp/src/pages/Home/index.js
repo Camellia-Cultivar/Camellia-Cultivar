@@ -3,8 +3,7 @@ import StepList from "../../components/StepList";
 import { useDispatch } from 'react-redux';
 import axios from "axios";
 
-import { signIn, signOut, signedIn } from '../../redux/actions'
-
+import { signIn, signOut, signedIn } from '../../redux/actions';
 
 import StepList from "../../components/StepList";
 
