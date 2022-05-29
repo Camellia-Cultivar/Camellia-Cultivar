@@ -23,13 +23,9 @@ import com.camellia.models.specimens.ReferenceSpecimen;
 import com.camellia.models.specimens.ToIdentifySpecimen;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @Table(name = "cultivar")
 public class Cultivar {
@@ -47,8 +43,8 @@ public class Cultivar {
     @Column(name = "description", columnDefinition="TEXT")
     private String description;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "photograph")
+    private String photograph;
 
     @OneToMany(
         fetch = FetchType.EAGER,
@@ -120,13 +116,47 @@ public class Cultivar {
         this.description = description;
     }
 
-    public String getName(){
-        return name;
+
+    public String getPhotograph() {
+        return this.photograph;
     }
 
-    public void setName(String name){
-        this.name=name;
+    public void setPhotograph(String photo) {
+        this.photograph = photo;
     }
+
+    public Set<ReferenceSpecimen> getReferenceSpecimens() {
+        return this.referenceSpecimens;
+    }
+
+    public void setReferenceSpecimens(Set<ReferenceSpecimen> referenceSpecimens) {
+        this.referenceSpecimens = referenceSpecimens;
+    }
+
+    public Set<Quiz> getQuizzes() {
+        return this.quizzes;
+    }
+
+    public void setQuizzes(Set<Quiz> quizzes) {
+        this.quizzes = quizzes;
+    }
+
+    public Set<CultivarSynonyms> getSynonyms() {
+        return this.synonyms;
+    }
+
+    public void setSynonyms(Set<CultivarSynonyms> synonyms) {
+        this.synonyms = synonyms;
+    }
+
+    public Map<ToIdentifySpecimen,Integer> getCultivar_votes() {
+        return this.cultivar_votes;
+    }
+
+    public void setCultivar_votes(Map<ToIdentifySpecimen,Integer> cultivar_votes) {
+        this.cultivar_votes = cultivar_votes;
+    }
+
 
     
 }
