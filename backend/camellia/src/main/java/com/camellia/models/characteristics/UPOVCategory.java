@@ -40,4 +40,17 @@ public class UPOVCategory {
     )
     @JsonIgnoreProperties("upov_category")
     private Set<Characteristic> characteristics;
+
+    
+    public long getUpov_category_id() {
+        return upov_category_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Set<Characteristic> getCharacteristics() {
+        return characteristics;
+    }
 }

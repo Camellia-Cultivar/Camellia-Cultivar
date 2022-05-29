@@ -1,11 +1,8 @@
 package com.camellia.repositories.characteristics;
 
-import com.camellia.models.characteristics.CharacteristicOption;
+import com.camellia.models.characteristics.CharacteristicValue;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-//import org.springframework.stereotype.Repository;
-
-//@Repository
-public interface CharacteristicOptionRepository extends JpaRepository<CharacteristicOption, Long>{
-    CharacteristicOption findById(long id);
+public interface CharacteristicOptionRepository extends JpaRepository<CharacteristicValue, Long>{
+    CharacteristicValue findById(long id);
 }
