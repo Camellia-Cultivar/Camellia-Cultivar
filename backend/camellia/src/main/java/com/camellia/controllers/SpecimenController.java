@@ -83,7 +83,7 @@ public class SpecimenController {
 
     @PostMapping("api/v1/specimen/{id}/addvote/{c_name}")
     public void addVote(@PathVariable("id") long id, @PathVariable("c_name") String c_name){
-        Cultivar cultivar = cultivarService.getCultivarByName(c_name);
+        Cultivar cultivar = cultivarService.getCultivarByEpithet(c_name);
         ToIdentifySpecimen specimen = toId_specimen_service.getToIdentifySpecimenById(id);
         Map<Cultivar, Integer> votes = specimen.getCultivar_votes();
         if (votes.containsKey(cultivar)){
