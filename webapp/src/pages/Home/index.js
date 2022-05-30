@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import StepList from "../../components/StepList";
 import { useDispatch } from 'react-redux';
 import axios from "axios";
 
-import { signIn, signOut, signedIn } from '../../redux/actions';
-
 import StepList from "../../components/StepList";
+import { signIn, signOut, signedIn } from '../../redux/actions';
 
 
 // static data (to remove when backend is functional)
