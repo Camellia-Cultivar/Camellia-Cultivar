@@ -298,7 +298,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
                                 decoration: BoxDecoration(
                                     color: primaryColor,
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(15))),
+                                        const BorderRadius.all(Radius.circular(15))),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: const [
@@ -328,7 +328,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
                         decoration: BoxDecoration(
                             color: primaryColor,
                             borderRadius:
-                                BorderRadius.all(Radius.circular(15))),
+                                const BorderRadius.all(Radius.circular(15))),
                         child: Padding(
                             padding: const EdgeInsets.all(20),
                             child: Column(

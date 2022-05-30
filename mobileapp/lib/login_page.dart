@@ -268,14 +268,12 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Positioned(
-              top: -68,
+              top: -screenSize.height / 12.14,
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: primaryColor,
                 ),
-                // height: 136,
-                // width: 136,
                 height: screenSize.height / 7,
                 width: screenSize.width / 3,
                 child: Icon(Icons.person_outlined,
