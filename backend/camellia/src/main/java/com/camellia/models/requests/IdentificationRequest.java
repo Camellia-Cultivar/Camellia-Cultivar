@@ -19,7 +19,6 @@ import lombok.Setter;
 public class IdentificationRequest extends Request{
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn( referencedColumnName = "specimen_id", name="specimen_id", nullable=false)
-    @JsonProperty("specimen")
-    @JsonIgnoreProperties("identification_request")
+    @JsonProperty("specimen_id")
     private ToIdentifySpecimen toIdentifySpecimen;
 }

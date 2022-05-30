@@ -29,7 +29,7 @@ public class ToIdentifySpecimen extends Specimen{
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    @JsonIgnoreProperties("specimen")
+    @JsonIgnoreProperties("toIdentifySpecimen")
     private IdentificationRequest identificationRequest;
 
 
