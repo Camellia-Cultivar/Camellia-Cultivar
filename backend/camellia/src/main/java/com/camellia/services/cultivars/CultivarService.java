@@ -1,8 +1,9 @@
 package com.camellia.services.cultivars;
 
 import com.camellia.repositories.cultivars.CultivarRepository;
-import com.camellia.views.CultivarView;
+import com.camellia.views.CultivarListView;
 import com.camellia.models.cultivars.Cultivar;
+import com.camellia.models.cultivars.CultivarDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,14 +26,17 @@ public class CultivarService {
         return repository.findAll(pageable);
     }
 
-    public List<CultivarView> getCultivars(long page) {
+    public List<CultivarListView> getCultivars(long page) {
         page -= 1;
         page = page * CULTIVARS_PER_PAGE;
         return repository.retrieveAllPaged(page , CULTIVARS_PER_PAGE);
     }
 
-    public Optional<Cultivar> getCultivarById(Long id) {
-        return repository.findById(id);
+    public CultivarDTO getCultivarById(Long id) {
+        Optional<Cultivar> c = repository.findById(id);
+        if(c.isPresent())
+            return new CultivarDTO(c.get());
+        return new CultivarDTO();
     }
 
     public Cultivar getCultivarByEpithet(String epithet){
