@@ -47,35 +47,35 @@ const Home = () => {
 
     const dispatch = useDispatch();
 
-        useEffect(() => {
-            const loggedInUser = localStorage.getItem("userToken");
-            if (loggedInUser) {
-                dispatch(signIn());
-                const user = JSON.parse(localStorage.getItem("userToken"));
-                if(user.expiry > Date.now()) {
-                    axios.get(`/api/users/${user.userId}`, {
-                        headers: {
-                            "Authorization": `Bearer ${user.loginToken}`,
-                        }
-                    })
-                        .then(function (response) {
-                            console.log(response);
-                            dispatch(signedIn(response.data));
-        
-        
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
-                } else {
-                    localStorage.removeItem("userToken");
-                    dispatch(signOut());
-                    
-                }
+    useEffect(() => {
+        const loggedInUser = localStorage.getItem("userToken");
+        if (loggedInUser) {
+            dispatch(signIn());
+            const user = JSON.parse(localStorage.getItem("userToken"));
+            if (user.expiry > Date.now()) {
+                axios.get(`/api/users/${user.userId}`, {
+                    headers: {
+                        "Authorization": `Bearer ${user.loginToken}`,
+                    }
+                })
+                    .then(function (response) {
+                        console.log(response);
+                        dispatch(signedIn(response.data));
 
-                }
-                
-        }, []);
+
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            } else {
+                localStorage.removeItem("userToken");
+                dispatch(signOut());
+
+            }
+
+        }
+
+    }, []);
 
 
 
