@@ -2,13 +2,11 @@ package com.camellia.services.specimens;
 
 import com.camellia.repositories.specimens.SpecimenRepository;
 import com.camellia.models.specimens.Specimen;
-import com.camellia.models.Country;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-//import org.springframework.data.repository.query.RepositoryQuery;
 
 import java.util.List;
 
@@ -27,10 +25,6 @@ public class SpecimenService {
 
     public Specimen getSpecimenById(long id) {
         return repository.findById((long)id);
-    }
-
-    public List<Specimen> getSpecimenByCountry(Country country){
-        return repository.findByCountry(country);
     }
 
     public Specimen saveSpecimen(Specimen specimen){

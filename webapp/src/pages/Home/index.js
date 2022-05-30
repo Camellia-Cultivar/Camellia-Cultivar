@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
+import StepList from "../../components/StepList";
 import { useDispatch } from 'react-redux';
 import axios from "axios";
 
-import { signIn, signOut, signedIn } from '../../redux/actions'
-
+import { signIn, signOut, signedIn } from '../../redux/actions';
 
 import StepList from "../../components/StepList";
 
@@ -27,15 +27,15 @@ let second_list = [
 const Home = () => {
     const [achievements, setAchievements] = useState(
         {
-            specimenCount: 0,
-            userCount: 0,
-            photoCount: 0
+            specimenCount: -1,
+            userCount: -1,
+            photoCount: -1
         }
     );
     const [fetchedAchievements, setFetchedAchievements] = useState(false)
 
 
-    let specimen_registered = axios.get('/api/achievements')
+    axios.get('/api/public/achievements')
         .then(function (response) {
             // handle success
             if (!fetchedAchievements) {

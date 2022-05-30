@@ -4,32 +4,16 @@ import java.beans.Transient;
 import java.io.Serializable;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import com.camellia.models.Quiz;
+import com.camellia.models.QuizAnswer;
 import com.camellia.models.QuizParameters;
 import com.camellia.models.ReputationParameters;
 import com.camellia.models.requests.CultivarRequest;
 import com.camellia.models.requests.IdentificationRequest;
 import com.camellia.models.requests.ReportRequest;
-import com.camellia.models.specimens.Specimen;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 import lombok.NoArgsConstructor;
 
@@ -41,16 +25,7 @@ import lombok.NoArgsConstructor;
 public class User implements Serializable{
     
     @Id
-    @GeneratedValue(generator = "user-sequence-generator")
-    @GenericGenerator(
-        name = "user-sequence-generator",
-        strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-        parameters = {
-                    @Parameter(name = "sequence_name", value = "user_sequence"),
-                    @Parameter(name = "initial_value", value = "1"),
-                    @Parameter(name = "increment_size", value = "1")
-        }
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userId;
 
     @JsonProperty("first_name")
@@ -80,24 +55,14 @@ public class User implements Serializable{
     @Column(name = "verified", nullable = false)
     private boolean verified;
 
-
-    @OneToMany(
+    @OneToMany (
         fetch = FetchType.EAGER,
-        mappedBy = "registered_user",
+        mappedBy = "user",
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    @JsonIgnoreProperties("registered_user")
-    private Set<Specimen> specimens;
-
-    @OneToMany(
-        fetch = FetchType.EAGER,
-        mappedBy = "registered_user",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
-    @JsonIgnoreProperties("registered_user")
-    private Set<Quiz> quizzes;
+    @JsonIgnoreProperties("user")
+    private Set<QuizAnswer> quizAnswers;
 
     @OneToMany(
         fetch = FetchType.EAGER,
@@ -214,20 +179,12 @@ public class User implements Serializable{
         this.verified = verified;
     }
 
-    public Set<Specimen> getSpecimens() {
-        return this.specimens;
+    public Set<QuizAnswer> getQuizAnswers() {
+        return this.quizAnswers;
     }
 
-    public void setSpecimens(Set<Specimen> specimens) {
-        this.specimens = specimens;
-    }
-
-    public Set<Quiz> getQuizzes() {
-        return this.quizzes;
-    }
-
-    public void setQuizzes(Set<Quiz> quizzes) {
-        this.quizzes = quizzes;
+    public void setQuizAnswers(Set<QuizAnswer> quizAnswers) {
+        this.quizAnswers = quizAnswers;
     }
 
     public Set<IdentificationRequest> getIdentificationRequests() {
@@ -260,14 +217,6 @@ public class User implements Serializable{
 
     public void setReputationParameters(Set<ReputationParameters> reputationParameters) {
         this.reputationParameters = reputationParameters;
-    }
-
-    public Set<QuizParameters> getQuizParameters() {
-        return this.quizParameters;
-    }
-
-    public void setQuizParameters(Set<QuizParameters> quizParameters) {
-        this.quizParameters = quizParameters;
     }
 
     @Transient

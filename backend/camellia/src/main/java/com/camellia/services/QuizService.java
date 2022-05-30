@@ -1,7 +1,7 @@
 package com.camellia.services;
 
 import com.camellia.repositories.QuizRepository;
-import com.camellia.models.Quiz;
+import com.camellia.models.QuizAnswer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,15 +15,15 @@ public class QuizService {
     @Autowired
     private QuizRepository repository;
 
-    public Page<Quiz> getQuizzes(Pageable pageable) {
+    public Page<QuizAnswer> getQuizzes(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
-    public List<Quiz> getQuizzes() {
+    public List<QuizAnswer> getQuizzes() {
         return repository.findAll();
     }
 
-    public Quiz getQuizById(long id) {
+    public QuizAnswer getQuizById(long id) {
         return repository.findById((long) id);
     }
 }

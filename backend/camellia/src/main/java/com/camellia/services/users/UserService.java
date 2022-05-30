@@ -71,7 +71,7 @@ public class UserService {
         user.setProfilePhoto(tempUser.getProfilePhoto());
         user.setFirstName(tempUser.getFirstName());
         user.setLastName(tempUser.getLastName());
-        user.setPassword(tempUser.getPassword());
+        user.setPassword(bCryptPasswordEncoder.encode(tempUser.getPassword()));
         this.repository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(user.getProfile());
     }

@@ -1,60 +1,22 @@
 package com.camellia.models.specimens;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.InheritanceType;
+import javax.persistence.*;
 
-import com.camellia.models.Country;
 import com.camellia.models.Photo;
-import com.camellia.models.Quiz;
-import com.camellia.models.characteristics.CharacteristicOption;
-//import com.camellia.models.users.RegisteredUser;
-import com.camellia.models.users.User;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.camellia.models.QuizAnswer;
+import com.camellia.models.characteristics.CharacteristicValue;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@NoArgsConstructor
 public abstract class Specimen {
     
     @Id
-    @GeneratedValue(generator = "specimen-sequence-generator")
-    @GenericGenerator(
-        name = "specimen-sequence-generator",
-        strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-        parameters = {
-                    @Parameter(name = "sequence_name", value = "specimen_sequence"),
-                    @Parameter(name = "initial_value", value = "1"),
-                    @Parameter(name = "increment_size", value = "1")
-        }
-    )
-    private long specimen_id;
-
-    @Column(name = "submission_date", nullable = false)
-    private LocalDateTime submission_date;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "specimen_id")
+    private long specimenId;
 
     @Column(name = "owner")
     private String owner;
@@ -75,30 +37,56 @@ public abstract class Specimen {
     @Column(name = "garden")
     private double garden;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn( referencedColumnName = "userId", name="user_id", nullable=false)
-    @JsonIncludeProperties("user_id")
-    private User registered_user;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn( referencedColumnName = "country_id", name="country_id", nullable=false)
-    @JsonIncludeProperties("country_id")
-    private Country country;
-
     @OneToMany(
         fetch = FetchType.EAGER,
         mappedBy = "specimen",
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    @JsonIgnoreProperties("specimen")
-    private Set<Quiz> quizzes;
+    @JsonIgnore
+    private Set<QuizAnswer> quizAnswers;
 
     @ManyToMany
     @JoinTable(
-        name = "specimen_contains_option", 
-        joinColumns = @JoinColumn(name = "specimen_id"), 
-        inverseJoinColumns = @JoinColumn(name = "characteristic_option_id")
+        name = "specimen_has_characteristic_values",
+        joinColumns = @JoinColumn(name = "specimen_id"),
+        inverseJoinColumns = @JoinColumn(name = "characteristic_value_id")
     )
-    Set<CharacteristicOption> characteristic_options;
+    Set<CharacteristicValue> characteristicValues;
+
+    public long getSpecimenId() {
+        return specimenId;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public Set<Photo> getPhotographs() {
+        return photographs;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public double getGarden() {
+        return garden;
+    }
+
+    public Set<QuizAnswer> getQuizzes() {
+        return quizAnswers;
+    }
+
+    public Set<CharacteristicValue> getCharacteristicValues() {
+        return characteristicValues;
+    }
 }
