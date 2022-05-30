@@ -1,6 +1,6 @@
 package com.camellia.views;
 
-public interface CultivarView {
+public interface CultivarListView {
     String getCultivar_id();
     String getEpithet();
     String getSpecies();
