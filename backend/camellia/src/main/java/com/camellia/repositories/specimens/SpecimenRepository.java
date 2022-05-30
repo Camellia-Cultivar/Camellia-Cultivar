@@ -1,7 +1,6 @@
 package com.camellia.repositories.specimens;
 
 import com.camellia.models.specimens.Specimen;
-import com.camellia.models.Country;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 // import org.springframework.data.jpa.repository.Query;
@@ -14,7 +13,4 @@ import java.util.List;
 public interface SpecimenRepository extends JpaRepository<Specimen, Long>{
     Specimen findById(long id);
 
-    List<Specimen> findByCountry(Country country);
-
-    
 }

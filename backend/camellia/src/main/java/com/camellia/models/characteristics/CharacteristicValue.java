@@ -22,7 +22,7 @@ public class CharacteristicValue {
     @Id
     @GeneratedValue( strategy =  GenerationType.AUTO)
     @JsonProperty("id")
-    private long characteristic_value_id;
+    private long characteristicValueId;
 
     @Column( name = "value")
     private Short value;
@@ -35,11 +35,11 @@ public class CharacteristicValue {
     @JsonIncludeProperties("characteristic_id")
     private Characteristic characteristic;
 
-    @ManyToMany(mappedBy = "characteristic_options")
+    @ManyToMany(mappedBy = "characteristicValues")
     Set<Specimen> specimens;
 
-    public long getCharacteristic_value_id() {
-        return characteristic_value_id;
+    public long getCharacteristicValueId() {
+        return characteristicValueId;
     }
 
     public Short getValue() {

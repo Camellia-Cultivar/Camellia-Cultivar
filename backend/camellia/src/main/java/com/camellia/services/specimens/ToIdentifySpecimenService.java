@@ -25,10 +25,10 @@ public class ToIdentifySpecimenService {
     }
 
     public ToIdentifySpecimen getToIdentifySpecimenById(long id) {
-        return repository.findById((long) id);
+        return repository.findById(id);
     }
 
-    public void updateVotes(ToIdentifySpecimen specimen, Map<Cultivar, Integer> votes){
-        specimen.setCultivar_votes(votes);
+    public void updateVotes(ToIdentifySpecimen specimen, Map<Cultivar, Float> votes){
+        specimen.setCultivarProbabilities(votes);
     }
 }

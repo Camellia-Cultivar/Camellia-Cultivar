@@ -1,17 +1,11 @@
 package com.camellia.models.requests;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import com.camellia.models.Quiz;
 import com.camellia.models.specimens.ToIdentifySpecimen;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,13 +17,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "identification_request")
 public class IdentificationRequest extends Request{
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "quiz_id", referencedColumnName = "quiz_id")
-    private Quiz quiz;
-
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn( referencedColumnName = "specimen_id", name="specimen_id", nullable=false)
-    @JsonIncludeProperties("specimen_id")
-    private ToIdentifySpecimen to_identify_specimen;
+    @JsonProperty("specimen")
+    @JsonIgnoreProperties("identification_request")
+    private ToIdentifySpecimen toIdentifySpecimen;
 }
