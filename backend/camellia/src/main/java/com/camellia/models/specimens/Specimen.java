@@ -9,14 +9,15 @@ import com.camellia.models.QuizAnswer;
 import com.camellia.models.characteristics.CharacteristicValue;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Specimen {
     
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "specimen_id")
-    private long specimenId;
+    private long specimen_id;
 
     @Column(name = "owner")
     private String owner;
@@ -54,9 +55,7 @@ public abstract class Specimen {
     )
     Set<CharacteristicValue> characteristicValues;
 
-    public long getSpecimenId() {
-        return specimenId;
-    }
+
 
     public String getOwner() {
         return owner;
