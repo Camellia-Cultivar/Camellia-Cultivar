@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.*;
 
 import com.camellia.models.QuizAnswer;
+import com.camellia.models.QuizParameters;
 import com.camellia.models.ReputationParameters;
 import com.camellia.models.requests.CultivarRequest;
 import com.camellia.models.requests.IdentificationRequest;
@@ -98,6 +99,16 @@ public class User implements Serializable{
     )
     @JsonIgnoreProperties("admin_user")
     private Set<ReputationParameters> reputationParameters;
+
+
+    @OneToMany(
+        fetch = FetchType.EAGER,
+        mappedBy = "admin_user",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    @JsonIgnoreProperties("admin_user")
+    private Set<QuizParameters> quizParameters;
 
     public long getUserId() {
         return this.userId;

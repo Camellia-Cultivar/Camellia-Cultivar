@@ -133,13 +133,15 @@ public class Cultivar {
         this.referenceSpecimens = referenceSpecimens;
     }
 
-    public Set<Quiz> getQuizzes() {
-        return this.quizzes;
+
+    public Set<QuizAnswer> getQuizAnswers() {
+        return this.quizAnswers;
     }
 
-    public void setQuizzes(Set<Quiz> quizzes) {
-        this.quizzes = quizzes;
+    public void setQuizAnswers(Set<QuizAnswer> quizAnswers) {
+        this.quizAnswers = quizAnswers;
     }
+
 
     public Set<CultivarSynonyms> getSynonyms() {
         return this.synonyms;
