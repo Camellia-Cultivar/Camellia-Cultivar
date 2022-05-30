@@ -18,7 +18,9 @@ const Register = () => {
 
         const axios = require('axios').default;
 
-        axios.post('/api/users/signup', user)
+        axios.post('/api/users/signup', user, {headers:{
+            'content-type': 'application/json'
+        }})
             .then(function (response) {
                 console.log(response);
                 navigate('/login');
