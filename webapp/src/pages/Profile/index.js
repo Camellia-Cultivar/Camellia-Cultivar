@@ -1,6 +1,10 @@
-import React, {useState} from 'react'
+import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { IoCalendarNumberOutline, IoLocationOutline } from 'react-icons/io5'
+import { useDispatch, useSelector } from 'react-redux'
 
-import {IoCalendarNumberOutline, IoLocationOutline } from 'react-icons/io5'
+import { signOut } from '../../redux/actions'
+
 import ProfileCard from '../../components/ProfileCard'
 import ProfileEditCard from '../../components/ProfileEditCard'
 
@@ -11,11 +15,30 @@ const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [person, setPerson] = useState(details);
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const user = useSelector(state => state.user)
+
+
+    useEffect(() => {
+        const loggedInUser = localStorage.getItem("userToken");
+        if (loggedInUser) {
+            const tempUser = JSON.parse(loggedInUser);
+            if (tempUser.expiry < Date.now()) {
+                localStorage.removeItem("userToken");
+                dispatch(signOut());
+                navigate("/");
+            }
+        }
+
+    }, []);
+
     return (
         <div className='mt-16 container-4/5'>
-            <p className="text-4xl font-bold text-emerald-900">Welcome {person.firstName}!</p>
+            <p className="text-4xl font-bold text-emerald-900">Welcome {user.first_name}!</p>
             <div className="flex mt-16">
-                {isEditing ? <ProfileEditCard person={person} setPerson={(p)=>{setPerson(p)} } setIsEditing={(editing)=>{setIsEditing(editing)}}></ProfileEditCard>:<ProfileCard person={person} setIsEditing={(editing)=>{setIsEditing(editing)}}></ProfileCard>}
+                {isEditing ? <ProfileEditCard person={user} setPerson={(p) => { setPerson(p) }} setIsEditing={(editing) => { setIsEditing(editing) }}></ProfileEditCard> : <ProfileCard person={user} setIsEditing={(editing) => { setIsEditing(editing) }}></ProfileCard>}
                 <div className="ml-24">
                     <p className="text-2xl font-bold text-emerald-900">Your Requests</p>
                     {
@@ -38,15 +61,15 @@ const Profile = () => {
                                         <p className="mx-2">{request.status}</p>
                                     </div>
                                     <div className="ml-4 col-span-3">
-                                        {request.identifications.length ===0 ? <div className="flex items-center justify-center h-full"><p className="text-lg font-medium text-center ">No Results</p></div>: <p className="text-lg font-medium mt-2">Results: </p>}
+                                        {request.identifications.length === 0 ? <div className="flex items-center justify-center h-full"><p className="text-lg font-medium text-center ">No Results</p></div> : <p className="text-lg font-medium mt-2">Results: </p>}
                                         <div className="flex flex-col justify-center">
-                                        {request.identifications.map((result, ind) => {
-                                            return (
-                                              <p key={ind}>
-                                                  {result.name} : {result.percentage}%
-                                              </p>  
-                                            )
-                                        })}
+                                            {request.identifications.map((result, ind) => {
+                                                return (
+                                                    <p key={ind}>
+                                                        {result.name} : {result.percentage}%
+                                                    </p>
+                                                )
+                                            })}
 
                                         </div>
                                     </div>
