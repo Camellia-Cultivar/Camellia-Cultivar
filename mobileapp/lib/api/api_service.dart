@@ -19,7 +19,7 @@ Map<int, User> mockUser = {
       lastName: "Doe",
       email: "jd@ua.pt",
       reputation: 0,
-      profileImage: "https://i.imgflip.com/2/1975nj.jpg")
+      profileImageUrl: "https://i.imgflip.com/2/1975nj.jpg")
 };
 
 Map<int, String> mockPassord = {0: "12345"};
@@ -173,15 +173,14 @@ class APIService {
     return null;
   }
 
-
   Future<List<Question>?> getQuiz() async {
     List<Question> lst = [];
 
     try {
       var url = Uri.parse(APIConstants.baseUrl + APIConstants.quizEndpoint);
       var response = await http.get(url);
-      if(response.statusCode == 200) {
-        for(dynamic o in json.decode(response.body)) {
+      if (response.statusCode == 200) {
+        for (dynamic o in json.decode(response.body)) {
           lst.add(Question.fromJson(json.decode(o)));
         }
         return lst;
@@ -192,16 +191,15 @@ class APIService {
     return null;
   }
 
-
   Future<void> setQuizAnswers(int uid, List<FormItem> answers) async {
     List<Map<String, dynamic>> lst = [];
 
-    for(FormItem i in answers) {
+    for (FormItem i in answers) {
       lst.add(i.getData());
     }
 
     try {
-      var url = Uri.parse(APIConstants.baseUrl+APIConstants.quizEndpoint);
+      var url = Uri.parse(APIConstants.baseUrl + APIConstants.quizEndpoint);
       var obj = {"uid": uid, "answers": lst};
       var body = jsonEncode(obj);
       var response = await http.post(url,
@@ -211,48 +209,50 @@ class APIService {
           body: body);
       if (response.statusCode != 200) {
         throw Exception("Submission of quiz answers did not suceed!");
-      } 
-
+      }
     } catch (e) {
       log(e.toString());
     }
   }
 
   Future<List<Map<String, dynamic>?>?> getRecentlyUploadedSpecimens() async {
-
     try {
-      var url = Uri.parse(APIConstants.baseUrl+APIConstants.recentlyUploadedSpecimensEndpoint);
+      var url = Uri.parse(APIConstants.baseUrl +
+          APIConstants.recentlyUploadedSpecimensEndpoint);
       var response = await http.get(url);
       if (response.statusCode == 200) {
         return json.decode(response.body);
       }
       return null;
-
     } catch (e) {
       log(e.toString());
     }
   }
 
-
   Future<List<Map<String, dynamic>?>?> getMapSpecimens() async {
-
     List<Map<String, dynamic>> lst = [];
 
     try {
-      var url = Uri.parse(APIConstants.baseUrl+APIConstants.mapSpecimensEndpoint);
+      var url =
+          Uri.parse(APIConstants.baseUrl + APIConstants.mapSpecimensEndpoint);
       var response = await http.get(url);
       if (response.statusCode == 200) {
-        for(dynamic obj in json.decode(response.body)) {
-          LatLng coordinates = LatLng(double.parse(obj["lat"]), double.parse(obj["long"]));
-          Map<String, dynamic> new_obj = {"coords" : coordinates, "name": obj["name"], "image": obj["image"], "camellia_id": obj["camellia_id"]};
+        for (dynamic obj in json.decode(response.body)) {
+          LatLng coordinates =
+              LatLng(double.parse(obj["lat"]), double.parse(obj["long"]));
+          Map<String, dynamic> new_obj = {
+            "coords": coordinates,
+            "name": obj["name"],
+            "image": obj["image"],
+            "camellia_id": obj["camellia_id"]
+          };
           lst.add(new_obj);
         }
       }
       return lst;
-
     } catch (e) {
       log(e.toString());
     }
     return null;
-  } 
+  }
 }

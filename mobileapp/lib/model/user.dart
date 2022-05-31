@@ -9,7 +9,7 @@ class User {
   String email;
   //String password;
   int reputation;
-  String? profileImage;
+  String profileImageUrl;
 
   User(
       {required this.id,
@@ -18,7 +18,7 @@ class User {
       required this.email,
       //required this.password,
       required this.reputation,
-      this.profileImage});
+      required this.profileImageUrl});
 
   String get name {
     return firstName + " " + lastName;
@@ -26,7 +26,7 @@ class User {
 
   @override
   String toString() {
-    return 'id: $id, firstName: $firstName, lastName: $lastName, email: $email repuation: $reputation, profileImage: $profileImage';
+    return 'id: $id, firstName: $firstName, lastName: $lastName, email: $email repuation: $reputation, profileImage: $profileImageUrl';
   }
 
   Map<String, dynamic> toJson() {
@@ -37,7 +37,7 @@ class User {
       'email': email,
       //'password': password,
       "reputation": reputation,
-      "profileImage": profileImage
+      "profileImage": profileImageUrl
     };
   }
 
@@ -47,6 +47,6 @@ class User {
       lastName: json["last_name"],
       email: json["email"],
       //password: json["password"],
-      profileImage: json["profile_image"],
+      profileImageUrl: json["profile_photo"],
       reputation: json["reputation"]);
 }

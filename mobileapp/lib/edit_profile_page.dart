@@ -40,7 +40,7 @@ class _EditProfilePage extends State<EditProfilePage> {
     }
   }
 
-  late String profileImageUrl;
+  String? profileImageUrl;
 
   Future<void> uploadInAzure(User user) async {
     var storage = AzureStorage.parse(
@@ -59,6 +59,7 @@ class _EditProfilePage extends State<EditProfilePage> {
       profileImageUrl = baseUrl + azureImgUrl;
     });
   }
+
   final api = APIService();
 
   @override
@@ -90,6 +91,9 @@ class _EditProfilePage extends State<EditProfilePage> {
         // user.password = passwordController.text.isNotEmpty
         //     ? passwordController.text
         //     : user.password;
+        if (profileImage != null) {
+          user.profileImageUrl = profileImageUrl!;
+        }
 
         if (passwordController.text.isNotEmpty) {
           var password = passwordController.text;
@@ -168,14 +172,21 @@ class _EditProfilePage extends State<EditProfilePage> {
                           ),
                           child: Column(
                             children: [
-                              SizedBox(
-                                height: screenSize.height / 8,
-                                width: screenSize.width / 4,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(90.0),
-                                  child: Image.network(
-                                      user.profileImage as String),
+                              GestureDetector(
+                                child: SizedBox(
+                                  height: screenSize.height / 8,
+                                  width: screenSize.width / 4,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(90.0),
+                                    child: profileImage == null
+                                        ? Image.network(user.profileImageUrl)
+                                        : Image.file(
+                                            profileImage!,
+                                            fit: BoxFit.fill,
+                                          ),
+                                  ),
                                 ),
+                                onTap: _getFromGallery,
                               ),
                               Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,

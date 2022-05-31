@@ -151,7 +151,7 @@ class _ProfilePage extends State<ProfilePage> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(90.0),
                                     child: Image.network(
-                                      "https://i.imgflip.com/2/1975nj.jpg",
+                                      user!.profileImageUrl,
                                     ),
                                   ),
                                 )),
@@ -159,7 +159,7 @@ class _ProfilePage extends State<ProfilePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 UserDetailWidget(
-                                    text: user?.name != null ? user!.name : "",
+                                    text: user.name != null ? user.name : "",
                                     icon: Icon(
                                       Icons.person_outlined,
                                       color: primaryColor,
@@ -170,16 +170,15 @@ class _ProfilePage extends State<ProfilePage> {
                                           fontFamily: 'MaterialIcons'),
                                       color: primaryColor,
                                     ),
-                                    text:
-                                        user?.email != null ? user!.email : ""),
+                                    text: user.email != null ? user.email : ""),
                                 UserDetailWidget(
                                   icon: Icon(
                                     const IconData(0xf3e2,
                                         fontFamily: 'MaterialIcons'),
                                     color: primaryColor,
                                   ),
-                                  text: user?.reputation != null
-                                      ? '${user!.reputation} reputation'
+                                  text: user.reputation != null
+                                      ? '${user.reputation} reputation'
                                       : "",
                                 )
                               ],

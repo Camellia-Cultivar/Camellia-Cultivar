@@ -122,12 +122,13 @@ class _RegisterPageState extends State<RegisterPage> {
     var password = passwordController.text;
 
     User user = User(
-      id: null as int,
-      firstName: firstNameController.text,
-      email: emailController.text,
-      lastName: lastNameController.text,
-      reputation: 0,
-    );
+        id: null as int,
+        firstName: firstNameController.text,
+        email: emailController.text,
+        lastName: lastNameController.text,
+        reputation: 0,
+        profileImageUrl:
+            "https://cdn.discordapp.com/attachments/958416677777854545/981241254778138664/unknown.png");
 
     try {
       User? existingUser = await api.getUser(user.id);
@@ -146,7 +147,6 @@ class _RegisterPageState extends State<RegisterPage> {
       user.id = uid;
 
       await api.updatePassword(user.id, password);
-      
     } catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
