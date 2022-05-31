@@ -4,8 +4,9 @@ import 'package:camellia_cultivar/home/map_page.dart';
 import 'package:camellia_cultivar/local_auth_api.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/navbar/botnavbar.dart';
-import 'package:camellia_cultivar/profilepage.dart';
+import 'package:camellia_cultivar/profile_page.dart';
 import 'package:camellia_cultivar/providers/user.dart';
+import 'package:camellia_cultivar/unique_quiz_page.dart';
 import 'package:camellia_cultivar/utils/auth.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,16 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong/latlong.dart';
 
-import '../new_specimen/new_specimen.dart';
+import '../new_specimen/new_specimen_page.dart';
 import 'specimen_popup.dart';
+
+
+List<Map<String, dynamic>> recentlyUploadedJson = [
+	{"image": "https://www.significados.com.br/foto/camelia-29.jpg", "location": "Parque da Macaca, Aveiro", "request_date": "26-Jun-2022", "specimen_id": 2},
+	{"image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBA5mAFxS9mjuuD-AWAGB_z1676LSGYIBoNA&usqp=CAU", "location": "Estufa Fria, Lisboa", "request_date": "20-May-2022",  "specimen_id": 3},
+  {"image": "https://media.istockphoto.com/photos/white-camellia-flower-isolated-on-white-background-picture-id1251528600?k=20&m=1251528600&s=612x612&w=0&h=AW64ZIfakH0ROp3WJeh_Gd5bjaJtOOyokx-NMjAho7E=", "location": "Jardim Botânico do Porto", "request_date": "01-Jan-2022",  "specimen_id": 7}
+];
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -27,7 +36,6 @@ class HomePage extends StatefulWidget {
 }
 
 class Home extends State<HomePage> with WidgetsBindingObserver {
-  List recently_uploaded = [];
 
   List<LatLng> _latLngList = [];
   List<Marker> _markers = [];
@@ -47,27 +55,18 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
     _latLngList = [
       LatLng(40.6384943, -8.6540832),
       LatLng(40.6391863, -8.6563771),
-      LatLng(40.6364017, -8.6532305),
-      LatLng(40.6335806, -8.6519005),
-      LatLng(40, -8),
-      LatLng(41.6335806, -7.6519005),
-      LatLng(40.6335806, -8.6419005),
-      LatLng(39.6335806, -9.0419005)
+      LatLng(40.6364017, -8.6532305)
     ];
     _openPopUp = initOpenPopUp();
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
   }
 
-  // @override
-  // void dispose() {
-  //   WidgetsBinding.instance!.removeObserver(this);
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
+    var screenSize = MediaQuery.of(context).size;
+
     User? user = context.watch<UserProvider>().user;
 
     // final PopupController _popupController = PopupController();
@@ -87,12 +86,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
             ))
         .toList();
 
-    recently_uploaded = [
-      'https://www.significados.com.br/foto/camelia-29.jpg',
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBA5mAFxS9mjuuD-AWAGB_z1676LSGYIBoNA&usqp=CAU',
-      'https://media.istockphoto.com/photos/white-camellia-flower-isolated-on-white-background-picture-id1251528600?k=20&m=1251528600&s=612x612&w=0&h=AW64ZIfakH0ROp3WJeh_Gd5bjaJtOOyokx-NMjAho7E='
-    ];
-
     return Scaffold(
       backgroundColor: primaryColor,
       body: ListView(children: [
@@ -107,7 +100,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                       )),
                 ))),
         Container(
-            height: 100,
+            height: screenSize.height / 8.25,
             color: primaryColor,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -129,7 +122,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
         Container(
             decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(width: 1, color: const Color(0x064E3B)),
+                border: Border.all(width: 1, color: const Color(0x00064e3b)),
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(15),
                     topRight: Radius.circular(15))),
@@ -147,13 +140,13 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                       const Padding(padding: EdgeInsets.all(5)),
                       CarouselSlider(
                         options: CarouselOptions(
-                            aspectRatio: 1.4,
+                            aspectRatio: 1.3,
                             viewportFraction: 0.8,
                             autoPlay: true,
                             enableInfiniteScroll: false,
                             enlargeStrategy: CenterPageEnlargeStrategy.height),
                         items: [
-                          for (int i = 0; i < recently_uploaded.length; i++)
+                          for (int i = 0; i < recentlyUploadedJson.length; i++)
                             Card(
                               child: Column(
                                 children: [
@@ -167,8 +160,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                                           topLeft: Radius.circular(5),
                                           topRight: Radius.circular(5)),
                                       child: Image.network(
-                                        recently_uploaded[i],
-                                        height: 150,
+                                        recentlyUploadedJson.elementAt(i)["image"].toString(),
+                                        height: screenSize.height / 5.5,
                                         width:
                                             MediaQuery.of(context).size.width,
                                         fit: BoxFit.fitWidth,
@@ -185,8 +178,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                                         size: 30,
                                         color: primaryColor,
                                       ),
-                                      const Text('Parque da Macaca, Aveiro',
-                                          style: TextStyle(
+                                       Text(recentlyUploadedJson.elementAt(i)["location"].toString(),
+                                          style: const TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold))
                                     ],
@@ -194,9 +187,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                                   Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: const [
-                                        Text('26-Jun-2022',
-                                            style: TextStyle(fontSize: 12))
+                                      children: [
+                                        Text(recentlyUploadedJson.elementAt(i)["request_date"].toString(),
+                                            style: const TextStyle(fontSize: 12))
                                       ]),
                                   const SizedBox(height: 10),
                                   MaterialButton(
@@ -206,9 +199,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                                       shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(150.0))),
-                                      onPressed: () {
-                                        //change to page of quiz with that identification request
-                                      },
+                                       onPressed: () => {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                      UniqueQuizPage(specimenId: recentlyUploadedJson.elementAt(i)["specimen_id"], 
+                                                      image: recentlyUploadedJson.elementAt(i)["image"].toString())))
+                                         },
                                       child: const Text(
                                         'Identify',
                                         style: TextStyle(
@@ -220,6 +218,13 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                               shadowColor: Colors.blueGrey,
                             ),
                         ],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        child: Divider(
+                          height: screenSize.height / 27.52,
+                          color: Colors.grey,
+                        ),
                       ),
                       // GestureDetector(
                       //     onTap: () {
@@ -282,6 +287,10 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                     ],
                   ),
                 ),
+              ),
+              Padding(padding: const EdgeInsets.only(top: 10, bottom: 5), 
+                child: Text("Click to see specimens", 
+                  style: TextStyle(color: Colors.grey[500]))
               ),
               const Padding(padding: EdgeInsets.only(top: 10)),
               SizedBox(

@@ -1,10 +1,10 @@
-import 'package:camellia_cultivar/quizzpage.dart';
+import 'package:camellia_cultivar/quiz_page.dart';
 import 'package:flutter/material.dart';
 
 import 'navbar/botnavbar.dart';
 
-class QuizzOptionsPage extends StatelessWidget {
-  const QuizzOptionsPage({Key? key}) : super(key: key);
+class QuizOptionsPage extends StatelessWidget {
+  const QuizOptionsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +15,15 @@ class QuizzOptionsPage extends StatelessWidget {
       backgroundColor: const Color(0XFFF6F6F7),
       body: Center(
           child: Container(
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                   color: const Color(0x0F064E3B),
                   borderRadius: BorderRadius.circular(15.0)),
-              height: screenSize.height / 1.2,
-              width: screenSize.width / 1.2,
+              margin: EdgeInsets.fromLTRB(
+                  screenSize.width / 15.7,
+                  screenSize.height / 20.6,
+                  screenSize.width / 15.7,
+                  screenSize.height / 20.6),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -36,7 +40,7 @@ class QuizzOptionsPage extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const QuizzPage()))
+                                      builder: (context) => const QuizPage()))
                             },
                         style: ButtonStyle(
                           backgroundColor:

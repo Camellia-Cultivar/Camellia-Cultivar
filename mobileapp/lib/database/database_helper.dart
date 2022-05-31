@@ -49,7 +49,7 @@ class DatabaseHelper {
             email: first["email"],
             firstName: first["firstName"],
             lastName: first["lastName"],
-            password: first["password"],
+            //password: first["password"],
             reputation: first["reputation"]);
       }
       return null;
