@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:camellia_cultivar/model/coordinates.dart';
 import 'package:camellia_cultivar/model/question.dart';
 import 'package:camellia_cultivar/model/uploaded_specimen.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong/latlong.dart';
 
@@ -19,67 +20,79 @@ Map<int, User> mockUser = {
       lastName: "Doe",
       email: "jd@ua.pt",
       reputation: 0,
-      profileImageUrl: "https://i.imgflip.com/2/1975nj.jpg")
+      profileImage: "https://i.imgflip.com/2/1975nj.jpg",
+      verified: true)
 };
 
 Map<int, String> mockPassord = {0: "12345"};
 
 class APIService {
-  Future<int?> login(String email, String password) async {
-    // try {
-    //   var url = Uri.parse(APIConstants.baseUrl + APIConstants.loginEndpoint);
-    //   var obj = {"email": email, "password": password};
-    //   var body = jsonEncode(obj);
-    //   var response = await http.post(url,
-    //       headers: <String, String>{
-    //         'Content-Type': 'application/json; charset=UTF-8'
-    //       },
-    //       body: body);
-    //   if (response.statusCode == 200) {
-    //     return int.parse(response.body);
-    //   }
-    // } catch (e) {
-    //   log(e.toString());
-    // }
-    // return null;
-    return 0;
+  final storage = FlutterSecureStorage();
+
+  Future<List<Object>> login(Map login_user) async {
+    var er;
+    try {
+      var url = Uri.parse(APIConstants.baseUrl + APIConstants.loginEndpoint);
+      print(url);
+      // var obj = {"email": email, "password": password};
+      var body = jsonEncode(login_user);
+      print(body);
+      var response = await http.post(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            "Access-Control-Allow-Origin": "*"
+          },
+          body: body);
+      if (response.statusCode == 200 && response.body == "") {
+        return [-2, "Credentials are wrong!"];
+      }
+      return [response.statusCode, response.body];
+    } catch (e) {
+      log(e.toString());
+      er = e;
+    }
+    return [-1, er.toString() /*"Failed to authenticate. Please try again!"*/];
+    // return 0;
   }
 
   Future<User?> getUser(int uid) async {
-    //  try {
-    //     var url = Uri.parse(APIConstants.baseUrl + APIConstants.profileEndpoint + "/$uid");
-    //     var response = await http.get(url);
-    //     if (response.statusCode == 200) {
-    //       User _model = userFromJson(response.body);
-    //       print(_model.toString());
-    //       return _model;
-    //     }
-    //   } catch (e) {
-    //     log(e.toString());
-    //   }
-    //   return null;
-    // }
+    try {
+      var url = Uri.parse(
+          APIConstants.baseUrl + APIConstants.profileEndpoint + "/${uid}");
+      var response = await http.get(url, headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+        'Authorization': 'Bearer ${await storage.read(key: 'token')}',
+      });
+      if (response.statusCode == 202) {
+        User api_user = userFromJson(response.body, uid);
+        print(api_user.toString());
+        return api_user;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
     return mockUser[uid];
   }
 
-  Future<int?> createUser(User user) async {
-    // try {
-    //   var url = Uri.parse(APIConstants.baseUrl + APIConstants.registerEndpoint);
-    //   var body = jsonEncode(user.toJson());
-    //   var response = await http.post(url,
-    //       headers: <String, String>{
-    //         'Content-Type': 'application/json; charset=UTF-8'
-    //       },
-    //       body: body);
-    //   if (response.statusCode == 200) {
-    //     return int.parse(response.body);
-    //   }
-    // } catch (e) {
-    //   log(e.toString());
-    // }
-    // return null;
-    mockUser[user.id] = user;
-    return user.id;
+  Future<List<Object>> createUser(Map signup_user) async {
+    try {
+      var url = Uri.parse(APIConstants.baseUrl + APIConstants.registerEndpoint);
+      // print(url);
+      var body = jsonEncode(signup_user);
+      var response = await http.post(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          },
+          body: body);
+      return [response.statusCode, response.body];
+    } catch (e) {
+      log(e.toString());
+      log("Could not fetch from api");
+    }
+    return [-1, "Failed to create account. Please try again later!"];
+    // mockUser[user.id] = user;
+    // return user.id;
   }
 
   //TODO: Use try-catch when using this function

@@ -92,7 +92,7 @@ class _EditProfilePage extends State<EditProfilePage> {
         //     ? passwordController.text
         //     : user.password;
         if (profileImage != null) {
-          user.profileImageUrl = profileImageUrl!;
+          user.profileImage = profileImageUrl!;
         }
 
         if (passwordController.text.isNotEmpty) {
@@ -179,7 +179,7 @@ class _EditProfilePage extends State<EditProfilePage> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(90.0),
                                     child: profileImage == null
-                                        ? Image.network(user.profileImageUrl)
+                                        ? Image.network(user.profileImage)
                                         : Image.file(
                                             profileImage!,
                                             fit: BoxFit.fill,

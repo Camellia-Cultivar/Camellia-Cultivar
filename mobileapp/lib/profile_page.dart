@@ -151,7 +151,7 @@ class _ProfilePage extends State<ProfilePage> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(90.0),
                                     child: Image.network(
-                                      user!.profileImageUrl,
+                                      user!.profileImage,
                                     ),
                                   ),
                                 )),

@@ -23,6 +23,8 @@ class _LoginPageState extends State<LoginPage> {
   bool _authError = false;
   final _formKey = GlobalKey<FormState>();
 
+  final storage = FlutterSecureStorage();
+
   @override
   void initState() {
     super.initState();
@@ -81,25 +83,42 @@ class _LoginPageState extends State<LoginPage> {
         });
 
     if (_formKey.currentState!.validate()) {
-      String email = emailController.text;
-      String password = passwordController.text;
+      // String email = emailController.text;
+      // String password = passwordController.text;
+      Map<String, String> login_user = {
+        'email': emailController.text,
+        'password': passwordController.text
+      };
       int? uid;
+      List<Object> response_object;
 
-      try {
-        uid = await api.login(email, password);
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text("Failed to authenticate. Please try again!"),
-              backgroundColor: Colors.red),
-        );
+      response_object = await api.login(login_user);
+      // } catch (e) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //         content: Text("Failed to authenticate. Please try again!"),
+      //         backgroundColor: Colors.red),
+      //   );
+      //   return;
+      // }
+      print(response_object);
+      if (response_object[0] == 200) {
+        String response = response_object[1].toString();
+        var splitted = response.split(' ');
+        uid = int.parse(splitted[0]);
+        await storage.write(key: 'token', value: splitted[1]);
+      } else {
+        showSnackBar(response_object[1].toString(), Colors.red);
         return;
       }
 
-      if (uid != null) {
-        User? user = await api.getUser(uid);
+      print("ID: " + uid.toString());
 
-        if (user != null) {
+      if (!uid.isNaN) {
+        User? user = await api.getUser(uid);
+        print(user);
+
+        if (user != null && user.verified) {
           await login(context, user);
 
           emailController.clear();
@@ -107,6 +126,11 @@ class _LoginPageState extends State<LoginPage> {
 
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const HomePage()));
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => _buildVerifyEmailPopup(context),
+          );
         }
       } else {
         setState(() => {
@@ -116,8 +140,13 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  showSnackBar(String message, Color backgroundColor) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: backgroundColor),
+    );
+  }
+
   void checkAuth() async {
-    const storage = FlutterSecureStorage();
     String expiresIn = await storage.read(key: "expiresIn") ?? "";
 
     if (expiresIn.isNotEmpty &&
@@ -134,6 +163,25 @@ class _LoginPageState extends State<LoginPage> {
             context, MaterialPageRoute(builder: (context) => const HomePage()));
       }
     }
+  }
+
+  Widget _buildVerifyEmailPopup(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Verify Email'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Text("Check your email and verify your account!"),
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+            onPressed: () => {Navigator.of(context).pop()},
+            child: const Text("Close",
+                style: TextStyle(color: Color(0xFF064E3B)))),
+      ],
+    );
   }
 
   @override
@@ -209,13 +257,6 @@ class _LoginPageState extends State<LoginPage> {
                               )),
                         ],
                       ),
-                      SizedBox(
-                          width: screenSize.width / 1.8,
-                          child: _authError == true
-                              ? const Text("Email and Password do not match.",
-                                  style: TextStyle(color: Colors.red))
-                              : null),
-                      const Padding(padding: EdgeInsets.all(5)),
                       SizedBox(
                         height: screenSize.height / 12.5,
                         width: screenSize.width / 1.8,

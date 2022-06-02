@@ -20,13 +20,28 @@ import 'package:latlong/latlong.dart';
 import '../new_specimen/new_specimen_page.dart';
 import 'specimen_popup.dart';
 
-
 List<Map<String, dynamic>> recentlyUploadedJson = [
-	{"image": "https://www.significados.com.br/foto/camelia-29.jpg", "location": "Parque da Macaca, Aveiro", "request_date": "26-Jun-2022", "specimen_id": 2},
-	{"image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBA5mAFxS9mjuuD-AWAGB_z1676LSGYIBoNA&usqp=CAU", "location": "Estufa Fria, Lisboa", "request_date": "20-May-2022",  "specimen_id": 3},
-  {"image": "https://media.istockphoto.com/photos/white-camellia-flower-isolated-on-white-background-picture-id1251528600?k=20&m=1251528600&s=612x612&w=0&h=AW64ZIfakH0ROp3WJeh_Gd5bjaJtOOyokx-NMjAho7E=", "location": "Jardim Botânico do Porto", "request_date": "01-Jan-2022",  "specimen_id": 7}
+  {
+    "image": "https://www.significados.com.br/foto/camelia-29.jpg",
+    "location": "Parque da Macaca, Aveiro",
+    "request_date": "26-Jun-2022",
+    "specimen_id": 2
+  },
+  {
+    "image":
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBA5mAFxS9mjuuD-AWAGB_z1676LSGYIBoNA&usqp=CAU",
+    "location": "Estufa Fria, Lisboa",
+    "request_date": "20-May-2022",
+    "specimen_id": 3
+  },
+  {
+    "image":
+        "https://media.istockphoto.com/photos/white-camellia-flower-isolated-on-white-background-picture-id1251528600?k=20&m=1251528600&s=612x612&w=0&h=AW64ZIfakH0ROp3WJeh_Gd5bjaJtOOyokx-NMjAho7E=",
+    "location": "Jardim Botânico do Porto",
+    "request_date": "01-Jan-2022",
+    "specimen_id": 7
+  }
 ];
-
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -36,7 +51,6 @@ class HomePage extends StatefulWidget {
 }
 
 class Home extends State<HomePage> with WidgetsBindingObserver {
-
   List<LatLng> _latLngList = [];
   List<Marker> _markers = [];
 
@@ -59,7 +73,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
     ];
     _openPopUp = initOpenPopUp();
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -160,7 +174,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                                           topLeft: Radius.circular(5),
                                           topRight: Radius.circular(5)),
                                       child: Image.network(
-                                        recentlyUploadedJson.elementAt(i)["image"].toString(),
+                                        recentlyUploadedJson
+                                            .elementAt(i)["image"]
+                                            .toString(),
                                         height: screenSize.height / 5.5,
                                         width:
                                             MediaQuery.of(context).size.width,
@@ -178,7 +194,10 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                                         size: 30,
                                         color: primaryColor,
                                       ),
-                                       Text(recentlyUploadedJson.elementAt(i)["location"].toString(),
+                                      Text(
+                                          recentlyUploadedJson
+                                              .elementAt(i)["location"]
+                                              .toString(),
                                           style: const TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold))
@@ -188,8 +207,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Text(recentlyUploadedJson.elementAt(i)["request_date"].toString(),
-                                            style: const TextStyle(fontSize: 12))
+                                        Text(
+                                            recentlyUploadedJson
+                                                .elementAt(i)["request_date"]
+                                                .toString(),
+                                            style:
+                                                const TextStyle(fontSize: 12))
                                       ]),
                                   const SizedBox(height: 10),
                                   MaterialButton(
@@ -199,14 +222,22 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                                       shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(150.0))),
-                                       onPressed: () => {
+                                      onPressed: () => {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) =>
-                                                      UniqueQuizPage(specimenId: recentlyUploadedJson.elementAt(i)["specimen_id"], 
-                                                      image: recentlyUploadedJson.elementAt(i)["image"].toString())))
-                                         },
+                                                    builder: (context) => UniqueQuizPage(
+                                                        specimenId:
+                                                            recentlyUploadedJson
+                                                                    .elementAt(
+                                                                        i)[
+                                                                "specimen_id"],
+                                                        image:
+                                                            recentlyUploadedJson
+                                                                .elementAt(
+                                                                    i)["image"]
+                                                                .toString())))
+                                          },
                                       child: const Text(
                                         'Identify',
                                         style: TextStyle(
@@ -288,10 +319,10 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                   ),
                 ),
               ),
-              Padding(padding: const EdgeInsets.only(top: 10, bottom: 5), 
-                child: Text("Click to see specimens", 
-                  style: TextStyle(color: Colors.grey[500]))
-              ),
+              Padding(
+                  padding: const EdgeInsets.only(top: 10, bottom: 5),
+                  child: Text("Click to see specimens",
+                      style: TextStyle(color: Colors.grey[500]))),
               const Padding(padding: EdgeInsets.only(top: 10)),
               SizedBox(
                 height: MediaQuery.of(context).size.height / 3,
