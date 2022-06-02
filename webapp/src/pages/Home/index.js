@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
 import axios from "axios";
 
 import StepList from "../../components/StepList";
@@ -31,7 +32,7 @@ const Home = () => {
         }
     );
     const [fetchedAchievements, setFetchedAchievements] = useState(false)
-
+    const navigate = useNavigate();
 
     axios.get('/api/public/achievements')
         .then(function (response) {
@@ -48,7 +49,6 @@ const Home = () => {
     useEffect(() => {
         const loggedInUser = localStorage.getItem("userToken");
         if (loggedInUser) {
-            dispatch(signIn());
             const user = JSON.parse(localStorage.getItem("userToken"));
             if (user.expiry > Date.now()) {
                 axios.get(`/api/users/${user.userId}`, {
@@ -58,8 +58,13 @@ const Home = () => {
                 })
                     .then(function (response) {
                         console.log(response);
+                        if(!response.data.verified){
+                            navigate("/verify");
+                        } else {
+                            dispatch(signIn());
                         dispatch(signedIn(response.data));
-
+                            
+                        }
 
                     })
                     .catch(function (error) {

@@ -14,6 +14,7 @@ import Encyclopedia from './pages/Encyclopedia';
 import Camellia from './pages/Camellia';
 import Moderation from './pages/Moderation';
 import Profile from './pages/Profile';
+import Verify from './pages/Verify';
 
 function App() {
 
@@ -23,11 +24,13 @@ function App() {
             <Navbar />
             <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/verify" element={<Verify />} />
                 <Route path="/moderation" element={<Moderation />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/quizzes" element={<Quizzes />} />
-                <Route path="/encyclopedia" element={<Encyclopedia />} />
-                <Route path="/encyclopedia/camellia" element={<Camellia />} />
+                <Route path="/encyclopedia" element={<Encyclopedia />} >
+                </Route>
+                <Route path="/encyclopedia/:id" element={<Camellia />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/profile" element={<Profile />} />
