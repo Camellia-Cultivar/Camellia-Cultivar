@@ -84,21 +84,29 @@ class _EditProfilePage extends State<EditProfilePage> {
     final _formKey = GlobalKey<FormState>();
 
     void handleSubmit(BuildContext context, User user) async {
+      var new_user = User(
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          id: user.id,
+          profileImage: user.profileImage,
+          reputation: user.reputation,
+          verified: user.verified);
       if (_formKey.currentState!.validate()) {
         //user.email = emailController.text;
-        user.firstName = firstNameController.text;
-        user.lastName = lastNameController.text;
+        new_user.firstName = firstNameController.text;
+        new_user.lastName = lastNameController.text;
         // user.password = passwordController.text.isNotEmpty
         //     ? passwordController.text
         //     : user.password;
         if (profileImage != null) {
-          user.profileImage = profileImageUrl!;
+          new_user.profileImage = profileImageUrl!;
         }
 
-        if (passwordController.text.isNotEmpty) {
-          var password = passwordController.text;
-          await api.updatePassword(user.id, password);
-        }
+        // if (passwordController.text.isNotEmpty) {
+        //   var password = passwordController.text;
+        //   await api.updatePassword(user.id, password);
+        // }
 
         // try {
         //   final dbHelper = DatabaseHelper.instance;
@@ -116,7 +124,7 @@ class _EditProfilePage extends State<EditProfilePage> {
         // }
 
         try {
-          await api.updateUser(user);
+          await api.updateUser(new_user, passwordController.text);
           context.read<UserProvider>().setUser(user);
           Navigator.pop(context,
               MaterialPageRoute(builder: (context) => const ProfilePage()));
@@ -377,12 +385,10 @@ class _EditProfilePage extends State<EditProfilePage> {
                                                       controller:
                                                           passwordController,
                                                       validator: (value) {
+                                                        print("Value: " +
+                                                            value.toString());
                                                         if ((value == null ||
-                                                                value
-                                                                    .isEmpty) &&
-                                                            confirmPasswordController
-                                                                .text
-                                                                .isNotEmpty) {
+                                                            value.isEmpty)) {
                                                           return 'Password is required!';
                                                         }
                                                         return null;

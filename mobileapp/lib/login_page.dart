@@ -38,53 +38,12 @@ class _LoginPageState extends State<LoginPage> {
     passwordController.dispose();
   }
 
-  // void handleSubmit(BuildContext context) async {
-  //   setState(() => {
-  //         _authError = false,
-  //       });
-
-  //   if (_formKey.currentState!.validate()) {
-  //     final dbHelper = DatabaseHelper.instance;
-
-  //     User? user;
-
-  //     try {
-  //       user = await dbHelper.getUser(emailController.text);
-  //     } catch (e) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(
-  //             content: Text("Failed to authenticate. Please try again!"),
-  //             backgroundColor: Colors.red),
-  //       );
-  //       return;
-  //     }
-
-  //     bool isAuth = user != null && user.password == passwordController.text;
-
-  //     if (isAuth) {
-  //       await login(context, user);
-
-  //       emailController.clear();
-  //       passwordController.clear();
-
-  //       Navigator.push(
-  //           context, MaterialPageRoute(builder: (context) => const HomePage()));
-  //     } else {
-  //       setState(() => {
-  //             _authError = true,
-  //           });
-  //     }
-  //   }
-  // }
-
   void handleSubmit(BuildContext context) async {
     setState(() => {
           _authError = false,
         });
 
     if (_formKey.currentState!.validate()) {
-      // String email = emailController.text;
-      // String password = passwordController.text;
       Map<String, String> login_user = {
         'email': emailController.text,
         'password': passwordController.text
@@ -93,18 +52,11 @@ class _LoginPageState extends State<LoginPage> {
       List<Object> response_object;
 
       response_object = await api.login(login_user);
-      // } catch (e) {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     const SnackBar(
-      //         content: Text("Failed to authenticate. Please try again!"),
-      //         backgroundColor: Colors.red),
-      //   );
-      //   return;
-      // }
-      print(response_object);
+
       if (response_object[0] == 200) {
         String response = response_object[1].toString();
         var splitted = response.split(' ');
+
         uid = int.parse(splitted[0]);
         await storage.write(key: 'token', value: splitted[1]);
       } else {
@@ -112,20 +64,14 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
 
-      print("ID: " + uid.toString());
-
       if (!uid.isNaN) {
         User? user = await api.getUser(uid);
-        print(user);
 
         if (user != null && user.verified) {
           await login(context, user);
 
           emailController.clear();
           passwordController.clear();
-
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const HomePage()));
         } else {
           showDialog(
             context: context,
@@ -175,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
           Text("Check your email and verify your account!"),
         ],
       ),
-      actions: <Widget>[
+      actions: [
         TextButton(
             onPressed: () => {Navigator.of(context).pop()},
             child: const Text("Close",

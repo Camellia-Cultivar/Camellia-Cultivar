@@ -4,7 +4,7 @@ class APIConstants {
   static String loginEndpoint = "/users/login";
   static String registerEndpoint = "/users/signup";
   static String profileEndpoint = "/users";
-  static String editProfileEndpoint = "/users"; //todo
+  static String editProfileEndpoint = "/users";
   static String editPasswordEndpoint = "/editpassword"; //todo
   static String deleteProfileEndpoint = "/deleteprofile"; //todo
   static String cultivarEdpoint = "/cultivar"; //todo

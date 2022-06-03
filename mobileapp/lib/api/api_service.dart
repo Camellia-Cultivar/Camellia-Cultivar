@@ -33,10 +33,8 @@ class APIService {
     var er;
     try {
       var url = Uri.parse(APIConstants.baseUrl + APIConstants.loginEndpoint);
-      print(url);
-      // var obj = {"email": email, "password": password};
+
       var body = jsonEncode(login_user);
-      print(body);
       var response = await http.post(url,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
@@ -51,8 +49,7 @@ class APIService {
       log(e.toString());
       er = e;
     }
-    return [-1, er.toString() /*"Failed to authenticate. Please try again!"*/];
-    // return 0;
+    return [-1, "Failed to authenticate. Please try again!"];
   }
 
   Future<User?> getUser(int uid) async {
@@ -66,13 +63,13 @@ class APIService {
       });
       if (response.statusCode == 202) {
         User api_user = userFromJson(response.body, uid);
-        print(api_user.toString());
+        print("user from api" + api_user.toString());
         return api_user;
       }
     } catch (e) {
       log(e.toString());
     }
-    return mockUser[uid];
+    return null;
   }
 
   Future<List<Object>> createUser(Map signup_user) async {
@@ -82,39 +79,52 @@ class APIService {
       var body = jsonEncode(signup_user);
       var response = await http.post(url,
           headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8'
+            'Content-Type': 'application/json; charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
           },
           body: body);
       return [response.statusCode, response.body];
     } catch (e) {
       log(e.toString());
       log("Could not fetch from api");
+      throw e;
     }
     return [-1, "Failed to create account. Please try again later!"];
-    // mockUser[user.id] = user;
-    // return user.id;
   }
 
   //TODO: Use try-catch when using this function
-  Future<void> updateUser(User user) async {
-    mockUser.remove(user.id);
-    mockUser[user.id] = user;
+  Future<void> updateUser(User user, String password) async {
+    // mockUser.remove(user.id);
+    // mockUser[user.id] = user;
 
-    // try {
-    //   var url =
-    //       Uri.parse(APIConstants.baseUrl + APIConstants.editProfileEndpoint);
-    //   var body = jsonEncode(user.toJson());
-    //   var response = await http.post(url,
-    //       headers: <String, String>{
-    //         'Content-Type': 'application/json; charset=UTF-8'
-    //       },
-    //       body: body);
-    //   if (response.statusCode != 200) {
-    //     throw Exception("Update of profile did not suceed!");
-    //   }
-    // } catch (e) {
-    //   log(e.toString());
-    // }
+    try {
+      var url =
+          Uri.parse(APIConstants.baseUrl + APIConstants.editProfileEndpoint);
+      print(user);
+      Map<String, String> request = {
+        "email": user.email,
+        "profile_image": user.profileImage,
+        "first_name": user.firstName,
+        "last_name": user.lastName,
+        "password": password
+      };
+      var body = jsonEncode(request /*user.toJson()*/);
+      print(body);
+      var response = await http.put(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Access-Control-Allow-Origin': '*',
+            'Authorization': 'Bearer ${await storage.read(key: 'token')}'
+          },
+          body: body);
+      print(response.body);
+
+      if (response.statusCode != 200) {
+        throw Exception("Update of profile did not suceed!");
+      }
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   //TODO: Use try-catch when using this function

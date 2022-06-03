@@ -66,6 +66,21 @@ class _ProfilePage extends State<ProfilePage> {
   //         backgroundColor: Colors.green),
   //   );
   // }
+  bool one_call = false;
+
+  Future<void> getUser(BuildContext context, User? user) async {
+    if (user != null) {
+      User? updated_user = await api.getUser(user.id);
+      if (updated_user != null) {
+        context.read<UserProvider>().setUser(updated_user);
+        one_call = true;
+      }
+    }
+  }
+
+  void setOne_callFalse() {
+    one_call = false;
+  }
 
   void handleDelete(BuildContext context, User user) async {
     try {
@@ -92,6 +107,7 @@ class _ProfilePage extends State<ProfilePage> {
   }
 
   void handleLogout(BuildContext context, User user) async {
+    print(one_call.toString() + "heres 2nd onecall");
     await logout(context, user);
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -107,6 +123,10 @@ class _ProfilePage extends State<ProfilePage> {
     Color primaryColor = Theme.of(context).primaryColor;
 
     User? user = context.watch<UserProvider>().user;
+    print("one call: " + one_call.toString());
+    if (!one_call) {
+      getUser(context, user);
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -210,6 +230,7 @@ class _ProfilePage extends State<ProfilePage> {
                                   width: screenSize.width / 1.8,
                                   child: TextButton(
                                       onPressed: () => {
+                                            setOne_callFalse(),
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
