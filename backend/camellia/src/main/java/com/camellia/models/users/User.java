@@ -61,7 +61,7 @@ public class User implements Serializable{
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    @JsonIgnoreProperties("user")
+    //@JsonIgnoreProperties("user")
     private Set<QuizAnswer> quizAnswers;
 
     @OneToMany(
@@ -179,12 +179,20 @@ public class User implements Serializable{
         this.verified = verified;
     }
 
-    public Set<QuizAnswer> getQuizAnswers() {
+//    public Set<QuizAnswer> getQuizAnswers() {
+//        return this.quizAnswers;
+//    }
+//
+//    public void setQuizAnswers(Set<QuizAnswer> quizAnswers) {
+//        this.quizAnswers = quizAnswers;
+//    }
+
+    public Set<QuizAnswer> customGetQuizAnswers() {
         return this.quizAnswers;
     }
 
-    public void setQuizAnswers(Set<QuizAnswer> quizAnswers) {
-        this.quizAnswers = quizAnswers;
+    public void addQuizAnswers(QuizAnswer qa) {
+        this.quizAnswers.add(qa);
     }
 
     public Set<IdentificationRequest> getIdentificationRequests() {

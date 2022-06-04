@@ -8,9 +8,13 @@ import javax.persistence.*;
 import com.camellia.models.QuizAnswer;
 import com.camellia.models.characteristics.CharacteristicValue;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 
 @Entity
+@NoArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Specimen {
     
@@ -20,7 +24,6 @@ public class Specimen {
 
     @Column(name = "owner")
     private String owner;
-
 
 
     @Column(name = "address", nullable = false)
@@ -41,7 +44,7 @@ public class Specimen {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    @JsonIgnore
+    @JsonIgnoreProperties("specimen")
     private Set<QuizAnswer> quizAnswers;
 
     @ManyToMany
@@ -51,6 +54,7 @@ public class Specimen {
         joinColumns = @JoinColumn(name = "specimen_id"),
         inverseJoinColumns = @JoinColumn(name = "characteristic_value_id")
     )
+    @JsonIgnore
     Set<CharacteristicValue> characteristicValues;
 
     @ElementCollection
