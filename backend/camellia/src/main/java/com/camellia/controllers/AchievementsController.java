@@ -1,6 +1,5 @@
 package com.camellia.controllers;
 
-import com.camellia.services.PhotoService;
 import com.camellia.services.specimens.SpecimenService;
 import com.camellia.services.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +20,13 @@ public class AchievementsController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private PhotoService photoService;
-
     @GetMapping
     public Map<String, Long> getAchievements() {
 
         HashMap<String, Long> achievements = new HashMap<>();
         achievements.put("specimenCount", specimenService.getSpecimenCount());
         achievements.put("userCount", userService.getUserCount());
-        achievements.put("photoCount", photoService.getPhotoCount());
+        achievements.put("photoCount", specimenService.getSpecimenPhotosCount());
 
         return achievements;
     }

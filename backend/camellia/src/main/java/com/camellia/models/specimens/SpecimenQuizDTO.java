@@ -2,19 +2,18 @@ package com.camellia.models.specimens;
 
 import java.util.Set;
 
-import com.camellia.models.Photo;
 
 public class SpecimenQuizDTO {
     
     private long specimen_id;
 
-    private Set<Photo> photographs;
+    private Set<String> photographs;
 
     public SpecimenQuizDTO(){}
 
     public SpecimenQuizDTO(Specimen s){
         this.specimen_id = s.getSpecimen_id();
-        this.photographs = s.getPhotographs();
+        this.photographs = s.getPhotos();
     }
 
 
@@ -26,11 +25,11 @@ public class SpecimenQuizDTO {
         this.specimen_id = specimen_id;
     }
 
-    public Set<Photo> getPhotographs() {
+    public Set<String> getPhotographs() {
         return this.photographs;
     }
 
-    public void setPhotographs(Set<Photo> photographs) {
+    public void setPhotographs(Set<String> photographs) {
         this.photographs = photographs;
     }
 
