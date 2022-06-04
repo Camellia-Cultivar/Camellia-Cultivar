@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
-import StepList from "../../components/StepList";
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import axios from "axios";
 
-import { signIn, signOut, signedIn } from '../../redux/actions';
+import { signIn, signedIn } from '../../redux/actions';
 
 import StepList from "../../components/StepList";
 

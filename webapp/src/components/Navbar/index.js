@@ -29,7 +29,7 @@ const Navbar = () => {
     let navigate = useNavigate();
 
     return (
-        <div className="overflow-x-hidden sticky top-0 z-50">
+        <div className="overflow-x-hidden sticky top-0 z-30">
             <nav className="flex bg-emerald-900 lg:px-2 py-2 md:py-4 lg:py-5 text-stone-200 select-none">
                 <div className="container flex flex-wrap justify-between items-center mx-auto">
                     <Link to={"/"} className="flex items-center" onClick={() => closeMenu()}>
