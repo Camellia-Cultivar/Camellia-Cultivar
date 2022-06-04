@@ -1,5 +1,6 @@
 package com.camellia.services.users;
 
+import com.camellia.models.QuizAnswer;
 import com.camellia.models.users.User;
 import com.camellia.repositories.users.UserRepository;
 
@@ -98,5 +99,16 @@ public class UserService {
 
     public Long getUserCount() {
         return repository.count();
+    }
+
+    public User getUserById(long id){
+        return repository.findById(id);
+    }
+
+
+    public void addQuizAnswerToUser(long userId, QuizAnswer qa){
+        User u = repository.findById(userId);
+        //u.getQuizAnswers().add(qa);
+        repository.save(u);
     }
 }

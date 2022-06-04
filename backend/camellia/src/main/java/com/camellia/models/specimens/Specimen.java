@@ -8,10 +8,12 @@ import com.camellia.models.Photo;
 import com.camellia.models.QuizAnswer;
 import com.camellia.models.characteristics.CharacteristicValue;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Specimen {
     
@@ -24,6 +26,7 @@ public abstract class Specimen {
 
     // File System link
     @OneToMany(mappedBy = "specimen")
+    @JsonIgnore
     private Set<Photo> photographs;
 
     @Column(name = "address", nullable = false)
@@ -44,7 +47,7 @@ public abstract class Specimen {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    @JsonIgnore
+    @JsonIgnoreProperties("specimen")
     private Set<QuizAnswer> quizAnswers;
 
     @ManyToMany
@@ -53,9 +56,17 @@ public abstract class Specimen {
         joinColumns = @JoinColumn(name = "specimen_id"),
         inverseJoinColumns = @JoinColumn(name = "characteristic_value_id")
     )
+    @JsonIgnore
     Set<CharacteristicValue> characteristicValues;
 
 
+    public long getSpecimen_id() {
+        return this.specimen_id;
+    }
+
+    public void setSpecimen_id(long specimen_id) {
+        this.specimen_id = specimen_id;
+    }
 
     public String getOwner() {
         return owner;
@@ -88,4 +99,35 @@ public abstract class Specimen {
     public Set<CharacteristicValue> getCharacteristicValues() {
         return characteristicValues;
     }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+    public void setPhotographs(Set<Photo> photographs) {
+        this.photographs = photographs;
+    }
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+    public void setGarden(double garden) {
+        this.garden = garden;
+    }
+
+    public Set<QuizAnswer> getQuizAnswers() {
+        return this.quizAnswers;
+    }
+
+    public void setQuizAnswers(Set<QuizAnswer> quizAnswers) {
+        this.quizAnswers = quizAnswers;
+    }
+    public void setCharacteristicValues(Set<CharacteristicValue> characteristicValues) {
+        this.characteristicValues = characteristicValues;
+    }
+
 }

@@ -1,10 +1,18 @@
 package com.camellia.models;
 
 import com.camellia.models.specimens.Specimen;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "photo")
 public class Photo {
 
@@ -12,36 +20,11 @@ public class Photo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long photoId;
 
-    @Column
+    @Column(name="url")
     private String url;
 
     @ManyToOne
     @JoinColumn(name = "specimen_id", nullable = false)
+    @JsonIgnoreProperties("specimen_id")
     private Specimen specimen;
-
-    public Photo() {}
-
-    public Long getPhotoId() {
-        return photoId;
-    }
-
-    public void setPhotoId(Long photoId) {
-        this.photoId = photoId;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Specimen getSpecimen() {
-        return specimen;
-    }
-
-    public void setSpecimen(Specimen specimen) {
-        this.specimen = specimen;
-    }
 }

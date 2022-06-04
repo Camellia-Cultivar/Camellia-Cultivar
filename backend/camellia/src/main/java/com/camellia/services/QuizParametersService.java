@@ -12,6 +12,11 @@ import java.util.List;
 
 @Service
 public class QuizParametersService {
+
+    private int no_to_identify_specimens = 3;
+
+    private int no_reference_specimens = 6;
+
     @Autowired
     private QuizParametersRepository repository;
 
@@ -25,5 +30,13 @@ public class QuizParametersService {
 
     public QuizParameters getQuizParametersById(long id) {
         return repository.findById((long) id);
+    }
+
+    public int getToIdentifyNo(){
+        return this.no_to_identify_specimens;
+    }
+
+    public int getReferenceNo(){
+        return this.no_reference_specimens;
     }
 }

@@ -14,14 +14,16 @@ import javax.persistence.Table;
 
 import com.camellia.models.users.AdministratorUser;
 import com.camellia.models.users.User;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "quiz_parameters")
 public class QuizParameters {
     
@@ -41,6 +43,6 @@ public class QuizParameters {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn( referencedColumnName = "userId", name="user_id", nullable=false)
-    @JsonIncludeProperties("user_id")
+    @JsonIgnoreProperties("userId")
     private User admin_user;
 }

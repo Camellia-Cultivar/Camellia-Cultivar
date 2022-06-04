@@ -5,6 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.camellia.models.QuizAnswer;
+import com.camellia.models.QuizAnswerDTO;
+import com.camellia.models.specimens.SpecimenQuizDTO;
 import com.camellia.services.QuizService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +25,15 @@ public class QuizController {
     private QuizService quizService;
 
     @GetMapping(value="/{id}")
-    public void generateQuiz(@PathVariable(value = "id") Long user_id, HttpServletRequest request){
-        
+    public List<SpecimenQuizDTO> generateQuiz(@PathVariable(value = "id") Long userId, HttpServletRequest request){
+        return quizService.generateQuiz(userId);
     }
 
 
-    @PostMapping
-    public void quizSubmission(@RequestBody List<QuizAnswer> answersList){
+    @PostMapping(value="/{id}")
+    public double quizSubmission(@RequestBody List<QuizAnswerDTO> answersList, @PathVariable(value="id") long uId){
         System.out.println(answersList);
+        return quizService.saveQuizAnswers(uId, answersList);
     }
 
 }
