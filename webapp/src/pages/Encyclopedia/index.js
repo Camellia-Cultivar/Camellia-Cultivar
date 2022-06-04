@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { IoSearch, IoCloseCircleOutline } from "react-icons/io5";
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import axios from 'axios'
 
 import Card from "../../components/Card"
@@ -19,12 +20,13 @@ const Encyclopedia = () => {
     const [autocompletedCamellias, setAutocompletedCamellias] = useState([]); //
     const [sugestion, setSugestion] = useState({});
     const [chosenSugestion, setChosenSugestion] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
 
 
     useEffect(() => {
         if (!fetched)
-            axios.get('https://localhost:8085/api/public/cultivars', { params: { page: page } })
+            axios.get('api/public/cultivars', { params: { page: page } })
                 .then((response) => {
                     console.log(Object.entries(response.data))
                     setCamellias(response.data)
@@ -33,7 +35,7 @@ const Encyclopedia = () => {
                 .catch((error) => {
                     console.log(error)
                 })
-    })
+    }, [])
 
 
 
@@ -43,7 +45,7 @@ const Encyclopedia = () => {
         setSearchText(e.target.value)
         if (e.target.value.length > 2) {
             setSugestionsOn(true)
-            axios.get('https://localhost:8085/api/public/autocomplete', { params: { substring: e.target.value } })
+            axios.get('api/public/autocomplete', { params: { substring: e.target.value } })
                 .then((response) => {
                     console.log(response.data)
                     setAutocompletedCamellias(response.data)
@@ -62,7 +64,7 @@ const Encyclopedia = () => {
         setSugestionsOn(false);
         setChosenSugestion(true);
         setSugestion(sugestion)
-        axios.get(`https://localhost:8085/api/public/cultivars/${sugestion.cultivarId}`)
+        axios.get(`api/public/cultivars/${sugestion.cultivarId}`)
             .then((response) => {
                 setCamellias([response.data])
                 console.log(Object.entries(response.data))
@@ -73,9 +75,8 @@ const Encyclopedia = () => {
     }
 
     const clearAll = () => {
-        axios.get('https://localhost:8085/api/public/cultivars', { params: { page: page } })
+        axios.get('api/public/cultivars', { params: { page: page } })
             .then((response) => {
-                console.log(Object.entries(response.data))
                 setCamellias(response.data)
                 setFetched(true)
                 setSearchText("")
@@ -88,29 +89,42 @@ const Encyclopedia = () => {
 
     }
 
-    const searchCultivar = () => {
-        axios.get('https://localhost:8085/api/public/autocomplete', { params: { substring: searchText } })
+    const searchCultivar = async () => {
+        let tempCamellias = [];
+        if(searchText === "") return;
+        await axios.get('api/public/autocomplete', { params: { substring: searchText } })
             .then((response) => {
-                let tempCamellias;
                 response.data.map((data, index) => {
-                    axios.get(`https://localhost:8085/api/public/cultivars/${data.cultivarId}`)
+                    axios.get(`api/public/cultivars/${data.cultivarId}`)
                         .then((newResponse) => {
                             tempCamellias.push(newResponse.data)
                         })
                         .catch((error) => {
                             console.log(error)
                         })
-                        return null
+                    return null;
                 })
-                console.log(tempCamellias)
-                setCamellias(tempCamellias)
-                setChosenSugestion(true)
-                setSugestionsOn(false)
+                console.log(tempCamellias);
+
+            })
+            .finally(() => {
+                setIsLoading(true);
+                setSugestionsOn(false);
+                setChosenSugestion(true);
+                setTimeout(() => {
+                setCamellias(tempCamellias);
+                setIsLoading(false);
+                }, 500)
+                setCamellias(tempCamellias);
+                console.log("sdadasdsad");
 
             })
             .catch((error) => {
                 console.log(error)
             })
+
+
+
 
     }
 
@@ -177,6 +191,15 @@ const Encyclopedia = () => {
                     <button className="bg-emerald-900 text-white font-light text-base md:text-lg px-4 md:px-6 py-1 mx-1 md:mx-4 rounded-3xl active:scale-95">Sort By</button>
                 </div>
             </div>
+
+            {isLoading?
+            
+            
+            <div className="my-28 flex justify-center">
+                <AiOutlineLoading3Quarters className="loading text-emerald-900 text-4xl"></AiOutlineLoading3Quarters>
+            </div>
+            
+            :
             <div className="grid sm:grid-cols-2 sm:gap-x-4 md:grid-cols-3 md:grid-rows-3 md:gap-x-8 gap-y-10 mt-10">
                 {chosenSugestion ?
                     camellias.map((camellia) => (<Card className="hover:scale-110 hover:shadow transition-transform duration-75 ease-linear" key={camellia.id} image={camellia.photograph} name={camellia.epithet} species={camellia.species} redirect={redirect} camelliaId={camellia.cultivar_id}></Card>))
@@ -188,7 +211,7 @@ const Encyclopedia = () => {
                         )
                     })
                 }
-            </div>
+            </div>}
             {!chosenSugestion && <div className="mt-8 mb-4 flex justify-center">
                 {buttons.map((button) => { return (button) })}
             </div>}
