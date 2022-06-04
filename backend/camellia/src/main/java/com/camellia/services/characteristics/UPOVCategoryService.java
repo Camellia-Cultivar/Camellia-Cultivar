@@ -1,5 +1,6 @@
 package com.camellia.services.characteristics;
 
+import com.camellia.models.characteristics.UPOVCategoryView;
 import com.camellia.repositories.characteristics.UPOVCategoryRepository;
 import com.camellia.models.characteristics.UPOVCategory;
 
@@ -13,17 +14,13 @@ import java.util.List;
 @Service
 public class UPOVCategoryService {
     @Autowired
-    private UPOVCategoryRepository repository;
+    private UPOVCategoryRepository categoryRepository;
 
-    public Page<UPOVCategory> getUPOVCategories(Pageable pageable) {
-        return repository.findAll(pageable);
+    public List<UPOVCategoryView> getUPOVCategories() {
+        return categoryRepository.findBy();
     }
 
-    public List<UPOVCategory> getUPOVCategories() {
-        return repository.findAll();
-    }
-
-    public UPOVCategory getUPOVCategoryById(long id) {
-        return repository.findById((long) id);
+    public UPOVCategoryView getUPOVCategoryById(long id) {
+        return categoryRepository.findById(id);
     }
 }

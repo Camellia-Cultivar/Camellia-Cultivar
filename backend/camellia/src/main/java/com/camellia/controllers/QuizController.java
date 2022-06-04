@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.camellia.models.Quiz;
+import com.camellia.models.QuizAnswer;
 import com.camellia.services.QuizService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class QuizController {
 
 
     @PostMapping
-    public void quizSubmission(@RequestBody List<Quiz> answersList){
+    public void quizSubmission(@RequestBody List<QuizAnswer> answersList){
         System.out.println(answersList);
     }
 

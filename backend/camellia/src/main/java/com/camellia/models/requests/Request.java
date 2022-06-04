@@ -10,8 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
-import com.camellia.models.users.ModeratorUser;
-import com.camellia.models.users.RegisteredUser;
+
+import com.camellia.models.users.User;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
 import lombok.Getter;
@@ -44,12 +44,12 @@ public abstract class Request {
     private LocalDateTime submission_date;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn( referencedColumnName = "user_id", name="mod_user_id", nullable=false)
+    @JoinColumn( referencedColumnName = "userId", name="mod_user_id", nullable=false)
     @JsonIncludeProperties("mod_user_id")
-    private ModeratorUser mod_user;
+    private User mod_user;
     
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn( referencedColumnName = "user_id", name="reg_user_id", nullable=false)
+    @JoinColumn( referencedColumnName = "userId", name="reg_user_id", nullable=false)
     @JsonIncludeProperties("reg_user_id")
-    private RegisteredUser reg_user;
+    private User reg_user;
 }

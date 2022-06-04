@@ -2,34 +2,19 @@ package com.camellia.models.characteristics;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.*;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
 @Table(name = "characteristic")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "has_options", discriminatorType = DiscriminatorType.INTEGER)
 public class Characteristic {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.AUTO)
+    @JsonProperty("id")
     private long characteristic_id;
 
     @Column(name = "name")
@@ -37,17 +22,33 @@ public class Characteristic {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn( referencedColumnName = "upov_category_id", name="upov_category_id", nullable=false)
-    @JsonIncludeProperties("upov_category_id")
+    @JsonIgnore
     private UPOVCategory upov_category;
- 
-    
-    @OneToMany(
-        fetch = FetchType.EAGER,
-        mappedBy = "characteristic",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
-    @JsonIgnoreProperties("characteristic")
-    private Set<CharacteristicOption> characteristic_options;
 
+
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            mappedBy = "characteristic",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JsonIgnoreProperties({ "characteristic", "specimens"})
+    private Set<CharacteristicValue> characteristic_values;
+
+    @JsonProperty("values")
+    public Set<CharacteristicValue> getCharacteristic_values() {
+        return characteristic_values;
+    }
+
+    public long getCharacteristic_id() {
+        return characteristic_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public UPOVCategory getUpov_category() {
+        return upov_category;
+    }
 }

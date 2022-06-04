@@ -24,6 +24,19 @@ public class SpecimenService {
     }
 
     public Specimen getSpecimenById(long id) {
-        return repository.findById((long) id);
+        return repository.findById((long)id);
+    }
+
+    public Specimen saveSpecimen(Specimen specimen){
+        return repository.save(specimen);
+    }
+
+    public String deleteSpecimen(long id) {
+        repository.deleteById(id);
+        return "Specimen with id="+ id +" removed!";
+    }
+
+    public Long getSpecimenCount() {
+        return repository.count();
     }
 }

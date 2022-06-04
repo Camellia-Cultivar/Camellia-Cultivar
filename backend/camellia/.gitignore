@@ -1,3 +1,11 @@
 # build output
 /target
 /.mvn
+... 
+
+# ide files
+.vscode/settings.json
+.idea
+
+
+
