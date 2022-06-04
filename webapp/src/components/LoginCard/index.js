@@ -4,10 +4,6 @@ import { tokenTtl } from '../../utilities/ttl';
 
 const LoginCard = (props) => {
 
-    const redirect = (route) => {
-        props.navigate(route);
-    }
-
     const [wrongCredentials, setWrongCredentials] = useState(false);
 
     const loginUser = () => {
@@ -56,7 +52,7 @@ const LoginCard = (props) => {
                     }
                 </div>
                 <button onClick={() => loginUser()} className="bg-emerald-900 rounded-3xl w-3/4 self-center mt-10 md:mt-6 mb-4 md:mb-2 py-2 max-w-sm active:scale-95"><span className="text-lg text-white">LOGIN</span></button>
-                <p onClick={() => redirect("/register")} className="self-center mt-4 md:mt-2 hover:font-semibold text-base md:text-sm underline underline-offset-1 cursor-pointer">Don't have an account? Sign Up</p>
+                <p onClick={() => props.navigate("/register")} className="self-center mt-4 md:mt-2 hover:font-semibold text-base md:text-sm underline underline-offset-1 cursor-pointer">Don't have an account? Sign Up</p>
             </div>
         </div>
     )
