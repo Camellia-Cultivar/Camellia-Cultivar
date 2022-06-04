@@ -97,7 +97,7 @@ const Navbar = () => {
                             </svg>
                         </button>
                         <button
-                            onClick={() => { localStorage.removeItem("userToken");closeMenu(); window.location.push("/") }}
+                            onClick={() => { localStorage.removeItem("userToken"); closeMenu(); window.location.href = "/" }}
                             className="flex md:ml-4 justify-center font-medium rounded-full md:rounded-md md:px-2 md:py-1 hover:bg-white/10 hover:ring-teal-400/50 hover:ring-2 m-auto mr-3 lg:mr-0 focus:outline-none"
                         >
                             <span className="px-1 self-center hidden md:flex">Logout</span>
