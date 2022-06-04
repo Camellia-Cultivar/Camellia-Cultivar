@@ -78,6 +78,13 @@ code {
     animation-fill-mode: forwards;
 }
 
+.loading{
+    animation-name:rotating;
+    animation-duration:0.4s;
+    animation-timing-function: ease-out;
+    animation-iteration-count: infinite;
+}
+
 @keyframes slide-in {
     to {
         transform: translateX(0%);
@@ -98,8 +105,17 @@ code {
         transform: scale(1);
     }
 }
+
 .current{
  border: 3px solid;
  border-color: rgb(16 185 129);
 }
 
+@keyframes rotating {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}
