@@ -93,7 +93,7 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 			<version>2.5.6</version>
 		</dependency>
-	</dependencies>
+    </dependencies>
 
 
 	<dependencyManagement>

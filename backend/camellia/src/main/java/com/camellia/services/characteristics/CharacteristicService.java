@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CharacteristicService {
@@ -23,7 +24,7 @@ public class CharacteristicService {
         return repository.findAll();
     }
 
-    public Characteristic getCharacteristicById(long id) {
+    public Optional<Characteristic> getCharacteristicById(Long id) {
         return repository.findById(id);
     }
 }
