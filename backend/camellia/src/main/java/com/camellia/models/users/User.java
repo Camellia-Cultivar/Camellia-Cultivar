@@ -1,6 +1,5 @@
 package com.camellia.models.users;
 
-import java.beans.Transient;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -17,6 +16,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.NoArgsConstructor;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
+
 @Entity
 @NoArgsConstructor
 @Table(name = "users")
@@ -25,7 +28,16 @@ import lombok.NoArgsConstructor;
 public class User implements Serializable{
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "user-sequence-generator")
+    @GenericGenerator(
+        name = "user-sequence-generator",
+        strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+        parameters = {
+                    @Parameter(name = "sequence_name", value = "userssequence"),
+                    @Parameter(name = "initial_value", value = "2"),
+                    @Parameter(name = "increment_size", value = "1")
+        }
+    )
     private long userId;
 
     @JsonProperty("first_name")
@@ -55,15 +67,17 @@ public class User implements Serializable{
     @Column(name = "verified", nullable = false)
     private boolean verified;
 
+    @Transient
     @OneToMany (
         fetch = FetchType.EAGER,
         mappedBy = "user",
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    @JsonIgnoreProperties("user")
+    //@JsonIgnoreProperties("user")
     private Set<QuizAnswer> quizAnswers;
 
+    @Transient
     @OneToMany(
         fetch = FetchType.EAGER,
         mappedBy = "mod_user",
@@ -73,6 +87,7 @@ public class User implements Serializable{
     @JsonIgnoreProperties("mod_user")
     private Set<IdentificationRequest> identificationRequests;
 
+    @Transient
     @OneToMany(
         fetch = FetchType.EAGER,
         mappedBy = "mod_user",
@@ -82,6 +97,7 @@ public class User implements Serializable{
     @JsonIgnoreProperties("mod_user")
     private Set<ReportRequest> reportRequests;
 
+    @Transient
     @OneToMany(
         fetch = FetchType.EAGER,
         mappedBy = "mod_user",
@@ -91,6 +107,7 @@ public class User implements Serializable{
     @JsonIgnoreProperties("mod_user")
     private Set<CultivarRequest> cultivarRequest;
 
+    @Transient
     @OneToMany(
             fetch = FetchType.EAGER,
             mappedBy = "admin_user",
@@ -100,7 +117,7 @@ public class User implements Serializable{
     @JsonIgnoreProperties("admin_user")
     private Set<ReputationParameters> reputationParameters;
 
-
+    @Transient
     @OneToMany(
         fetch = FetchType.EAGER,
         mappedBy = "admin_user",
@@ -179,12 +196,20 @@ public class User implements Serializable{
         this.verified = verified;
     }
 
-    public Set<QuizAnswer> getQuizAnswers() {
+//    public Set<QuizAnswer> getQuizAnswers() {
+//        return this.quizAnswers;
+//    }
+//
+//    public void setQuizAnswers(Set<QuizAnswer> quizAnswers) {
+//        this.quizAnswers = quizAnswers;
+//    }
+
+    public Set<QuizAnswer> customGetQuizAnswers() {
         return this.quizAnswers;
     }
 
-    public void setQuizAnswers(Set<QuizAnswer> quizAnswers) {
-        this.quizAnswers = quizAnswers;
+    public void addQuizAnswers(QuizAnswer qa) {
+        this.quizAnswers.add(qa);
     }
 
     public Set<IdentificationRequest> getIdentificationRequests() {

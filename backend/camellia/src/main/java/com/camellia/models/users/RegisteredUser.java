@@ -19,10 +19,6 @@ public class RegisteredUser extends User{
     private boolean autoApproval;
 
 
-    public boolean isAutoApproval() {
-        return this.autoApproval;
-    }
-
     public boolean getAutoApproval() {
         return this.autoApproval;
     }
@@ -31,10 +27,10 @@ public class RegisteredUser extends User{
         this.autoApproval = autoApproval;
     }
    
-
+    @Override
     public String getProfile() {
         return "{" + super.getProfile() + 
-            ", " + "\"auto_approval\":" + isAutoApproval()  +
+            ", " + "\"auto_approval\":" + getAutoApproval()  +
             "}";
     }
     

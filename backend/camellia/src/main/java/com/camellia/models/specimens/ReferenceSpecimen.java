@@ -7,14 +7,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.camellia.models.cultivars.Cultivar;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+
 @Entity
 @NoArgsConstructor
 @Table(name = "reference_specimen")
@@ -23,6 +20,17 @@ public class ReferenceSpecimen extends Specimen{
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn( referencedColumnName = "cultivar_id", name="cultivar_id", nullable=false)
-    @JsonIncludeProperties("cultivar_id")
+    @JsonIgnoreProperties("cultivar_id")
     private Cultivar cultivar;
+
+
+    public Cultivar getCultivar() {
+        return this.cultivar;
+    }
+
+    public void setCultivar(Cultivar cultivar) {
+        this.cultivar = cultivar;
+    }
+
+
 }

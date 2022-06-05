@@ -9,15 +9,12 @@ import javax.persistence.*;
 import com.camellia.models.QuizAnswer;
 import com.camellia.models.cultivars.Cultivar;
 import com.camellia.models.requests.IdentificationRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @Table( name = "to_identify_specimen")
 public class ToIdentifySpecimen extends Specimen{
@@ -39,6 +36,7 @@ public class ToIdentifySpecimen extends Specimen{
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @JsonIgnoreProperties("specimen")
     private Set<QuizAnswer> quizAnswers;
 
     @ElementCollection
@@ -46,6 +44,7 @@ public class ToIdentifySpecimen extends Specimen{
             joinColumns = @JoinColumn(name = "specimen_id")
     )
     @MapKeyJoinColumn(name = "cultivar_id")
+    @JsonIgnore
     private Map<Cultivar, Float> cultivarProbabilities = new HashMap<>();
 
     public Map<Cultivar, Float> getCultivarProbabilities() {
@@ -54,6 +53,25 @@ public class ToIdentifySpecimen extends Specimen{
 
     public void setCultivarProbabilities(Map<Cultivar, Float> cultivarProbabilities) {
         this.cultivarProbabilities = cultivarProbabilities;
+    }
+
+
+    public IdentificationRequest getIdentificationRequest() {
+        return this.identificationRequest;
+    }
+
+    public void setIdentificationRequest(IdentificationRequest identificationRequest) {
+        this.identificationRequest = identificationRequest;
+    }
+
+    @Override
+    public Set<QuizAnswer> getQuizAnswers() {
+        return this.quizAnswers;
+    }
+
+    @Override
+    public void setQuizAnswers(Set<QuizAnswer> quizAnswers) {
+        this.quizAnswers = quizAnswers;
     }
 
 }

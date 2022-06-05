@@ -28,18 +28,6 @@ public class UserService {
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
-//    public ResponseEntity<String> login(User user){
-//        if(!emailVerification(user.getEmail()))
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Login failed");
-//
-//        User savedUser = this.repository.findByEmail(user.getEmail());
-//
-//        if(savedUser != null){
-//            return ResponseEntity.status(HttpStatus.ACCEPTED).body( "userId: ".concat(savedUser.getUserId() + ""));
-//        }
-//        else
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Login failed");
-//    }
 
     public ResponseEntity<String> getUserProfile(long id){
         User attemptingUser = repository.findById(id);
@@ -54,14 +42,12 @@ public class UserService {
     }
 
 
-    public ResponseEntity<String> editProfile(User tempUser){
-        if( tempUser.getFirstName().isEmpty() 
-                || tempUser.getLastName().isEmpty() 
-                || tempUser.getPassword().isEmpty() 
-                || tempUser.getEmail().isEmpty())
+    public ResponseEntity<String> editProfile(User tempUser, long id){
+        if( tempUser.getFirstName().isEmpty() && tempUser.getLastName().isEmpty() 
+                && tempUser.getPassword().isEmpty() && tempUser.getProfilePhoto().isEmpty())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user data");
 
-        if(!emailVerification(tempUser.getEmail()))
+        if(!emailVerification(repository.findById(id).getEmail()))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid user profile");
 
         User user;
@@ -70,10 +56,16 @@ public class UserService {
         } catch( NullPointerException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
-        user.setProfilePhoto(tempUser.getProfilePhoto());
-        user.setFirstName(tempUser.getFirstName());
-        user.setLastName(tempUser.getLastName());
-        user.setPassword(bCryptPasswordEncoder.encode(tempUser.getPassword()));
+
+        if(!tempUser.getProfilePhoto().isEmpty())
+            user.setProfilePhoto(tempUser.getProfilePhoto());
+        if(!tempUser.getFirstName().isEmpty())
+            user.setFirstName(tempUser.getFirstName());
+        if(!tempUser.getLastName().isEmpty())
+            user.setLastName(tempUser.getLastName());
+        if(!tempUser.getPassword().isEmpty())
+            user.setPassword(bCryptPasswordEncoder.encode(tempUser.getPassword()));
+            
         this.repository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(user.getProfile());
     }
@@ -100,5 +92,9 @@ public class UserService {
 
     public Long getUserCount() {
         return repository.count();
+    }
+
+    public User getUserById(long id){
+        return repository.findById(id);
     }
 }

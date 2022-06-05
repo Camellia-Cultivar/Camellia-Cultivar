@@ -4,10 +4,12 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.camellia.models.QuizAnswer;
+import com.camellia.models.QuizAnswerDTO;
+import com.camellia.models.specimens.SpecimenQuizDTO;
 import com.camellia.services.QuizService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,15 +24,15 @@ public class QuizController {
     @Autowired
     private QuizService quizService;
 
-    @GetMapping(value="/{id}")
-    public void generateQuiz(@PathVariable(value = "id") Long user_id, HttpServletRequest request){
-        
+    @GetMapping(value="/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public List<SpecimenQuizDTO> generateQuiz(@PathVariable(value = "id") Long userId, HttpServletRequest request){
+        return quizService.generateQuiz(userId);
     }
 
 
-    @PostMapping
-    public void quizSubmission(@RequestBody List<QuizAnswer> answersList){
-        System.out.println(answersList);
+    @PostMapping(value="/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public double quizSubmission(@RequestBody List<QuizAnswerDTO> answersList, @PathVariable(value="id") long uId){
+        return quizService.saveQuizAnswers(uId, answersList);
     }
 
 }

@@ -24,6 +24,6 @@ public class ReferenceSpecimenService {
     }
 
     public ReferenceSpecimen getReferenceSpecimenById(long id) {
-        return repository.findById((long) id);
+        return repository.findById( id);
     }
 }

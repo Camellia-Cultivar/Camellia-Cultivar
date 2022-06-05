@@ -15,6 +15,7 @@ import com.camellia.services.users.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,22 +41,22 @@ public class UserController {
     @Autowired
     private AdministratorUserService administratorUserService;
 
-    @PostMapping(value="/signup")
+    @PostMapping(value="/signup", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> createUser(@Valid @RequestBody RegisteredUser user, HttpServletRequest request) throws MailException, UnsupportedEncodingException, MessagingException{
         return registeredUserService.addRegisteredUser(user, getSiteURL(request));
     }
 
-    @GetMapping(value="/{id}")
+    @GetMapping(value="/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> getProfile(@PathVariable(value = "id") long id){
         return userService.getUserProfile(id);
     }
 
-    @PutMapping(value="")
-    public ResponseEntity<String> editProfile(@Valid @RequestBody User tempUser){
-        return this.userService.editProfile( tempUser );
+    @PutMapping(value="/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<String> editProfile(@Valid @RequestBody User tempUser, @PathVariable(value = "id") long id){
+        return this.userService.editProfile( tempUser, id );
     }
 
-    @GetMapping("/verify")
+    @GetMapping(value="/verify", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public String verifyUser(@Param("code") String code) {
         if (userService.verify(code)) {
             return "Account is verified";

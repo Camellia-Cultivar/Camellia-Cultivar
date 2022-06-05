@@ -2,10 +2,16 @@ package com.camellia.repositories.specimens;
 
 import com.camellia.models.specimens.ToIdentifySpecimen;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-//import org.springframework.stereotype.Repository;
+import java.util.List;
 
-//@Repository
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
 public interface ToIdentifySpecimenRepository extends JpaRepository<ToIdentifySpecimen, Long>{
     ToIdentifySpecimen findById(long id);
+
+    @Query("SELECT specimenId FROM ToIdentifySpecimen")
+    List<Long> findAllIds();
+
+    List<ToIdentifySpecimen> findFirst10ByOrderBySpecimenIdDesc();
 }
