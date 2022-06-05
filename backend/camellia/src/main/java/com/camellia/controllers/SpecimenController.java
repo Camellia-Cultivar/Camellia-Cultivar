@@ -23,6 +23,9 @@ public class SpecimenController {
     @Autowired
     private ToIdentifySpecimenService toIdentifySpecimenService;
 
+    @Autowired
+    private ReferenceSpecimenService referenceSpecimenService;
+
     private final SpecimenMapper mapper = Mappers.getMapper(SpecimenMapper.class);
 
     @GetMapping()
@@ -31,6 +34,11 @@ public class SpecimenController {
                 .stream()
                 .map(mapper::specimenToSpecimenDTO)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/reference")
+    public List<ReferenceSpecimenView> getAllReferenceSpecimens(){
+        return referenceSpecimenService.getReferenceSpecimensView();
     }
 
     @GetMapping("/{id}")
