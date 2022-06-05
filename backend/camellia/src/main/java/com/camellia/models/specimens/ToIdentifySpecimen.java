@@ -63,5 +63,4 @@ public class ToIdentifySpecimen extends Specimen{
     public void setIdentificationRequest(IdentificationRequest identificationRequest) {
         this.identificationRequest = identificationRequest;
     }
-
 }

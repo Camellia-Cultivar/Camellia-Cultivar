@@ -48,13 +48,12 @@ public class QuizAnswer {
     public void setSpecimen(Specimen specimen) {
         this.specimen = specimen;
     }
-
-
-    public void setCultivar(Cultivar cultivar) {
-        this.cultivar = cultivar;
-    }
     
     public Specimen getSpecimen(){
         return this.specimen;
+    }
+
+    public void setCultivar(Cultivar cultivar) {
+        this.cultivar = cultivar;
     }
 }
