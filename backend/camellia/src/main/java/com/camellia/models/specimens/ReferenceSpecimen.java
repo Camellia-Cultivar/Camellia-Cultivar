@@ -8,11 +8,8 @@ import javax.persistence.Table;
 
 import com.camellia.models.cultivars.Cultivar;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 
 @Entity

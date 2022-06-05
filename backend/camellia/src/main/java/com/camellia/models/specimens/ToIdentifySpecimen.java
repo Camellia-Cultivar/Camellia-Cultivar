@@ -11,11 +11,8 @@ import com.camellia.models.cultivars.Cultivar;
 import com.camellia.models.requests.IdentificationRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
@@ -67,10 +64,12 @@ public class ToIdentifySpecimen extends Specimen{
         this.identificationRequest = identificationRequest;
     }
 
+    @Override
     public Set<QuizAnswer> getQuizAnswers() {
         return this.quizAnswers;
     }
 
+    @Override
     public void setQuizAnswers(Set<QuizAnswer> quizAnswers) {
         this.quizAnswers = quizAnswers;
     }
