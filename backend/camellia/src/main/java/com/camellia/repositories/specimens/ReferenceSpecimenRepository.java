@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface ReferenceSpecimenRepository extends JpaRepository<ReferenceSpecimen, Long>{
     ReferenceSpecimen findById(long id);
 
-    @Query("SELECT specimen_id FROM ReferenceSpecimen")
+    @Query("SELECT specimenId FROM ReferenceSpecimen")
     List<Long> findAllIds(); 
 }

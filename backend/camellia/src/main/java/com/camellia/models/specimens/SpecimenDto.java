@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Set;
 
 public class SpecimenDto {
-    private long specimen_id;
+    private long specimenId;
     private String owner;
 
     private Set<String> photos;
@@ -18,12 +18,12 @@ public class SpecimenDto {
     private Set<CharacteristicValue> characteristicValues;
 
 
-    public long getSpecimen_id() {
-        return specimen_id;
+    public long getSpecimenId() {
+        return specimenId;
     }
 
-    public void setSpecimen_id(long specimen_id) {
-        this.specimen_id = specimen_id;
+    public void setSpecimenId(long specimenId) {
+        this.specimenId = specimenId;
     }
 
     public String getOwner() {

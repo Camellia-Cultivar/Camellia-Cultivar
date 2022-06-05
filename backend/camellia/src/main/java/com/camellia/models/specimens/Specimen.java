@@ -20,7 +20,8 @@ public class Specimen {
     
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long specimen_id;
+    @Column(name = "specimen_id")
+    private long specimenId;
 
     @Column(name = "owner")
     private String owner;
@@ -70,12 +71,12 @@ public class Specimen {
         this.photos = photos;
     }
 
-    public long getSpecimen_id() {
-        return specimen_id;
+    public long getSpecimenId() {
+        return specimenId;
     }
 
-    public void setSpecimen_id(long specimen_id) {
-        this.specimen_id = specimen_id;
+    public void setSpecimenId(long specimen_id) {
+        this.specimenId = specimen_id;
     }
 
     public String getOwner() {
@@ -116,14 +117,6 @@ public class Specimen {
 
     public void setGarden(String garden) {
         this.garden = garden;
-    }
-
-    public Set<QuizAnswer> getQuizAnswers() {
-        return quizAnswers;
-    }
-
-    public void setQuizAnswers(Set<QuizAnswer> quizAnswers) {
-        this.quizAnswers = quizAnswers;
     }
 
     public Set<CharacteristicValue> getCharacteristicValues() {

@@ -68,7 +68,7 @@ public class QuizService {
 
         while(iterator.hasNext()) {
             QuizAnswer f = iterator.next();
-            answeredQuizzesIds.add(f.getSpecimen().getSpecimen_id());
+            answeredQuizzesIds.add(f.getSpecimen().getSpecimenId());
         }
 
         quiz = specimenService.getQuizSpecimens(answeredQuizzesIds, noReferenceSpecimens, noToIdentifySpecimens);
@@ -86,7 +86,6 @@ public class QuizService {
 
         for(QuizAnswerDTO qa: quizAnswers){
             s = specimenService.getSpecimenById(qa.getSpecimen_id());
-
 
             if( s instanceof ReferenceSpecimen 
                     && referenceSpecimenService.getReferenceSpecimenById(qa.getSpecimen_id()).getCultivar().getEpithet().equals(qa.getAnswer())){

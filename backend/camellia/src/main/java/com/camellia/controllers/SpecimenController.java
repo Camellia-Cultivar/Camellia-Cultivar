@@ -20,6 +20,9 @@ public class SpecimenController {
     @Autowired
     private SpecimenService specimenService;
 
+    @Autowired
+    private ToIdentifySpecimenService toIdentifySpecimenService;
+
     private final SpecimenMapper mapper = Mappers.getMapper(SpecimenMapper.class);
 
     @GetMapping()
@@ -33,6 +36,14 @@ public class SpecimenController {
     @GetMapping("/{id}")
     public SpecimenDto getSpecimenById(@PathVariable Long id) {
         return mapper.specimenToSpecimenDTO(specimenService.getSpecimenById(id));
+    }
+
+    @GetMapping("/recent")
+    public List<SpecimenDto> getRecentlyUploaded() {
+        return toIdentifySpecimenService.getRecentlyUploaded()
+                .stream()
+                .map(mapper::specimenToSpecimenDTO)
+                .collect(Collectors.toList());
     }
 
     @PostMapping
