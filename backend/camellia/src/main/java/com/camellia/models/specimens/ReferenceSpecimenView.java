@@ -21,4 +21,10 @@ public interface ReferenceSpecimenView {
     String getGarden();
 
     CultivarView getCultivar();
+
+    @Value("#{target.latitude}")
+    Double getLat();
+
+    @Value("#{target.longitude}")
+    Double getLong();
 }
