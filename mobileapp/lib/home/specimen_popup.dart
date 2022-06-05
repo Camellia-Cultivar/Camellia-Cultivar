@@ -3,17 +3,16 @@ import 'package:flutter/material.dart';
 
 import 'image_full_slider_map.dart';
 
-class CustomPopup extends StatefulWidget {
-
+class SpecimenPopup extends StatefulWidget {
   final Map<String, dynamic>? specimen;
 
-  const CustomPopup({Key? key, this.specimen}) : super(key: key);
+  const SpecimenPopup({Key? key, this.specimen}) : super(key: key);
 
   @override
-  CustomPopupState createState() => CustomPopupState();
+  SpecimenPopupState createState() => SpecimenPopupState();
 }
 
-class CustomPopupState extends State<CustomPopup> {
+class SpecimenPopupState extends State<SpecimenPopup> {
   final list = [
     "https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455__340.jpg",
     "https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg?w=2000",
@@ -28,6 +27,7 @@ class CustomPopupState extends State<CustomPopup> {
   @override
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
+    // list = widget.specimen!["photos"];
     return _buildDialogContent();
   }
 
@@ -36,7 +36,6 @@ class CustomPopupState extends State<CustomPopup> {
       decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(5))),
-
       width: 200,
       height: 250,
       child: Column(
@@ -44,8 +43,8 @@ class CustomPopupState extends State<CustomPopup> {
           _buildImagesContainer(),
           Column(
             children: <Widget>[
-              _buildCultivarName(),
-              _buildSpeciesName(),
+              // _buildCultivarName(),
+              // _buildSpeciesName(),
               _buildViewCultivarDetailsBtn()
             ],
           ),
@@ -62,29 +61,29 @@ class CustomPopupState extends State<CustomPopup> {
         child: expandForMoreImages(list));
   }
 
-  Container _buildCultivarName() {
-    return Container(
-      margin: const EdgeInsets.only(top: 5),
-      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(
-          widget.specimen!["cultivar_name"],
-          style: TextStyle(fontSize: 20),
-        )
-      ]),
-    );
-  }
+  // Container _buildCultivarName() {
+  //   return Container(
+  //     margin: const EdgeInsets.only(top: 5),
+  //     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+  //       Text(
+  //         widget.specimen!["epithet"],
+  //         style: TextStyle(fontSize: 20),
+  //       )
+  //     ]),
+  //   );
+  // }
 
-  Container _buildSpeciesName() {
-    return Container(
-      margin: const EdgeInsets.only(top: 3),
-      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(
-          widget.specimen!["species_name"],
-          style: TextStyle(fontSize: 12),
-        )
-      ]),
-    );
-  }
+  // Container _buildSpeciesName() {
+  //   return Container(
+  //     margin: const EdgeInsets.only(top: 3),
+  //     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+  //       Text(
+  //         widget.specimen!["species"],
+  //         style: TextStyle(fontSize: 12),
+  //       )
+  //     ]),
+  //   );
+  // }
 
   MaterialButton _buildViewCultivarDetailsBtn() {
     return MaterialButton(
@@ -92,12 +91,14 @@ class CustomPopupState extends State<CustomPopup> {
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(15.0))),
       onPressed: () => {
-         Navigator.push(
+        Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) =>
                     //const EditProfilePage()))
-                    CultivarPage(specimenId: widget.specimen!["specimen_id"])))
+                    CultivarPage(
+                        specimenId:
+                            widget.specimen!["specimen_id" /*"cultivar_id"*/])))
       },
       child: const Text(
         "Cultivar Details",

@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (_formKey.currentState!.validate()) {
       Map<String, String> login_user = {
-        'email': emailController.text,
+        'email': emailController.text.trim(),
         'password': passwordController.text
       };
       int? uid;
@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
       if (!uid.isNaN) {
         User? user = await api.getUser(uid);
 
-        if (user != null && user.verified) {
+        if (user != null /*&& user.verified*/) {
           await login(context, user);
 
           emailController.clear();

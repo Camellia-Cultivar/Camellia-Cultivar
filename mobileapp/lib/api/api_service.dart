@@ -2,9 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:camellia_cultivar/model/List_of_categories.dart';
 import 'package:camellia_cultivar/model/coordinates.dart';
 import 'package:camellia_cultivar/model/question.dart';
 import 'package:camellia_cultivar/model/uploaded_specimen.dart';
+import 'package:camellia_cultivar/model/upov_category.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong/latlong.dart';
@@ -87,16 +90,13 @@ class APIService {
     } catch (e) {
       log(e.toString());
       log("Could not fetch from api");
-      throw e;
+      // throw e;
     }
     return [-1, "Failed to create account. Please try again later!"];
   }
 
   //TODO: Use try-catch when using this function
   Future<void> updateUser(User user, String password) async {
-    // mockUser.remove(user.id);
-    // mockUser[user.id] = user;
-
     try {
       var url =
           Uri.parse(APIConstants.baseUrl + APIConstants.editProfileEndpoint);
@@ -252,30 +252,67 @@ class APIService {
     }
   }
 
-  Future<List<Map<String, dynamic>?>?> getMapSpecimens() async {
-    List<Map<String, dynamic>> lst = [];
+  Future<List<Map<String, Object>?>?> getMapSpecimens() async {
+    List<Map<String, Object>> lst = [];
 
     try {
       var url =
           Uri.parse(APIConstants.baseUrl + APIConstants.mapSpecimensEndpoint);
       var response = await http.get(url);
+      List listOfSpecimens = json.decode(response.body) as List;
+      // print(response.body);
       if (response.statusCode == 200) {
-        for (dynamic obj in json.decode(response.body)) {
+        // print("Sou code 200");
+        for (dynamic specimen in listOfSpecimens) {
+          // print("goinf through specimens");
+          // print(specimen["latitude"].runtimeType);
           LatLng coordinates =
-              LatLng(double.parse(obj["lat"]), double.parse(obj["long"]));
-          Map<String, dynamic> new_obj = {
+              LatLng(specimen["latitude"], specimen["longitude"]);
+          // print("wut");
+          Map<String, Object> new_obj = {
             "coords": coordinates,
-            "name": obj["name"],
-            "image": obj["image"],
-            "camellia_id": obj["camellia_id"]
+            // "epithet": specimen["epithet"],
+            // "species": specimen["species"],
+            // "cultivar_id": specimen["cultivar_id"],
+            "photos": specimen["photos"],
+            "specimen_id": specimen["specimenId"]
           };
           lst.add(new_obj);
         }
+        // print(lst.toString() + "\t im on the api service");
+        return lst;
       }
-      return lst;
     } catch (e) {
       log(e.toString());
     }
     return null;
+  }
+
+  Future<List<UpovCategory>> getUpovCharacteristics() async {
+    try {
+      var url = Uri.parse(
+          APIConstants.baseUrl + APIConstants.upovCharacteristicsEndpoint);
+      var response = await http.get(url);
+      var jsonObject = json.decode(response.body);
+      List<UpovCategory> categories = [];
+
+      List jsonie = jsonObject as List;
+
+      print(jsonie.length);
+
+      for (int i = 0; i < 12; i++) {
+        print(i);
+        categories.add(UpovCategory.fromJson(Map.from(jsonie[i])));
+      }
+      return categories;
+
+      // List<UpovCategory> categories = jsonie
+      //     .map((catObjJson) => UpovCategory.fromJson(catObjJson))
+      //     .toList();
+      // print(categories);
+    } catch (e) {
+      log(e.toString());
+    }
+    return [];
   }
 }

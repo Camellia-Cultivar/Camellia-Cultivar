@@ -123,7 +123,6 @@ class _ProfilePage extends State<ProfilePage> {
     Color primaryColor = Theme.of(context).primaryColor;
 
     User? user = context.watch<UserProvider>().user;
-    print("one call: " + one_call.toString());
     if (!one_call) {
       getUser(context, user);
     }
