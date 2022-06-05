@@ -13,12 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,13 +45,17 @@ public class SpecimenService {
     }
 
     public Specimen saveSpecimen(Specimen specimen){
-        Set<CharacteristicValue> values = specimen.getCharacteristicValues().stream()
-                .map(characteristicValueService::getOrSaveCharacteristicValue)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+        try {
+            Set<CharacteristicValue> values = specimen.getCharacteristicValues().stream()
+                    .map(characteristicValueService::getOrSaveCharacteristicValue)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
 
-        specimen.setCharacteristicValues(values);
-
+            specimen.setCharacteristicValues(values);
+        } catch (NullPointerException e) {
+            specimen.setCharacteristicValues(new HashSet<>());
+            System.err.println("No characteristics set to new specimen");
+        }
         return specimenRepository.save(specimen);
     }
 

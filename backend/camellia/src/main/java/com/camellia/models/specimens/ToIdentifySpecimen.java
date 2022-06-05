@@ -64,14 +64,4 @@ public class ToIdentifySpecimen extends Specimen{
         this.identificationRequest = identificationRequest;
     }
 
-    @Override
-    public Set<QuizAnswer> getQuizAnswers() {
-        return this.quizAnswers;
-    }
-
-    @Override
-    public void setQuizAnswers(Set<QuizAnswer> quizAnswers) {
-        this.quizAnswers = quizAnswers;
-    }
-
 }

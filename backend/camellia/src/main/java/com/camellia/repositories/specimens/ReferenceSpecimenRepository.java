@@ -4,6 +4,7 @@ import com.camellia.models.specimens.ReferenceSpecimen;
 
 import java.util.List;
 
+import com.camellia.models.specimens.ReferenceSpecimenView;
 import org.springframework.data.jpa.repository.JpaRepository;
 //import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,5 +14,7 @@ public interface ReferenceSpecimenRepository extends JpaRepository<ReferenceSpec
     ReferenceSpecimen findById(long id);
 
     @Query("SELECT specimenId FROM ReferenceSpecimen")
-    List<Long> findAllIds(); 
+    List<Long> findAllIds();
+
+    List<ReferenceSpecimenView> findBy();
 }
