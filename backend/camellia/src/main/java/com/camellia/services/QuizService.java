@@ -1,15 +1,12 @@
 package com.camellia.services;
 
 import com.camellia.repositories.QuizRepository;
-import com.camellia.repositories.specimens.SpecimenRepository;
 import com.camellia.services.cultivars.CultivarService;
 import com.camellia.services.specimens.ReferenceSpecimenService;
 import com.camellia.services.specimens.SpecimenService;
-import com.camellia.services.specimens.ToIdentifySpecimenService;
 import com.camellia.services.users.UserService;
 import com.camellia.models.QuizAnswer;
 import com.camellia.models.QuizAnswerDTO;
-import com.camellia.models.cultivars.Cultivar;
 import com.camellia.models.specimens.ReferenceSpecimen;
 import com.camellia.models.specimens.Specimen;
 import com.camellia.models.specimens.SpecimenQuizDTO;
@@ -72,7 +69,7 @@ public class QuizService {
 
         while(iterator.hasNext()) {
             QuizAnswer f = iterator.next();
-            answeredQuizzesIds.add(f.getSpecimen().getSpecimen_id());
+            answeredQuizzesIds.add(f.getSpecimen().getSpecimenId());
         }
 
         quiz = specimenService.getQuizSpecimens(answeredQuizzesIds, noReferenceSpecimens, noToIdentifySpecimens);
@@ -95,7 +92,7 @@ public class QuizService {
             System.out.println((qa.getSpecimen_id()));
             System.out.println(qa.getAnswer());
 
-            System.out.println(referenceSpecimenService.getReferenceSpecimenById(s.getSpecimen_id()).getCultivar().getEpithet());
+            System.out.println(referenceSpecimenService.getReferenceSpecimenById(s.getSpecimenId()).getCultivar().getEpithet());
             
             if( s instanceof ReferenceSpecimen 
                     && referenceSpecimenService.getReferenceSpecimenById(qa.getSpecimen_id()).getCultivar().getEpithet().equals(qa.getAnswer())){

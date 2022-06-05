@@ -32,4 +32,8 @@ public class ToIdentifySpecimenService {
     public void updateVotes(ToIdentifySpecimen specimen, Map<Cultivar, Float> votes){
         specimen.setCultivarProbabilities(votes);
     }
+
+    public List<ToIdentifySpecimen> getRecentlyUploaded() {
+        return repository.findFirst10ByOrderBySpecimenIdDesc();
+    }
 }

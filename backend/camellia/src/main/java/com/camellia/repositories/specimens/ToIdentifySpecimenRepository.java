@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 public interface ToIdentifySpecimenRepository extends JpaRepository<ToIdentifySpecimen, Long>{
     ToIdentifySpecimen findById(long id);
 
-    @Query("SELECT specimen_id FROM ToIdentifySpecimen")
-    List<Long> findAllIds(); 
+    @Query("SELECT specimenId FROM ToIdentifySpecimen")
+    List<Long> findAllIds();
+
+    List<ToIdentifySpecimen> findFirst10ByOrderBySpecimenIdDesc();
 }
