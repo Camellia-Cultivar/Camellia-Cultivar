@@ -55,8 +55,10 @@ public class UserService {
 
 
     public ResponseEntity<String> editProfile(User tempUser){
-        if( tempUser.getFirstName().isEmpty() || tempUser.getLastName().isEmpty() 
-                || tempUser.getPassword().isEmpty() || tempUser.getEmail().isEmpty())
+        if( tempUser.getFirstName().isEmpty() 
+                || tempUser.getLastName().isEmpty() 
+                || tempUser.getPassword().isEmpty() 
+                || tempUser.getEmail().isEmpty())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user data");
 
         if(!emailVerification(tempUser.getEmail()))

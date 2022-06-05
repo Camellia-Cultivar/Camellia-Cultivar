@@ -2,12 +2,19 @@ version: '3.8'
 
 services:
 
+    # proxy:
+    #     image: nginx:alpine
+    #     ports:
+    #         - 8083:85
+    #     volumes:
+    #         - ./default.conf.template:/etc/nginx/templates/default.conf.template
+
     db:
         image: 'postgres:13.1-alpine'
         container_name: camellia-db
         restart: always
         ports:
-            - '5432:5432'
+            - '5439:5432'
         environment:
             - POSTGRES_USER=camellia
             - POSTGRES_PASSWORD=password
