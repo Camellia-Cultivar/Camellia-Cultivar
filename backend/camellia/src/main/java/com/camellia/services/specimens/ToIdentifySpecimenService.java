@@ -1,7 +1,6 @@
 package com.camellia.services.specimens;
 
 import com.camellia.repositories.specimens.ToIdentifySpecimenRepository;
-import com.camellia.models.specimens.SpecimenQuizDTO;
 import com.camellia.models.specimens.ToIdentifySpecimen;
 import com.camellia.models.cultivars.Cultivar;
 

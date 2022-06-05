@@ -2,16 +2,13 @@ package com.camellia.services.specimens;
 
 import com.camellia.repositories.specimens.ReferenceSpecimenRepository;
 import com.camellia.models.specimens.ReferenceSpecimen;
-import com.camellia.models.specimens.SpecimenQuizDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ReferenceSpecimenService {
@@ -27,6 +24,6 @@ public class ReferenceSpecimenService {
     }
 
     public ReferenceSpecimen getReferenceSpecimenById(long id) {
-        return repository.findById((long) id);
+        return repository.findById( id);
     }
 }

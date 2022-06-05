@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -59,7 +58,7 @@ public class QuizService {
         int noToIdentifySpecimens = quizParametersService.getToIdentifyNo();
         int noReferenceSpecimens = quizParametersService.getReferenceNo();
 
-        List<SpecimenQuizDTO> quiz = new ArrayList<>();
+        List<SpecimenQuizDTO> quiz;
 
         User user = userService.getUserById(userId);
         Set<QuizAnswer> answers = repository.findByUser(user);
@@ -84,20 +83,13 @@ public class QuizService {
 
         QuizAnswer qaSaved;
         
-        System.out.println(quizAnswers);
 
         for(QuizAnswerDTO qa: quizAnswers){
             s = specimenService.getSpecimenById(qa.getSpecimen_id());
 
-            System.out.println((qa.getSpecimen_id()));
-            System.out.println(qa.getAnswer());
-
-            System.out.println(referenceSpecimenService.getReferenceSpecimenById(s.getSpecimenId()).getCultivar().getEpithet());
-            
             if( s instanceof ReferenceSpecimen 
                     && referenceSpecimenService.getReferenceSpecimenById(qa.getSpecimen_id()).getCultivar().getEpithet().equals(qa.getAnswer())){
                 
-                System.out.println("specimen identified");
 
                 user.setReputation(user.getReputation() + 100);
                 
@@ -107,7 +99,6 @@ public class QuizService {
                 qaSaved.setUser(user);
 
                 repository.save(qaSaved);
-                //user.addQuizAnswers(qaSaved);
             }
         }
         return user.getReputation();
