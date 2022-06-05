@@ -24,7 +24,7 @@ public class QuizController {
     @Autowired
     private QuizService quizService;
 
-    @GetMapping(value="/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value="/{id}")
     public List<SpecimenQuizDTO> generateQuiz(@PathVariable(value = "id") Long userId, HttpServletRequest request){
         return quizService.generateQuiz(userId);
     }

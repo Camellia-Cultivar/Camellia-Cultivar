@@ -46,7 +46,7 @@ public class UserController {
         return registeredUserService.addRegisteredUser(user, getSiteURL(request));
     }
 
-    @GetMapping(value="/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value="/{id}")
     public ResponseEntity<String> getProfile(@PathVariable(value = "id") long id){
         return userService.getUserProfile(id);
     }
@@ -56,7 +56,7 @@ public class UserController {
         return this.userService.editProfile( tempUser, id );
     }
 
-    @GetMapping(value="/verify", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value="/verify")
     public String verifyUser(@Param("code") String code) {
         if (userService.verify(code)) {
             return "Account is verified";
