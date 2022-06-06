@@ -23,7 +23,6 @@ const Camellia = () => {
         if (!fetched) {
             axios.get(`/api/public/cultivars/${params.id}`)
                 .then((response) => {
-                    console.log(response);
                     setCamellia(response.data)
                     setFetched(true);
                 })
@@ -66,13 +65,19 @@ const Camellia = () => {
             </div>
             <div className="md:w-1/3 mt-8 md:mt-0">
                 <div className="flex flex-col">
-                    <img className="shadow-md self-center w-11/12 rounded-lg object-cover" src={camellia.photograph} alt={camellia.epithet}></img>
+                    {camellia.photograph === null ?
+                        <img src="/logo.svg" className="bg-emerald-900/20 self-center shadow-md rounded-lg object-cover w-11/12" alt="Logo"></img>
+                        :
+                        <img className="shadow-md self-center w-11/12 rounded-lg object-cover" src={camellia.photograph} alt={camellia.epithet}></img>
+                    }
                     <CamelliaCategory description={camellia.species} category="Species / Combination" />
                     <CamelliaCategory description={`${camellia.species} '${camellia.epithet}'`} category="Scientific Name" />
-                    <div className="bg-emerald-900/20 mt-8 rounded-full flex items-center justify-center py-4 text-emerald-900 cursor-pointer hover:scale-105" onClick={() => { loadMore() }}>
-                        <BiImages></BiImages>
-                        <p className="ml-2 text-center text-emerald-900">{moreLoaded ? "Less Photos" : "More Photos"}</p>
-                    </div>
+                    {camellia.otherImages &&
+
+                        <div className="bg-emerald-900/20 mt-8 rounded-full flex items-center justify-center py-4 text-emerald-900 cursor-pointer hover:scale-105" onClick={() => { loadMore() }}>
+                            <BiImages></BiImages>
+                            <p className="ml-2 text-center text-emerald-900">{moreLoaded ? "Less Photos" : "More Photos"}</p>
+                        </div>}
                     {/* <AnimateHeight duration={500} height={height}>
                         {moreLoaded &&
                             <div className="grid gap-y-3 gap-x-2 md:gap-x-1 grid-cols-2 md:grid-cols-3 mt-8">

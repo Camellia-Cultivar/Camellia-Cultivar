@@ -157,9 +157,9 @@ const Encyclopedia = () => {
 
 
         if (index < 4 || index + 1 === pages) {
-            buttons.push(<button onClick={() => { changePage(index)}} className={classN + " active:scale-95"}>{index + 1}</button>)
+            buttons.push(<button key={index} onClick={() => { changePage(index)}} className={classN + " active:scale-95"}>{index + 1}</button>)
         } else if (index === 4) {
-            buttons.push(<button className={classN}>...</button>)
+            buttons.push(<button key={index} className={classN}>...</button>)
         }
 
     }
