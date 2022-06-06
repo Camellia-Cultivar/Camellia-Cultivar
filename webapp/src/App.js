@@ -28,44 +28,45 @@ function App() {
     const userDetails = useSelector(state => state.user)
 
     useEffect(() => {
-
         const listen = history.listen((location, action) => {
-            const loggedInUser = localStorage.getItem("userToken");
-            if (loggedInUser) {
-                const user = JSON.parse(localStorage.getItem("userToken"));
-                if (user.expiry > Date.now()) {
-                    if (Object.keys(userDetails).length ===0) {
-                        axios.get(`/api/users/${user.userId}`, {
-                            headers: {
-                                "Authorization": `Bearer ${user.loginToken}`,
-                            }
-                        })
-                            .then(function (response) {
-                                if (!response.data.verified) {
-                                    if (location.location.pathname !== '/verify')
-                                        navigate("/verify");
-                                } else {
-                                    dispatch(signIn());
-                                    dispatch(signedIn(response.data));
-                                }
+            fetchUser(true);
+        })
+        fetchUser(Object.keys(userDetails).length ===0);
+        return listen;
+    })
 
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
+    const fetchUser = (secondFactor) => {
+        const loggedInUser = localStorage.getItem("userToken");
+        if (loggedInUser && secondFactor) {
+            const user = JSON.parse(localStorage.getItem("userToken"));
+            if (user.expiry > Date.now()) {
+                axios.get(`/api/users/${user.userId}`, {
+                    headers: {
+                        "Authorization": `Bearer ${user.loginToken}`,
                     }
+                })
+                    .then(function (response) {
+                        if (!response.data.verified) {
+                            if (history.location.pathname !== '/verify')
+                                navigate("/verify");
+                        } else {
+                            dispatch(signIn());
+                            dispatch(signedIn(response.data));
+                        }
 
-                } else {
-                    localStorage.removeItem("userToken");
-                    dispatch(signOut());
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
 
-                }
+            } else {
+                localStorage.removeItem("userToken");
+                dispatch(signOut());
 
             }
-        })
 
-        return listen;
-    }, [])
+        }
+    }
 
 
     return (
