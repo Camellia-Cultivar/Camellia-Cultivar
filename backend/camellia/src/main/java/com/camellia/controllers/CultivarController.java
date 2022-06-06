@@ -1,12 +1,22 @@
 package com.camellia.controllers;
 
+import com.camellia.models.cultivars.Cultivar;
 import com.camellia.models.cultivars.CultivarDTO;
+import com.camellia.models.cultivars.CultivarSynonymDTO;
+import com.camellia.models.cultivars.CultivarSynonyms;
+import com.camellia.models.requests.CultivarRequestDTO;
 import com.camellia.services.cultivars.CultivarService;
+import com.camellia.services.cultivars.CultivarSynonymsService;
+import com.camellia.services.requests.CultivarRequestService;
 import com.camellia.views.CultivarListView;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +32,13 @@ public class CultivarController {
     @Autowired
     private CultivarService cultivarService;
 
+    @Autowired
+    private CultivarRequestService cultivarRequestService;
+
+
+    @Autowired
+    private CultivarSynonymsService cultivarSynonymsService;
+
     @GetMapping
     public List<CultivarListView> getCultivarList(@Valid @RequestParam long page){
         return cultivarService.getCultivars(page);
@@ -30,5 +47,17 @@ public class CultivarController {
     @GetMapping("/{id}")
     public CultivarDTO getCultivarById(@PathVariable Long id) {
         return cultivarService.getCultivarById(id);
+    }
+
+    @PostMapping("/{id}")
+    public Cultivar createCultivar( @RequestBody CultivarDTO cultivar, @PathVariable(value="id") long requestId){
+        cultivarRequestService.deleteCultivarRequest(requestId);
+        return cultivarService.createCultivar(cultivar);
+    }
+
+    @PostMapping("/synonyms/{id}")
+    public CultivarSynonyms createCultivarSynonym( @RequestBody CultivarSynonymDTO cultivar,  @PathVariable(value="id") long requestId){
+        cultivarRequestService.deleteCultivarRequest(requestId);
+        return cultivarSynonymsService.createCultivarSynonym(cultivar);
     }
 }

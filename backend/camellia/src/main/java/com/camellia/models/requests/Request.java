@@ -41,10 +41,10 @@ public abstract class Request {
     private long request_id;
 
     @Column(name = "submission_date", nullable = false)
-    private LocalDateTime submission_date;
+    private LocalDateTime submissionDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn( referencedColumnName = "userId", name="mod_user_id", nullable=false)
+    @JoinColumn( referencedColumnName = "userId", name="mod_user_id", nullable=true)
     @JsonIncludeProperties("mod_user_id")
     private User mod_user;
     
@@ -52,4 +52,31 @@ public abstract class Request {
     @JoinColumn( referencedColumnName = "userId", name="reg_user_id", nullable=false)
     @JsonIncludeProperties("reg_user_id")
     private User reg_user;
+
+
+
+    public long getRequest_id() {
+        return this.request_id;
+    }
+
+    public void setRequest_id(long request_id) {
+        this.request_id = request_id;
+    }
+
+    public LocalDateTime getSubmissionDate() {
+        return this.submissionDate;
+    }
+
+    public void setSubmissionDate(LocalDateTime submissionDate) {
+        this.submissionDate = submissionDate;
+    }
+
+    public User getReg_user() {
+        return this.reg_user;
+    }
+
+    public void setReg_user(User reg_user) {
+        this.reg_user = reg_user;
+    }
+
 }
