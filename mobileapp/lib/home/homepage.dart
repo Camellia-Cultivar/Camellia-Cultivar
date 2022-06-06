@@ -52,9 +52,11 @@ class HomePage extends StatefulWidget {
 }
 
 class Home extends State<HomePage> with WidgetsBindingObserver {
+  late final Future? specimenMapFuture;
   @override
   void initState() {
     super.initState();
+    specimenMapFuture = api.getMapSpecimens();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -249,7 +251,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                 ),
               ),
               FutureBuilder(
-                future: api.getMapSpecimens(),
+                future: specimenMapFuture,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Column(
