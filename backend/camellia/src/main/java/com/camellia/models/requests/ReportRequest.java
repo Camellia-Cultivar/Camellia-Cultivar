@@ -33,4 +33,14 @@ public class ReportRequest extends Request{
     @JsonIncludeProperties("specimen_id")
     private ToIdentifySpecimen to_identify_specimen;
 
+
+    public ToIdentifySpecimen getTo_identify_specimen() {
+        return this.to_identify_specimen;
+    }
+
+    public void setTo_identify_specimen(ToIdentifySpecimen to_identify_specimen) {
+        this.to_identify_specimen = to_identify_specimen;
+    }
+
+
 }

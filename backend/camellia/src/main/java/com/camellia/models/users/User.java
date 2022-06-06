@@ -196,13 +196,7 @@ public class User implements Serializable{
         this.verified = verified;
     }
 
-//    public Set<QuizAnswer> getQuizAnswers() {
-//        return this.quizAnswers;
-//    }
-//
-//    public void setQuizAnswers(Set<QuizAnswer> quizAnswers) {
-//        this.quizAnswers = quizAnswers;
-//    }
+
 
     public Set<QuizAnswer> customGetQuizAnswers() {
         return this.quizAnswers;
@@ -220,13 +214,6 @@ public class User implements Serializable{
         this.identificationRequests = identificationRequests;
     }
 
-    public Set<ReportRequest> getReportRequests() {
-        return this.reportRequests;
-    }
-
-    public void setReportRequests(Set<ReportRequest> reportRequests) {
-        this.reportRequests = reportRequests;
-    }
 
     public Set<CultivarRequest> getCultivarRequest() {
         return this.cultivarRequest;
