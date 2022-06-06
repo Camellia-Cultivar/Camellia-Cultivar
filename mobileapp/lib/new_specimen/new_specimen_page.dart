@@ -56,9 +56,9 @@ class NewSpecimen extends State<NewSpecimenPage> {
 
   FocusNode myFocusNode = FocusNode();
 
-  MapController _mapController = MapController();
+  final MapController _mapController = MapController();
 
-  Position? _position = null;
+  LatLng? userLocation;
 
   final gardenController = TextEditingController();
   final ownerController = TextEditingController();
@@ -66,7 +66,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
   void _getCurrentPosition() async {
     Position position = await _determinePosition();
     setState(() {
-      _position = position;
+      userLocation = LatLng(position.latitude, position.longitude);
     });
   }
 
@@ -118,18 +118,13 @@ class NewSpecimen extends State<NewSpecimenPage> {
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
     final PopupController _popupController = PopupController();
-    double _zoom = 7;
-    LatLng location = _position == null
-        ? LatLng(40.6384943, -8.6540832)
-        : LatLng(_position!.latitude, _position!.longitude);
-    LatLng? actualLocation = _position != null
-        ? LatLng(_position!.latitude, _position!.longitude)
-        : null;
+    double _zoom = 1;
+
     List<Marker> markers = [
       Marker(
-        point: location,
-        width: 100,
-        height: 100,
+        point: userLocation,
+        width: 20,
+        height: 20,
         builder: (context) => Icon(
           Icons.location_on,
           size: 20,
@@ -151,7 +146,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
       {
         if (!_formKey.currentState!.validate() ||
             specimen_images.isEmpty ||
-            actualLocation == null) {
+            userLocation == null) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               backgroundColor: Colors.white,
               content: Text(
@@ -185,6 +180,17 @@ class NewSpecimen extends State<NewSpecimenPage> {
             child: Column(children: <Widget>[
               Stack(
                 children: [
+                  Positioned(
+                      left: 0,
+                      child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: primaryColor,
+                            size: 25,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          })),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -437,8 +443,8 @@ class NewSpecimen extends State<NewSpecimenPage> {
                                 child: FlutterMap(
                                   mapController: _mapController,
                                   options: MapOptions(
-                                    center: actualLocation ??
-                                        location, //change center with geolocation
+                                    center:
+                                        userLocation, //change center with geolocation
                                     zoom: _zoom,
                                     plugins: [
                                       MarkerClusterPlugin(),
@@ -485,12 +491,12 @@ class NewSpecimen extends State<NewSpecimenPage> {
                           const Padding(padding: EdgeInsets.all(10)),
                           Column(
                             children: [
-                              _position != null
+                              userLocation != null
                                   ? Text("Lat:" +
-                                      _position!.latitude.toString() +
+                                      userLocation!.latitude.toString() +
                                       "\n" +
                                       "Long:" +
-                                      _position!.longitude.toString())
+                                      userLocation!.longitude.toString())
                                   : const Text('Lat:\nLong:'),
                               const Padding(padding: EdgeInsets.all(5)),
                               MaterialButton(
@@ -538,90 +544,93 @@ class NewSpecimen extends State<NewSpecimenPage> {
       bottomNavigationBar: const BotNavbar(pageIndex: 0),
     );
   }
-
-  Widget upovs(BuildContext context, List upovs) {
-    List<String> selectedValues = List.filled(50, 'idk');
-    Color primaryColor = Theme.of(context).primaryColor;
-    return Column(children: [
-      for (UpovCategory category in upovs)
-        ExpansionTile(
-            collapsedIconColor: primaryColor,
-            collapsedTextColor: primaryColor,
-            title: Text(
-              category.category,
-              style: const TextStyle(fontSize: 18.0),
-            ),
-            children: [
-              for (UpovSubcategory subCategory in category.characteristics)
-                subCategory.options != null
-                    ? SmartSelect<String>.single(
-                        title: subCategory.name,
-                        choiceItems: [
-                          S2Choice<String>(
-                              value: 0.toString(), title: "i don't know"),
-                          for (UpovSubcategoryOption option
-                              in subCategory.options!)
-                            S2Choice<String>(
-                                value: option.value.toString(),
-                                title: option.descriptor)
-                        ],
-                        value: selectedValues[subCategory.id - 1],
-                        onChange: (selected) => setState(() =>
-                            selectedValues[subCategory.id - 1] =
-                                selected.value),
-                        modalType: S2ModalType.popupDialog,
-                      )
-                    : _buildColorTextInput(context)
-            ])
-    ]);
-  }
 }
 
-Widget _buildColorTextInput(BuildContext context) {
-  Color primaryColor = Theme.of(context).primaryColor;
-  FocusNode myFocusNode = FocusNode();
-  final mainColorController = TextEditingController();
-  final secondaryColorController = TextEditingController();
-  return (Column(
-    children: [
-      TextFormField(
-        focusNode: myFocusNode,
-        cursorColor: primaryColor,
-        decoration: InputDecoration(
-          //primaryColor
-          labelStyle: TextStyle(color: primaryColor),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: primaryColor),
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: primaryColor),
-          ),
-          border: UnderlineInputBorder(
-            borderSide: BorderSide(color: primaryColor),
-          ),
-          labelText: 'Main Color',
-        ),
-        controller: mainColorController,
-      ),
-      TextFormField(
-        focusNode: myFocusNode,
-        cursorColor: primaryColor,
-        decoration: InputDecoration(
-          //primaryColor
-          labelStyle: TextStyle(color: primaryColor),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: primaryColor),
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: primaryColor),
-          ),
-          border: UnderlineInputBorder(
-            borderSide: BorderSide(color: primaryColor),
-          ),
-          labelText: 'Secondary Color',
-        ),
-        controller: secondaryColorController,
-      ),
-    ],
-  ));
-}
+  // Widget upovs(BuildContext context, List upovs) {
+  //   List<String> selectedValues = List.filled(50, 'idk');
+  //   Color primaryColor = Theme.of(context).primaryColor;
+  //   return Column(children: [
+  //     for (UpovCategory category in upovs)
+  //       ExpansionTile(
+  //           collapsedIconColor: primaryColor,
+  //           collapsedTextColor: primaryColor,
+  //           title: Text(
+  //             category.category,
+  //             style: const TextStyle(fontSize: 18.0),
+  //           ),
+  //           children: [
+  //             for (UpovSubcategory subCategory in category.characteristics)
+  //               subCategory.options != null
+  //                   ? SmartSelect<String>.single(
+  //                       title: subCategory.name,
+  //                       choiceItems: [
+  //                         S2Choice<String>(
+  //                             value: 0.toString(), title: "i don't know"),
+  //                         for (UpovSubcategoryOption option
+  //                             in subCategory.options!)
+  //                           S2Choice<String>(
+  //                               value: option.value.toString(),
+  //                               title: option.descriptor)
+  //                       ],
+  //                       value: selectedValues[subCategory.id - 1],
+  //                       onChange: (selected) => setState(() =>
+  //                           selectedValues[subCategory.id - 1] =
+  //                               selected.value),
+  //                       modalType: S2ModalType.popupDialog,
+  //                     )
+  //                   : _buildColorTextInput(context)
+  //           ])
+  //   ]);
+  // }
+// }
+
+// Widget _buildColorTextInput(BuildContext context) {
+//   Color primaryColor = Theme.of(context).primaryColor;
+//   FocusNode myFocusNode = FocusNode();
+//   final mainColorController = TextEditingController();
+//   final secondaryColorController = TextEditingController();
+//   return (Column(
+//     children: [
+//       TextFormField(
+//         focusNode: myFocusNode,
+//         cursorColor: primaryColor,
+//         decoration: InputDecoration(
+//           //primaryColor
+//           labelStyle: TextStyle(color: primaryColor),
+//           enabledBorder: UnderlineInputBorder(
+//             borderSide: BorderSide(color: primaryColor),
+//           ),
+//           focusedBorder: UnderlineInputBorder(
+//             borderSide: BorderSide(color: primaryColor),
+//           ),
+//           border: UnderlineInputBorder(
+//             borderSide: BorderSide(color: primaryColor),
+//           ),
+//           labelText: 'Main Color',
+//         ),
+//         controller: mainColorController,
+//       ),
+//       TextFormField(
+//         focusNode: myFocusNode,
+//         cursorColor: primaryColor,
+//         decoration: InputDecoration(
+//           //primaryColor
+//           labelStyle: TextStyle(color: primaryColor),
+//           enabledBorder: UnderlineInputBorder(
+//             borderSide: BorderSide(color: primaryColor),
+//           ),
+//           focusedBorder: UnderlineInputBorder(
+//             borderSide: BorderSide(color: primaryColor),
+//           ),
+//           border: UnderlineInputBorder(
+//             borderSide: BorderSide(color: primaryColor),
+//           ),
+//           labelText: 'Secondary Color',
+//         ),
+//         controller: secondaryColorController,
+//       ),
+//     ],
+//   ));
+// }
+
+
