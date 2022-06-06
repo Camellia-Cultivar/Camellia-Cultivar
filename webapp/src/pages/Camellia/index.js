@@ -4,7 +4,6 @@ import CamelliaCategory from '../../components/CamelliaCategory';
 import { BiImages } from "react-icons/bi";
 import axios from 'axios';
 
-import sample from './sample'
 import CharacteristicDropdown from '../../components/CharacteristicDropdown';
 import AnimateHeight from 'react-animate-height';
 const Camellia = () => {
@@ -21,18 +20,22 @@ const Camellia = () => {
 
 
     useEffect(() => {
-        if(!fetched){
-            axios.get(`https://localhost:8085/api/public/cultivars/${params.id}`).then((response) => {
-                console.log(response);
-                setCamellia(response.data)
-                setFetched(true);
-            })
+        if (!fetched) {
+            axios.get(`/api/public/cultivars/${params.id}`)
+                .then((response) => {
+                    console.log(response);
+                    setCamellia(response.data)
+                    setFetched(true);
+                })
+                .catch((err) => {
+                    console.error(err)
+                })
 
         }
     })
 
     const loadMore = () => {
-        height === 'auto' ? setTimeout(() => { setMoreLoaded(!moreLoaded)}, 305) : setMoreLoaded(!moreLoaded);
+        height === 'auto' ? setTimeout(() => { setMoreLoaded(!moreLoaded) }, 305) : setMoreLoaded(!moreLoaded);
         setHeight(
             height === 0 ? 'auto' : 0
         )

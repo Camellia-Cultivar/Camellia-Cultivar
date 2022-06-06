@@ -25,29 +25,30 @@ const Encyclopedia = () => {
 
 
     useEffect(() => {
-        if (!fetched)
-            axios.get('api/public/cultivars', { params: { page: page } })
+        fetchPage();
+    })
+
+
+    const fetchPage = () => {
+        if (!fetched){
+            axios.get('/api/public/cultivars', { params: { page: page } })
                 .then((response) => {
-                    console.log(Object.entries(response.data))
                     setCamellias(response.data)
                     setFetched(true)
                 })
                 .catch((error) => {
                     console.log(error)
                 })
-    }, [])
-
-
-
+        }
+    }
 
 
     const getAutocompleteOnChange = (e) => {
         setSearchText(e.target.value)
         if (e.target.value.length > 2) {
             setSugestionsOn(true)
-            axios.get('api/public/autocomplete', { params: { substring: e.target.value } })
+            axios.get('/api/public/autocomplete', { params: { substring: e.target.value } })
                 .then((response) => {
-                    console.log(response.data)
                     setAutocompletedCamellias(response.data)
                 })
                 .catch((error) => {
@@ -59,23 +60,26 @@ const Encyclopedia = () => {
         }
     }
 
+
+
     const setSugestionClicked = (sugestion) => {
         setSearchText(sugestion.denomination);
         setSugestionsOn(false);
         setChosenSugestion(true);
         setSugestion(sugestion)
-        axios.get(`api/public/cultivars/${sugestion.cultivarId}`)
+        axios.get(`/api/public/cultivars/${sugestion.cultivarId}`)
             .then((response) => {
                 setCamellias([response.data])
-                console.log(Object.entries(response.data))
             })
             .catch((error) => {
                 console.log(error)
             })
     }
 
+
+
     const clearAll = () => {
-        axios.get('api/public/cultivars', { params: { page: page } })
+        axios.get('/api/public/cultivars', { params: { page: page } })
             .then((response) => {
                 setCamellias(response.data)
                 setFetched(true)
@@ -91,11 +95,14 @@ const Encyclopedia = () => {
 
     const searchCultivar = async () => {
         let tempCamellias = [];
-        if(searchText === "") return;
-        await axios.get('api/public/autocomplete', { params: { substring: searchText } })
+        if (searchText === "") {
+            clearAll();
+            return;
+        };
+        await axios.get('/api/public/autocomplete', { params: { substring: searchText } })
             .then((response) => {
                 response.data.map((data, index) => {
-                    axios.get(`api/public/cultivars/${data.cultivarId}`)
+                    axios.get(`/api/public/cultivars/${data.cultivarId}`)
                         .then((newResponse) => {
                             tempCamellias.push(newResponse.data)
                         })
@@ -104,7 +111,6 @@ const Encyclopedia = () => {
                         })
                     return null;
                 })
-                console.log(tempCamellias);
 
             })
             .finally(() => {
@@ -112,12 +118,10 @@ const Encyclopedia = () => {
                 setSugestionsOn(false);
                 setChosenSugestion(true);
                 setTimeout(() => {
-                setCamellias(tempCamellias);
-                setIsLoading(false);
+                    setCamellias(tempCamellias);
+                    setIsLoading(false);
                 }, 500)
                 setCamellias(tempCamellias);
-                console.log("sdadasdsad");
-
             })
             .catch((error) => {
                 console.log(error)
@@ -128,9 +132,16 @@ const Encyclopedia = () => {
 
     }
 
+    const changePage = (index) => {
+        setFetched(false); 
+        setPage(index + 1);
+
+        
+    }
 
 
-    const pages = 9;
+
+    const pages = 1001;
 
     let buttons = []
     let classN = "";
@@ -146,7 +157,7 @@ const Encyclopedia = () => {
 
 
         if (index < 4 || index + 1 === pages) {
-            buttons.push(<button onClick={() => { setPage(index + 1); setFetched(false) }} className={classN + " active:scale-95"}>{index + 1}</button>)
+            buttons.push(<button onClick={() => { changePage(index)}} className={classN + " active:scale-95"}>{index + 1}</button>)
         } else if (index === 4) {
             buttons.push(<button className={classN}>...</button>)
         }
@@ -160,8 +171,8 @@ const Encyclopedia = () => {
 
 
     return (
-        <div className="container-4/5 flex flex-col">
-            <div className="pt-16 pb-6 ml-4">
+        <div className="container-4/5 mt-16 mb-8 flex flex-col">
+            <div className="pb-6 ml-4">
                 <p className="text-3xl font-bold text-center md:text-start">Encyclopedia</p>
             </div>
             <div className="self-center flex flex-col w-full pt-4">
@@ -182,7 +193,7 @@ const Encyclopedia = () => {
                             className={`z-[1] rounded-3xl border-2 px-4 py-2 shadow w-full h-full outline-none ${sugestionsOn && `shadow-none border-x-0 border-b-0`}`}
                         >
                         </input>
-                        {searchText !== "" && <IoCloseCircleOutline onClick={() => { clearAll() }} className="absolute z-[1] top-[30%] right-4 text-emerald-900"></IoCloseCircleOutline>}
+                        {searchText !== "" && <IoCloseCircleOutline onClick={() => { clearAll() }} className="absolute z-[2] top-[30%] right-4 text-emerald-900"></IoCloseCircleOutline>}
                     </div>
                     <button onClick={() => { searchCultivar() }} className="bg-emerald-900 text-white text-2xl px-4 md:px-6 py-1 rounded-3xl active:scale-95 hover:scale-105"><IoSearch></IoSearch></button>
                 </div>
@@ -192,29 +203,31 @@ const Encyclopedia = () => {
                 </div>
             </div>
 
-            {isLoading?
-            
-            
-            <div className="my-28 flex justify-center">
-                <AiOutlineLoading3Quarters className="loading text-emerald-900 text-4xl"></AiOutlineLoading3Quarters>
-            </div>
-            
-            :
-            <div className="grid sm:grid-cols-2 sm:gap-x-4 md:grid-cols-3 md:grid-rows-3 md:gap-x-8 gap-y-10 mt-10">
-                {chosenSugestion ?
-                    camellias.map((camellia) => (<Card className="hover:scale-110 hover:shadow transition-transform duration-75 ease-linear" key={camellia.id} image={camellia.photograph} name={camellia.epithet} species={camellia.species} redirect={redirect} camelliaId={camellia.cultivar_id}></Card>))
+            {isLoading ?
 
-                    :
-                    Object.entries(camellias).map((camellia) => {
-                        return (
-                            <Card className="hover:scale-110 hover:shadow transition-transform duration-75 ease-linear" key={camellia[1].id} image={camellia[1].photograph} name={camellia[1].epithet} species={camellia[1].species} redirect={redirect} camelliaId={camellia[1].cultivar_id}></Card>
-                        )
-                    })
-                }
-            </div>}
-            {!chosenSugestion && <div className="mt-8 mb-4 flex justify-center">
-                {buttons.map((button) => { return (button) })}
-            </div>}
+
+                <div className="my-28 flex justify-center">
+                    <AiOutlineLoading3Quarters className="loading text-emerald-900 text-4xl"></AiOutlineLoading3Quarters>
+                </div>
+
+                :
+                <div className="grid sm:grid-cols-2 sm:gap-x-4 md:grid-cols-3 md:grid-rows-3 md:gap-x-8 gap-y-10 mt-10">
+                    {chosenSugestion ?
+                        camellias.map((camellia) => (<Card className="hover:scale-110 hover:shadow transition-transform duration-75 ease-linear" key={camellia.id} image={camellia.photograph} name={camellia.epithet} species={camellia.species} redirect={redirect} camelliaId={camellia.cultivar_id}></Card>))
+
+                        :
+                        Object.entries(camellias).map((camellia) => {
+                            return (
+                                <Card className="hover:scale-110 hover:shadow transition-transform duration-75 ease-linear" key={camellia[1].id} image={camellia[1].photograph} name={camellia[1].epithet} species={camellia[1].species} redirect={redirect} camelliaId={camellia[1].cultivar_id}></Card>
+                            )
+                        })
+                    }
+                </div>}
+            {!chosenSugestion &&
+                <div className="mt-8 mb-4 flex justify-center">
+                    {buttons.map((button) => { return (button) })}
+                </div>
+            }
 
         </div>
     )

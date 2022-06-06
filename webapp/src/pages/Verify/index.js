@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react'
-import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
@@ -30,7 +29,7 @@ const Verify = () => {
 
         }
 
-    }, []);
+    });
   return (
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <p className="text-3xl text-emerald-900 font-medium">Please go to your email, <span className="font-bold">verify your account</span>, and refresh this page!</p>
