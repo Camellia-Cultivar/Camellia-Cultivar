@@ -305,7 +305,7 @@ class APIService {
 
       print(jsonie.length);
 
-      for (int i = 0; i < 12; i++) {
+      for (int i = 0; i < jsonie.length; i++) {
         print(i);
         categories.add(UpovCategory.fromJson(Map.from(jsonie[i])));
       }

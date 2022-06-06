@@ -16,6 +16,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:latlong/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_select/smart_select.dart';
 
 import '../home/homepage.dart';
 import '../home/image_full_slider_map.dart';
@@ -23,6 +24,9 @@ import 'package:azblob/azblob.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart';
 
+import '../model/upov_category.dart';
+import '../model/upov_subcategory.dart';
+import '../model/upov_subcategory_option.dart';
 import '../model/user.dart';
 import '../providers/user.dart';
 
@@ -108,6 +112,8 @@ class NewSpecimen extends State<NewSpecimenPage> {
     });
   }
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
@@ -141,6 +147,33 @@ class NewSpecimen extends State<NewSpecimenPage> {
 
     User? user = context.watch<UserProvider>().user;
 
+    void handleSubmit() {
+      {
+        if (!_formKey.currentState!.validate() ||
+            specimen_images.isEmpty ||
+            actualLocation == null) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              backgroundColor: Colors.white,
+              content: Text(
+                'Please fill the first 4 fields',
+                style: TextStyle(color: Colors.red),
+              )));
+        } else {
+          uploadInAzure(user!);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                backgroundColor: Colors.white,
+                content: Text(
+                  'ID request sent for validation.',
+                  style: TextStyle(color: Colors.green),
+                )),
+          );
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const HomePage()));
+        }
+      }
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6F7),
       body: Container(
@@ -166,339 +199,429 @@ class NewSpecimen extends State<NewSpecimenPage> {
                   Positioned(
                     right: 0,
                     child: IconButton(
-                      icon: Icon(
-                        Icons.check,
-                        color: primaryColor,
-                        size: 25,
-                      ),
-                      onPressed: () {
-                        if (ownerController.text.isEmpty ||
-                            gardenController.text.isEmpty ||
-                            specimen_images.isEmpty ||
-                            actualLocation == null) {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                                  backgroundColor: Colors.white,
-                                  content: Text(
-                                    'Please, fill in the required fields',
-                                    style: TextStyle(color: Colors.red),
-                                  )));
-                        } else {
-                          uploadInAzure(user!);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                backgroundColor: Colors.white,
-                                content: Text(
-                                  'ID request sent for validation.',
-                                  style: TextStyle(color: Colors.black),
-                                )),
-                          );
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const HomePage()));
-                        }
-                      },
-                    ),
+                        icon: Icon(
+                          Icons.check,
+                          color: primaryColor,
+                          size: 25,
+                        ),
+                        onPressed: () => {handleSubmit()}),
                   )
                 ],
               ),
               const Padding(padding: EdgeInsets.all(10)),
-              specimen_images.isNotEmpty
-                  ? Column(
-                      children: [
-                        SizedBox(
-                            height: 190,
-                            child: Stack(children: [
-                              CarouselSlider(
-                                  carouselController: controller,
-                                  options: CarouselOptions(
-                                    aspectRatio: 2,
-                                    viewportFraction: 0.9,
-                                    enlargeCenterPage: true,
-                                    enlargeStrategy:
-                                        CenterPageEnlargeStrategy.height,
-                                    enableInfiniteScroll: true,
-                                    onPageChanged: (index, reason) {
-                                      setState(() {
-                                        currentImg = index;
-                                      });
+              Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      specimen_images.isNotEmpty
+                          ? Column(
+                              children: [
+                                SizedBox(
+                                    height: 190,
+                                    child: Stack(children: [
+                                      CarouselSlider(
+                                          carouselController: controller,
+                                          options: CarouselOptions(
+                                            aspectRatio: 2,
+                                            viewportFraction: 0.9,
+                                            enlargeCenterPage: true,
+                                            enlargeStrategy:
+                                                CenterPageEnlargeStrategy
+                                                    .height,
+                                            enableInfiniteScroll: true,
+                                            onPageChanged: (index, reason) {
+                                              setState(() {
+                                                currentImg = index;
+                                              });
+                                            },
+                                          ),
+                                          items: [
+                                            for (int i = 0;
+                                                i < specimen_images.length;
+                                                i++)
+                                              GestureDetector(
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(9),
+                                                  child: Image.file(
+                                                      specimen_images[i]),
+                                                ),
+                                                onTap: () {
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              SliderShowFullmages(
+                                                                listImagesModel:
+                                                                    specimen_images,
+                                                                current:
+                                                                    currentImg,
+                                                                isNetworkImg:
+                                                                    false,
+                                                              )));
+                                                },
+                                              )
+                                          ]),
+                                      Positioned(
+                                          bottom: 0,
+                                          right: 20,
+                                          child: MaterialButton(
+                                            color: primaryColor,
+                                            shape: const CircleBorder(),
+                                            onPressed: () {
+                                              _removeimg();
+                                            },
+                                            child: const Icon(
+                                              Icons.delete_outline_rounded,
+                                              size: 25,
+                                              color: Color(0xFFE7EEEC),
+                                            ),
+                                          ))
+                                    ])),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: specimen_images
+                                      .asMap()
+                                      .entries
+                                      .map((entry) {
+                                    return GestureDetector(
+                                      onTap: () =>
+                                          controller.animateToPage(entry.key),
+                                      child: Container(
+                                        width: 12.0,
+                                        height: 12.0,
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 8.0, horizontal: 4.0),
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color:
+                                                (Theme.of(context).brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : primaryColor)
+                                                    .withOpacity(
+                                                        currentImg == entry.key
+                                                            ? 0.9
+                                                            : 0.4)),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                                GestureDetector(
+                                    onTap: () {
+                                      _getFromCamera();
                                     },
-                                  ),
-                                  items: [
-                                    for (int i = 0;
-                                        i < specimen_images.length;
-                                        i++)
-                                      GestureDetector(
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(9),
-                                          child: Image.file(specimen_images[i]),
-                                        ),
-                                        onTap: () {
-                                          Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      SliderShowFullmages(
-                                                        listImagesModel:
-                                                            specimen_images,
-                                                        current: currentImg,
-                                                        isNetworkImg: false,
-                                                      )));
-                                        },
-                                      )
-                                  ]),
-                              Positioned(
-                                  bottom: 0,
-                                  right: 20,
-                                  child: MaterialButton(
-                                    color: primaryColor,
-                                    shape: const CircleBorder(),
-                                    onPressed: () {
-                                      _removeimg();
-                                    },
-                                    child: const Icon(
-                                      Icons.delete_outline_rounded,
-                                      size: 25,
-                                      color: Color(0xFFE7EEEC),
-                                    ),
-                                  ))
-                            ])),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children:
-                              specimen_images.asMap().entries.map((entry) {
-                            return GestureDetector(
-                              onTap: () => controller.animateToPage(entry.key),
+                                    child: Container(
+                                        width: 100,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                            color: primaryColor,
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(15))),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: const [
+                                            Icon(
+                                              Icons.camera_alt_outlined,
+                                              color: Colors.white,
+                                              size: 22,
+                                            ),
+                                            Text(
+                                              ' Add',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            )
+                                          ],
+                                        ))),
+                              ],
+                            )
+                          : GestureDetector(
+                              onTap: () {
+                                _getFromCamera();
+                              },
                               child: Container(
-                                width: 12.0,
-                                height: 12.0,
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 8.0, horizontal: 4.0),
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: (Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.white
-                                            : primaryColor)
-                                        .withOpacity(currentImg == entry.key
-                                            ? 0.9
-                                            : 0.4)),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                        GestureDetector(
-                            onTap: () {
-                              _getFromCamera();
-                            },
-                            child: Container(
-                                width: 100,
-                                height: 50,
+                                width: 200,
                                 decoration: BoxDecoration(
                                     color: primaryColor,
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(15))),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Icon(
-                                      Icons.camera_alt_outlined,
-                                      color: Colors.white,
-                                      size: 22,
-                                    ),
-                                    Text(
-                                      ' Add',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 15,
+                                child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const [
+                                        Icon(
+                                          Icons.camera_alt_outlined,
                                           color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ))),
-                      ],
-                    )
-                  : GestureDetector(
-                      onTap: () {
-                        _getFromCamera();
-                      },
-                      child: Container(
-                        width: 200,
-                        decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15))),
-                        child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(
-                                  Icons.camera_alt_outlined,
-                                  color: Colors.white,
-                                  size: 50,
-                                ),
-                                Text(
-                                  'Add\nSpecimen\nPicture',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            )),
-                      )),
-              SizedBox(
-                  width: 250,
-                  child: Center(
-                      child: Column(
-                    children: [
-                      TextFormField(
-                        cursorColor: primaryColor,
-                        decoration: InputDecoration(
-                          labelStyle: TextStyle(color: primaryColor),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: primaryColor),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: primaryColor),
-                          ),
-                          border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: primaryColor),
-                          ),
-                          labelText: 'Garden',
-                        ),
-                        controller: gardenController,
-                      ),
-                      TextFormField(
-                        focusNode: myFocusNode,
-                        cursorColor: primaryColor,
-                        decoration: InputDecoration(
-                          //primaryColor
-                          labelStyle: TextStyle(color: primaryColor),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: primaryColor),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: primaryColor),
-                          ),
-                          border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: primaryColor),
-                          ),
-                          labelText: 'Owner',
-                        ),
-                        controller: ownerController,
-                      ),
-                    ],
-                  ))),
-              const Padding(padding: EdgeInsets.all(20)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(15)),
-                    child: SizedBox(
-                        height: 120,
-                        width: 150,
-                        child: FlutterMap(
-                          mapController: _mapController,
-                          options: MapOptions(
-                            center: actualLocation ??
-                                location, //change center with geolocation
-                            zoom: _zoom,
-                            plugins: [
-                              MarkerClusterPlugin(),
-                            ],
-                            onTap: (_) => _popupController.hidePopup(),
-                          ),
-                          layers: [
-                            TileLayerOptions(
-                              minZoom: 1,
-                              maxZoom: 18,
-                              backgroundColor: Colors.black,
-                              urlTemplate:
-                                  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                              subdomains: ['a', 'b', 'c'],
-                            ),
-                            MarkerClusterLayerOptions(
-                              maxClusterRadius: 190,
-                              disableClusteringAtZoom: 16,
-                              size: const Size(50, 50),
-                              fitBoundsOptions: const FitBoundsOptions(
-                                padding: EdgeInsets.all(50),
-                              ),
-                              markers: markers,
-                              polygonOptions: PolygonOptions(
-                                  borderColor: primaryColor,
-                                  color: Colors.black12,
-                                  borderStrokeWidth: 3),
-                              builder: (context, markers) {
-                                return Container(
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      color: primaryColor,
-                                      shape: BoxShape.circle),
-                                  child: Text(
-                                    '${markers.length}',
-                                    style: const TextStyle(color: Colors.white),
+                                          size: 50,
+                                        ),
+                                        Text(
+                                          'Add\nSpecimen\nPicture',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    )),
+                              )),
+                      SizedBox(
+                          width: 250,
+                          child: Center(
+                              child: Column(
+                            children: [
+                              TextFormField(
+                                cursorColor: primaryColor,
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(color: primaryColor),
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: primaryColor),
                                   ),
-                                );
-                              },
-                            ),
-                          ],
-                        )),
-                  ),
-                  const Padding(padding: EdgeInsets.all(10)),
-                  Column(
-                    children: [
-                      _position != null
-                          ? Text("Lat:" +
-                              _position!.latitude.toString() +
-                              "\n" +
-                              "Long:" +
-                              _position!.longitude.toString())
-                          : const Text('Lat:\nLong:'),
-                      const Padding(padding: EdgeInsets.all(5)),
-                      MaterialButton(
-                          padding: const EdgeInsets.fromLTRB(10, 8, 20, 8),
-                          color: primaryColor,
-                          shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.0))),
-                          onPressed: () {
-                            _getCurrentPosition();
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
-                              Icon(
-                                Icons.location_on,
-                                size: 40,
-                                color: Color(0xFFE7EEEC),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: primaryColor),
+                                  ),
+                                  border: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: primaryColor),
+                                  ),
+                                  labelText: 'Garden',
+                                ),
+                                controller: gardenController,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return '*Required';
+                                  }
+                                },
                               ),
-                              Text(
-                                'Set current\nlocation',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              )
+                              TextFormField(
+                                focusNode: myFocusNode,
+                                cursorColor: primaryColor,
+                                decoration: InputDecoration(
+                                  //primaryColor
+                                  labelStyle: TextStyle(color: primaryColor),
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: primaryColor),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: primaryColor),
+                                  ),
+                                  border: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: primaryColor),
+                                  ),
+                                  labelText: 'Owner',
+                                ),
+                                controller: ownerController,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return '*Required';
+                                  }
+                                },
+                              ),
                             ],
-                          ))
+                          ))),
+                      const Padding(padding: EdgeInsets.all(20)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(15)),
+                            child: SizedBox(
+                                height: 120,
+                                width: 150,
+                                child: FlutterMap(
+                                  mapController: _mapController,
+                                  options: MapOptions(
+                                    center: actualLocation ??
+                                        location, //change center with geolocation
+                                    zoom: _zoom,
+                                    plugins: [
+                                      MarkerClusterPlugin(),
+                                    ],
+                                  ),
+                                  layers: [
+                                    TileLayerOptions(
+                                      minZoom: 1,
+                                      maxZoom: 18,
+                                      backgroundColor: Colors.black,
+                                      urlTemplate:
+                                          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                      subdomains: ['a', 'b', 'c'],
+                                    ),
+                                    MarkerClusterLayerOptions(
+                                      maxClusterRadius: 190,
+                                      disableClusteringAtZoom: 16,
+                                      size: const Size(50, 50),
+                                      fitBoundsOptions: const FitBoundsOptions(
+                                        padding: EdgeInsets.all(50),
+                                      ),
+                                      markers: markers,
+                                      polygonOptions: PolygonOptions(
+                                          borderColor: primaryColor,
+                                          color: Colors.black12,
+                                          borderStrokeWidth: 3),
+                                      builder: (context, markers) {
+                                        return Container(
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                              color: primaryColor,
+                                              shape: BoxShape.circle),
+                                          child: Text(
+                                            '${markers.length}',
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                )),
+                          ),
+                          const Padding(padding: EdgeInsets.all(10)),
+                          Column(
+                            children: [
+                              _position != null
+                                  ? Text("Lat:" +
+                                      _position!.latitude.toString() +
+                                      "\n" +
+                                      "Long:" +
+                                      _position!.longitude.toString())
+                                  : const Text('Lat:\nLong:'),
+                              const Padding(padding: EdgeInsets.all(5)),
+                              MaterialButton(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 8, 20, 8),
+                                  color: primaryColor,
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15.0))),
+                                  onPressed: () {
+                                    _getCurrentPosition();
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: const [
+                                      Icon(
+                                        Icons.location_on,
+                                        size: 40,
+                                        color: Color(0xFFE7EEEC),
+                                      ),
+                                      Text(
+                                        'Set current\nlocation',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )
+                                    ],
+                                  ))
+                            ],
+                          )
+                        ],
+                      ),
                     ],
-                  )
-                ],
-              ),
+                  )),
               Container(
                 width: 350,
                 margin: const EdgeInsets.only(top: 20),
                 padding: const EdgeInsets.only(bottom: 10),
                 child: const UpovCharacteristics(),
+                // child: upovs(context, upovs),
               ),
             ]),
           )),
       bottomNavigationBar: const BotNavbar(pageIndex: 0),
     );
   }
+
+  Widget upovs(BuildContext context, List upovs) {
+    List<String> selectedValues = List.filled(50, 'idk');
+    Color primaryColor = Theme.of(context).primaryColor;
+    return Column(children: [
+      for (UpovCategory category in upovs)
+        ExpansionTile(
+            collapsedIconColor: primaryColor,
+            collapsedTextColor: primaryColor,
+            title: Text(
+              category.category,
+              style: const TextStyle(fontSize: 18.0),
+            ),
+            children: [
+              for (UpovSubcategory subCategory in category.characteristics)
+                subCategory.options != null
+                    ? SmartSelect<String>.single(
+                        title: subCategory.name,
+                        choiceItems: [
+                          S2Choice<String>(
+                              value: 0.toString(), title: "i don't know"),
+                          for (UpovSubcategoryOption option
+                              in subCategory.options!)
+                            S2Choice<String>(
+                                value: option.value.toString(),
+                                title: option.descriptor)
+                        ],
+                        value: selectedValues[subCategory.id - 1],
+                        onChange: (selected) => setState(() =>
+                            selectedValues[subCategory.id - 1] =
+                                selected.value),
+                        modalType: S2ModalType.popupDialog,
+                      )
+                    : _buildColorTextInput(context)
+            ])
+    ]);
+  }
+}
+
+Widget _buildColorTextInput(BuildContext context) {
+  Color primaryColor = Theme.of(context).primaryColor;
+  FocusNode myFocusNode = FocusNode();
+  final mainColorController = TextEditingController();
+  final secondaryColorController = TextEditingController();
+  return (Column(
+    children: [
+      TextFormField(
+        focusNode: myFocusNode,
+        cursorColor: primaryColor,
+        decoration: InputDecoration(
+          //primaryColor
+          labelStyle: TextStyle(color: primaryColor),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: primaryColor),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: primaryColor),
+          ),
+          border: UnderlineInputBorder(
+            borderSide: BorderSide(color: primaryColor),
+          ),
+          labelText: 'Main Color',
+        ),
+        controller: mainColorController,
+      ),
+      TextFormField(
+        focusNode: myFocusNode,
+        cursorColor: primaryColor,
+        decoration: InputDecoration(
+          //primaryColor
+          labelStyle: TextStyle(color: primaryColor),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: primaryColor),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: primaryColor),
+          ),
+          border: UnderlineInputBorder(
+            borderSide: BorderSide(color: primaryColor),
+          ),
+          labelText: 'Secondary Color',
+        ),
+        controller: secondaryColorController,
+      ),
+    ],
+  ));
 }
