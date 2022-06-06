@@ -11,7 +11,7 @@ const LoginCard = (props) => {
         const password = document.getElementById('password').value;
         console.log({ "email": email, "password": password })
         const axios = require('axios').default;
-        axios.post('https://localhost:8085/api/users/login', { email: email, password: password })
+        axios.post('/api/users/login', { email: email, password: password })
             .then(function (response) {
                 console.log(response);
                 if((response.status === 200) && window.localStorage){
