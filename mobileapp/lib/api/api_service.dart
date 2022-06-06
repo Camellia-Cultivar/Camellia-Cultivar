@@ -67,6 +67,7 @@ class APIService {
       if (response.statusCode == 202) {
         User api_user = userFromJson(response.body, uid);
         print("user from api" + api_user.toString());
+        // api_user.profileImage = "\x00";
         return api_user;
       }
     } catch (e) {
@@ -98,16 +99,20 @@ class APIService {
   //TODO: Use try-catch when using this function
   Future<void> updateUser(User user, String password) async {
     try {
-      var url =
-          Uri.parse(APIConstants.baseUrl + APIConstants.editProfileEndpoint);
+      var url = Uri.parse(APIConstants.baseUrl +
+          APIConstants.editProfileEndpoint +
+          "/${user.id}");
       print(user);
       Map<String, String> request = {
-        "email": user.email,
-        "profile_image": user.profileImage,
         "first_name": user.firstName,
         "last_name": user.lastName,
         "password": password
       };
+
+      if (user.profileImage != "null") {
+        request["profile_image"] = user.profileImage;
+      }
+      print("profile image\t" + user.profileImage);
       var body = jsonEncode(request /*user.toJson()*/);
       print(body);
       var response = await http.put(url,
@@ -271,9 +276,9 @@ class APIService {
           // print("wut");
           Map<String, Object> new_obj = {
             "coords": coordinates,
-            // "epithet": specimen["epithet"],
-            // "species": specimen["species"],
-            // "cultivar_id": specimen["cultivar_id"],
+            // "epithet": specimen["cultivar"]["epithet"],
+            // "species": specimen["cultivar"]["species"],
+            // "cultivar_id": specimen["cultivar"]["cultivar_id"],
             "photos": specimen["photos"],
             "specimen_id": specimen["specimenId"]
           };

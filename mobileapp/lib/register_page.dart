@@ -132,6 +132,8 @@ class _RegisterPageState extends State<RegisterPage> {
     //     profileImageUrl:
     //         "https://cdn.discordapp.com/attachments/958416677777854545/981241254778138664/unknown.png");
     Map<String, String> signup_user = {
+      'profile_photo':
+          "https://cdn.discordapp.com/attachments/958416677777854545/981241254778138664/unknown.png",
       'first_name': firstNameController.text,
       'last_name': lastNameController.text,
       'email': emailController.text,

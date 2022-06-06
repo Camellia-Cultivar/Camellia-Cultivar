@@ -68,6 +68,9 @@ class _LoginPageState extends State<LoginPage> {
         User? user = await api.getUser(uid);
 
         if (user != null /*&& user.verified*/) {
+          // user.profileImage =
+          //     "https://cdn.discordapp.com/attachments/958416677777854545/981241254778138664/unknown.png";
+          // await api.updateUser(user, passwordController.text);
           await login(context, user);
 
           emailController.clear();

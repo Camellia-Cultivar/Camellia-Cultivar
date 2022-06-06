@@ -167,11 +167,14 @@ class _ProfilePage extends State<ProfilePage> {
                                 child: SizedBox(
                                   height: screenSize.height / 8,
                                   width: screenSize.width / 4,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(90.0),
-                                    child: Image.network(
-                                      user!.profileImage,
-                                    ),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.grey[100],
+                                    child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100.0),
+                                        child: Image.network(
+                                          user!.profileImage,
+                                        )),
                                   ),
                                 )),
                             Column(

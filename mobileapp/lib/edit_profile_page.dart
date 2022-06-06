@@ -77,7 +77,6 @@ class _EditProfilePage extends State<EditProfilePage> {
 
     final firstNameController = TextEditingController(text: user.firstName);
     final lastNameController = TextEditingController(text: user.lastName);
-    //final emailController = TextEditingController(text: user.email);
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
 
@@ -93,35 +92,11 @@ class _EditProfilePage extends State<EditProfilePage> {
           reputation: user.reputation,
           verified: user.verified);
       if (_formKey.currentState!.validate()) {
-        //user.email = emailController.text;
         new_user.firstName = firstNameController.text;
         new_user.lastName = lastNameController.text;
-        // user.password = passwordController.text.isNotEmpty
-        //     ? passwordController.text
-        //     : user.password;
-        if (profileImage != null) {
+        if (profileImageUrl != null) {
           new_user.profileImage = profileImageUrl!;
         }
-
-        // if (passwordController.text.isNotEmpty) {
-        //   var password = passwordController.text;
-        //   await api.updatePassword(user.id, password);
-        // }
-
-        // try {
-        //   final dbHelper = DatabaseHelper.instance;
-        //   await dbHelper.update("users", user.toJson());
-        //   context.read<UserProvider>().setUser(user);
-        //   Navigator.pop(context,
-        //       MaterialPageRoute(builder: (context) => const ProfilePage()));
-        // } on Exception catch (e) {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     const SnackBar(
-        //         content: Text('Failed to submit changes!'),
-        //         backgroundColor: Colors.red),
-        //   );
-        //   return;
-        // }
 
         try {
           await api.updateUser(new_user, passwordController.text);
@@ -184,14 +159,19 @@ class _EditProfilePage extends State<EditProfilePage> {
                                 child: SizedBox(
                                   height: screenSize.height / 8,
                                   width: screenSize.width / 4,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(90.0),
-                                    child: profileImage == null
-                                        ? Image.network(user.profileImage)
-                                        : Image.file(
-                                            profileImage!,
-                                            fit: BoxFit.fill,
-                                          ),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.grey[100],
+                                    child: ClipRRect(
+                                      borderRadius:
+                                          BorderRadius.circular(100.0),
+                                      child: profileImage == null
+                                          ? Image.network(
+                                              user.profileImage,
+                                            )
+                                          : Image.file(
+                                              profileImage!,
+                                            ),
+                                    ),
                                   ),
                                 ),
                                 onTap: _getFromGallery,
