@@ -17,15 +17,6 @@ public class UserService {
     private UserRepository repository;
 
     @Autowired
-    private RegisteredUserService registeredUserService;
-
-    @Autowired
-    private ModeratorUserService moderatorUserService;
-
-    @Autowired
-    private AdministratorUserService administratorUserService;
-
-    @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
@@ -73,6 +64,10 @@ public class UserService {
     public boolean emailVerification(String email){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName().equals(email);
+    }
+
+    public User getUserByEmail(String email) {
+        return repository.findByEmail(email);
     }
 
 
