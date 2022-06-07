@@ -2,12 +2,9 @@ package com.camellia.controllers;
 
 import com.camellia.mappers.SpecimenMapper;
 import com.camellia.models.specimens.*;
-import com.camellia.services.requests.ReportRequestService;
 import com.camellia.services.specimens.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,12 +23,9 @@ public class SpecimenController {
     private ToIdentifySpecimenService toIdentifySpecimenService;
 
     @Autowired
-    private ReportRequestService reportRequestService;
-
-    @Autowired
     private ReferenceSpecimenService referenceSpecimenService;
 
-    @GetMapping()
+    @GetMapping
     public List<SpecimenDto> getAllSpecimens() {
         return specimenService.getSpecimens()
                 .stream()
@@ -63,16 +57,5 @@ public class SpecimenController {
         Specimen newSpecimen = specimenService.saveSpecimen(SpecimenMapper.MAPPER.specimenDTOtoToIdentifySpecimen(specimenDto));
 
         return SpecimenMapper.MAPPER.specimenToSpecimenDTO(newSpecimen);
-    }
-
-    @PutMapping("/promote/{id}")
-    public Specimen promoteToReferenceSpecimen(@PathVariable Long id) {
-        return null;
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteSpecimen(@PathVariable(value="id") long requestId, @RequestParam(value="specimen") long specimenId){
-        reportRequestService.deleteReportRequest(requestId);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body( specimenService.deleteSpecimen(specimenId) );
     }
 }
