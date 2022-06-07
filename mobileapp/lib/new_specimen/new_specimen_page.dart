@@ -11,6 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
+import 'package:geocoding/geocoding.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong/latlong.dart';
@@ -18,6 +19,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_select/smart_select.dart';
 
+import '../api/api_service.dart';
 import '../home/homepage.dart';
 import '../home/image_full_slider_map.dart';
 import 'package:azblob/azblob.dart';
@@ -29,6 +31,7 @@ import '../model/upov_subcategory.dart';
 import '../model/upov_subcategory_option.dart';
 import '../model/user.dart';
 import '../providers/user.dart';
+import 'package:geocoding/geocoding.dart';
 
 class NewSpecimenPage extends StatefulWidget {
   const NewSpecimenPage({Key? key}) : super(key: key);
@@ -39,7 +42,13 @@ class NewSpecimenPage extends StatefulWidget {
 
 class NewSpecimen extends State<NewSpecimenPage> {
   List specimen_images = [];
-  List specimen_images_urls = [];
+  List<String> specimen_images_urls = [];
+  final api = APIService();
+  @override
+  void initState() {
+    super.initState();
+    upovFuture = api.getUpovCharacteristics();
+  }
 
   void _getFromCamera() async {
     XFile? pickedFile = await ImagePicker()
@@ -59,16 +68,53 @@ class NewSpecimen extends State<NewSpecimenPage> {
   final MapController _mapController = MapController();
 
   LatLng? userLocation;
+  var userAddress;
 
   final gardenController = TextEditingController();
   final ownerController = TextEditingController();
 
-  void _getCurrentPosition() async {
-    Position position = await _determinePosition();
-    setState(() {
-      userLocation = LatLng(position.latitude, position.longitude);
-    });
+  late final Future? upovFuture;
+  Map controllers = {
+    'main color': TextEditingController(),
+    'secondary color': TextEditingController()
+  };
+
+  void _getCurrentPosition(BuildContext context) async {
+    try {
+      Position position = await _determinePosition();
+      try {
+        List<Placemark> placemarks = await GeocodingPlatform.instance
+            .placemarkFromCoordinates(position.latitude, position.longitude);
+        var first_address = placemarks.first;
+        print(first_address.toString());
+        setState(() {
+          userAddress = first_address.toJson();
+        });
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              "Couldn't get the address",
+              style: TextStyle(color: Colors.white),
+            )));
+        setState(() {
+          userAddress = "default address";
+        });
+      }
+      setState(() {
+        userLocation = LatLng(position.latitude, position.longitude);
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            "Need google services to get your location.",
+            style: TextStyle(color: Colors.white),
+          )));
+    }
   }
+
+  _getPositionAddress() async {}
 
   Future<Position> _determinePosition() async {
     LocationPermission permission;
@@ -93,7 +139,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
     var storage = AzureStorage.parse(
         'DefaultEndpointsProtocol=https;AccountName=camelliacultivarstorage2;AccountKey=kPhGXW18u8dybJNKeMLHjmBd3F8ta3MC0ORiAibQyX5dURLBENCZdsmhT0qOI3OEbRUFE8KLHPRf+AStvoq0XQ==;EndpointSuffix=core.windows.net');
     var baseUrl = 'https://camelliacultivarstorage2.blob.core.windows.net';
-    var urls = [];
+    List<String> urls = [];
 
     for (File f in specimen_images) {
       var azureImgUrl = '/imagestorage/${user.id}/${basename(f.path)}';
@@ -113,6 +159,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
   }
 
   final _formKey = GlobalKey<FormState>();
+  Map<int, dynamic> selectedUpovs = {};
 
   @override
   Widget build(BuildContext context) {
@@ -142,19 +189,101 @@ class NewSpecimen extends State<NewSpecimenPage> {
 
     User? user = context.watch<UserProvider>().user;
 
-    void handleSubmit() {
-      {
-        if (!_formKey.currentState!.validate() ||
-            specimen_images.isEmpty ||
-            userLocation == null) {
+    void handleSubmit() async {
+      if (specimen_images_urls.isEmpty) {
+        setState(() {
+          specimen_images_urls = [
+            "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F24%2F2019%2F05%2Fgettyimages-1038704710-2000.jpg"
+          ];
+        });
+      }
+
+      if (!_formKey.currentState!.validate() ||
+          specimen_images_urls.isEmpty ||
+          userLocation == null) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            backgroundColor: Colors.white,
+            content: Text(
+              'Please fill the first 4 fields',
+              style: TextStyle(color: Colors.red),
+            )));
+        List<Map<String, dynamic>> characteristicValues = [];
+
+        for (int id in selectedUpovs.keys) {
+          var input = selectedUpovs[id];
+          if (input is int) {
+            characteristicValues.add({
+              "characteristic": {"id": id},
+              "id": input
+            });
+          } else if (input is String) {
+            characteristicValues.add({
+              "characteristic": {"id": id},
+              "descriptor": input
+            });
+          }
+        }
+        // Map<String, dynamic> specimenToUpload = {
+        //   'owner': ownerController.text.trim(),
+        //   'photos': specimen_images_urls,
+        //   'address': userAddress,
+        //   'garden': gardenController.text.trim(),
+        //   'latitude': userLocation!.latitude,
+        //   'longitude': userLocation!.longitude,
+        //   'characteristicValues': characteristicValues
+        // };
+        // print("specimen to upload\t" + specimenToUpload.toString());
+      } else {
+        if (userAddress == null) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               backgroundColor: Colors.white,
               content: Text(
-                'Please fill the first 4 fields',
+                "Couldn't get the address of coordinates",
                 style: TextStyle(color: Colors.red),
               )));
-        } else {
-          uploadInAzure(user!);
+          return;
+        }
+        uploadInAzure(user!);
+        //       "owner": ownerName,
+        //  "photos":[ link1, link2, … ],
+        //  "address": address,
+        //  "latitude": latitude (double),
+        //  "longitude": longitude (double),
+        //  "garden":"a",
+        //  "characteristicValues":[
+        //     	{"characteristic":{"id":4},"id":14}, // valores restritos (opções)
+        //     	{"characteristic":{"id":43},"descriptor":1000}, // valores abertos
+        //  ]
+
+        List<Map<String, dynamic>> characteristicValues = [];
+
+        for (int id in selectedUpovs.keys) {
+          var input = selectedUpovs[id];
+          if (input is int) {
+            characteristicValues.add({
+              "characteristic": {"id": id},
+              "id": input
+            });
+          } else if (input is String) {
+            characteristicValues.add({
+              "characteristic": {"id": id},
+              "descriptor": input
+            });
+          }
+        }
+
+        Map<String, dynamic> specimenToUpload = {
+          'owner': ownerController.text.trim(),
+          'photos': specimen_images_urls,
+          'address': userAddress,
+          'garden': gardenController.text.trim(),
+          'latitude': userLocation!.latitude,
+          'longitude': userLocation!.longitude,
+          'characteristicValues': characteristicValues
+        };
+        var statusCode = await api.postSpecimenRequest(specimenToUpload);
+        print(statusCode);
+        if (statusCode == 200 || statusCode == 201 || statusCode == 202) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
                 backgroundColor: Colors.white,
@@ -165,6 +294,15 @@ class NewSpecimen extends State<NewSpecimenPage> {
           );
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const HomePage()));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                backgroundColor: Colors.white,
+                content: Text(
+                  'Something went wrong, please try again later.',
+                  style: TextStyle(color: Colors.red),
+                )),
+          );
         }
       }
     }
@@ -507,7 +645,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(15.0))),
                                   onPressed: () {
-                                    _getCurrentPosition();
+                                    _getCurrentPosition(context);
                                   },
                                   child: Row(
                                     mainAxisAlignment:
@@ -533,16 +671,136 @@ class NewSpecimen extends State<NewSpecimenPage> {
                     ],
                   )),
               Container(
-                width: 350,
-                margin: const EdgeInsets.only(top: 20),
-                padding: const EdgeInsets.only(bottom: 10),
-                child: const UpovCharacteristics(),
-                // child: upovs(context, upovs),
-              ),
+                  width: 350,
+                  margin: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: FutureBuilder(
+                    future: upovFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Column(
+                          children: [
+                            Text(
+                              snapshot.error.toString(),
+                            ),
+                          ],
+                        );
+                      }
+
+                      if (snapshot.hasData) {
+                        var upovs = snapshot.data! as List;
+                        print("length of upovs\t" + upovs.length.toString());
+                        return _buildUpovs(context, upovs);
+                      }
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [Text('Something went wrong!')],
+                      );
+                    },
+                  )
+                  // child: upovs(context, upovs),
+                  ),
             ]),
           )),
       bottomNavigationBar: const BotNavbar(pageIndex: 0),
     );
+  }
+
+  Widget _buildUpovs(BuildContext context, List upovs) {
+    Color primaryColor = Theme.of(context).primaryColor;
+    // Map<int, UpovSubcategoryOption> temp = {};
+    // for (UpovCategory category in upovs) {
+    //   for (UpovSubcategory subCategory in category.characteristics) {
+    //     //   temp[subCategory.id] = UpovSubcategoryOption(
+    //     //       value: 0, descriptor: "i don't know", id: 0);
+
+    //     // for (UpovSubcategoryOption option in subCategory.options!) {
+    //     //     temp[subCategory.id] = option;
+    //     // }
+    //     selectedValues[subCategory.id] =
+    //         UpovSubcategoryOption(value: 0, descriptor: "i don't know", id: 0);
+    //   }
+    // }
+
+    // for (int i = 0; i < upovs.length; i++) {
+    //   var category = upovs[i];
+    //   for (int j = 0; j < category.characteristics; j++) {
+    //     var options = category.characteristics[j];
+    //     for (int l = 0; j < options.options; l++) {
+    //       var option = options.options[l];
+    //       temp[i + j + l] = option;
+    //     }
+    //   }
+    // }
+    // setState(() {
+    //   possibleValues = temp;
+    // });
+    return Column(children: [
+      for (UpovCategory category in upovs)
+        ExpansionTile(
+            collapsedIconColor: primaryColor,
+            collapsedTextColor: primaryColor,
+            title: Text(
+              category.category,
+              style: const TextStyle(fontSize: 18.0),
+            ),
+            children: [
+              for (UpovSubcategory subCategory in category.characteristics)
+                subCategory.options!.isNotEmpty
+                    ? SmartSelect<String>.single(
+                        title: subCategory.name,
+                        choiceItems: [
+                          S2Choice<String>(
+                              value: 0.toString(), title: "i don't know"),
+                          for (UpovSubcategoryOption option
+                              in subCategory.options!)
+                            S2Choice<String>(
+                                value: option.value.toString(),
+                                title: option.descriptor)
+                        ],
+                        value: selectedUpovs[subCategory.id].toString(),
+                        onChange: (selected) => setState(() =>
+                            selected.value != "0"
+                                ? selectedUpovs[subCategory.id] =
+                                    int.parse(selected.value)
+                                : null),
+                        modalType: S2ModalType.popupDialog,
+                      )
+                    : _buildColorTextInput(context, subCategory)
+            ])
+    ]);
+  }
+
+  Widget _buildColorTextInput(
+      BuildContext context, UpovSubcategory subcategory) {
+    Color primaryColor = Theme.of(context).primaryColor;
+    FocusNode myFocusNode = FocusNode();
+    return (Padding(
+        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+        child: TextFormField(
+          focusNode: myFocusNode,
+          cursorColor: primaryColor,
+          decoration: InputDecoration(
+            //primaryColor
+            labelStyle: TextStyle(color: primaryColor),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: primaryColor),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: primaryColor),
+            ),
+            border: UnderlineInputBorder(
+              borderSide: BorderSide(color: primaryColor),
+            ),
+            labelText: subcategory.name,
+          ),
+          controller: controllers[subcategory.name],
+          onChanged: (value) {
+            setState(() {
+              selectedUpovs[subcategory.id] = value;
+            });
+          },
+        )));
   }
 }
 

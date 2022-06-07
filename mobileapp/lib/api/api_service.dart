@@ -320,4 +320,22 @@ class APIService {
     }
     return [];
   }
+
+  Future<int> postSpecimenRequest(Map<String, dynamic> specimenToUpload) async {
+    try {
+      var url =
+          Uri.parse(APIConstants.baseUrl + APIConstants.createSpecimenEndpoint);
+      var body = jsonEncode(specimenToUpload);
+      print(body);
+      var response = await http.post(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          },
+          body: body);
+      return response.statusCode;
+    } catch (e) {
+      log(e.toString());
+    }
+    return -1;
+  }
 }

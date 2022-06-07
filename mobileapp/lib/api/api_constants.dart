@@ -10,7 +10,7 @@ class APIConstants {
   static String uploadedSpecimensEndpoint = "/uploaded"; //todo
   static String recentlyUploadedSpecimensEndpoint =
       "/public/specimen/recent"; //todo
-  static String mapSpecimensEndpoint = "/public/specimen"; /*doing*/
-  static String upovCharacteristicsEndpoint = "/public/upov"; //todo
-  static String createSpecimenEndpoint = "/public/specimen"; //todo
+  static String mapSpecimensEndpoint = "/public/specimen";
+  static String upovCharacteristicsEndpoint = "/public/upov";
+  static String createSpecimenEndpoint = "/public/specimen";
 }
