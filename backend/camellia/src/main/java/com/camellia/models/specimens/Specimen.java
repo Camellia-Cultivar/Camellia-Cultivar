@@ -18,9 +18,18 @@ import org.hibernate.annotations.Cascade;
 @Entity
 @Table(name = "specimen")
 public class Specimen {
-    
+
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(
+            strategy =  GenerationType.SEQUENCE,
+            generator = "specimen_sequence_generator"
+    )
+    @SequenceGenerator(
+            name = "specimen_sequence_generator",
+            sequenceName = "specimen_sequence",
+            allocationSize = 1
+    )
     @Column(name = "specimen_id")
     private long specimenId;
 
