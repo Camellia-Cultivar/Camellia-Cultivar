@@ -3,10 +3,12 @@ package com.camellia.controllers;
 
 import com.camellia.models.requests.CultivarRequestDTO;
 import com.camellia.models.requests.ReportRequestDTO;
-import com.camellia.models.specimens.Specimen;
+import com.camellia.models.specimens.SpecimenDto;
 import com.camellia.services.requests.CultivarRequestService;
 import com.camellia.services.requests.ReportRequestService;
+import com.camellia.services.specimens.ReferenceSpecimenService;
 import com.camellia.services.specimens.SpecimenService;
+import com.camellia.services.specimens.ToIdentifySpecimenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,12 @@ public class ModeratorController {
 
     @Autowired
     SpecimenService specimenService;
+
+    @Autowired
+    ToIdentifySpecimenService toIdentifySpecimenService;
+
+    @Autowired
+    ReferenceSpecimenService referenceSpecimenService;
 
     @Autowired
     CultivarRequestService cultivarRequestService;
@@ -46,8 +54,13 @@ public class ModeratorController {
     }
 
     @PutMapping("/specimen/promote/{id}")
-    public Specimen promoteToReferenceSpecimen(@PathVariable Long id) {
-        return null;
+    public SpecimenDto promoteToReferenceSpecimen(@PathVariable Long id) {
+        return toIdentifySpecimenService.promoteToReferenceFromId(id);
+    }
+
+    @PutMapping("/specimen/demote/{id}")
+    public SpecimenDto demoteToToIdentifySpecimen(@PathVariable Long id) {
+        return referenceSpecimenService.demoteToToIdentify(id);
     }
 
     @DeleteMapping("/specimen/{id}")
