@@ -14,8 +14,9 @@ public class Characteristic {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.AUTO)
+    @Column(name = "characteristic_id")
     @JsonProperty("id")
-    private long characteristic_id;
+    private long characteristicId;
 
     @Column(name = "name")
     private String name;
@@ -23,7 +24,7 @@ public class Characteristic {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn( referencedColumnName = "upov_category_id", name="upov_category_id", nullable=false)
     @JsonIgnore
-    private UPOVCategory upov_category;
+    private UPOVCategory upovCategory;
 
 
     @OneToMany(
@@ -33,22 +34,22 @@ public class Characteristic {
             orphanRemoval = true
     )
     @JsonIgnoreProperties({ "specimens" })
-    private Set<CharacteristicValue> characteristic_values;
+    private Set<CharacteristicValue> characteristicValues;
 
     @JsonProperty("values")
-    public Set<CharacteristicValue> getCharacteristic_values() {
-        return characteristic_values;
+    public Set<CharacteristicValue> getCharacteristicValues() {
+        return characteristicValues;
     }
 
-    public long getCharacteristic_id() {
-        return characteristic_id;
+    public long getCharacteristicId() {
+        return characteristicId;
     }
 
     public String getName() {
         return name;
     }
 
-    public UPOVCategory getUpov_category() {
-        return upov_category;
+    public UPOVCategory getUpovCategory() {
+        return upovCategory;
     }
 }

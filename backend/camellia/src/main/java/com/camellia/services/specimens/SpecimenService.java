@@ -1,24 +1,19 @@
 package com.camellia.services.specimens;
 
-import com.camellia.repositories.specimens.ReferenceSpecimenRepository;
 import com.camellia.models.characteristics.CharacteristicValue;
 import com.camellia.repositories.specimens.SpecimenRepository;
-import com.camellia.repositories.specimens.ToIdentifySpecimenRepository;
 import com.camellia.models.specimens.Specimen;
 import com.camellia.models.specimens.SpecimenQuizDTO;
 
 import com.camellia.services.characteristics.CharacteristicValueService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,11 +24,8 @@ public class SpecimenService {
     @Autowired
     private CharacteristicValueService characteristicValueService;
 
-    @Autowired
-    private ReferenceSpecimenRepository referenceSpecimenRepository;
 
-    @Autowired 
-    private ToIdentifySpecimenRepository toIdentifySpecimenRepository;
+    Logger logger = LogManager.getLogger(SpecimenService.class);
 
     private Random r = new Random();
 
@@ -50,13 +42,17 @@ public class SpecimenService {
     }
 
     public Specimen saveSpecimen(Specimen specimen){
-        Set<CharacteristicValue> values = specimen.getCharacteristicValues().stream()
-                .map(characteristicValueService::getOrSaveCharacteristicValue)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+        try {
+            Set<CharacteristicValue> values = specimen.getCharacteristicValues().stream()
+                    .map(characteristicValueService::getOrSaveCharacteristicValue)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
 
-        specimen.setCharacteristicValues(values);
-
+            specimen.setCharacteristicValues(values);
+        } catch (NullPointerException e) {
+            specimen.setCharacteristicValues(new HashSet<>());
+            logger.warn("Found no characteristics in passed specimen");
+        }
         return specimenRepository.save(specimen);
     }
 
@@ -73,8 +69,8 @@ public class SpecimenService {
     public List<SpecimenQuizDTO> getQuizSpecimens( Set<Long> answeredQuizzesIds, int noReferenceSpecimens, int noToIdentifySpecimens ){
         List<SpecimenQuizDTO> specimens = new ArrayList<>();
 
-        List<Long> idsReference = referenceSpecimenRepository.findAllIds();
-        List<Long> idsToIdentify = toIdentifySpecimenRepository.findAllIds();
+        List<Long> idsReference = specimenRepository.findAllReferenceIds();
+        List<Long> idsToIdentify = specimenRepository.findAllToIdentifyIds();
 
         List<Long> tempList = new ArrayList<>();
         tempList.addAll(answeredQuizzesIds);
@@ -121,7 +117,6 @@ public class SpecimenService {
                 specimens.add( new SpecimenQuizDTO(entry.get() ) );
             }
         }
-
 
         return specimens;
     }

@@ -64,7 +64,7 @@ public class CharacteristicValueService {
         if (characteristic == null)
             return false;
 
-        Long characteristicId = characteristic.getCharacteristic_id();
+        Long characteristicId = characteristic.getCharacteristicId();
         Optional<Characteristic> persistentCharacteristicOfSameId = characteristicService.getCharacteristicById(characteristicId);
 
         return persistentCharacteristicOfSameId.isPresent() && !(persistentCharacteristicOfSameId.get() instanceof CharacteristicWithOptions);

@@ -2,17 +2,20 @@ package com.camellia.models.cultivars;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 
-import com.camellia.models.specimens.ToIdentifySpecimen;
+import com.camellia.models.characteristics.CharacteristicValue;
+import com.camellia.models.specimens.Specimen;
+import lombok.Data;
 
-
+@Data
 public class CultivarDTO {
 
 
-    private long cultivar_id;
+    private Long id;
 
     private String species;
 
@@ -25,28 +28,16 @@ public class CultivarDTO {
 
     private Set<CultivarSynonyms> synonyms;
 
+    private List<CharacteristicValue> characteristicValues;
 
-    private Map<ToIdentifySpecimen, Integer> cultivar_votes = new HashMap<>();
+    private Map<Specimen, Integer> cultivarVotes = new HashMap<>();
 
-    public CultivarDTO(){
+    public long getId() {
+        return id;
     }
 
-    public CultivarDTO(Cultivar c){
-        this.cultivar_id = c.getCultivar_id();
-        this.species = c.getSpecies();
-        this.epithet = c.getEpithet();
-        this.description = c.getDescription();
-        this.photograph = c.getPhotograph();
-        this.synonyms = c.getSynonyms();
-        this.cultivar_votes = c.getCultivar_votes();
-    }
-
-    public long getCultivar_id() {
-        return cultivar_id;
-    }
-
-    public void setCultivar_id(long cultivar_id) {
-        this.cultivar_id = cultivar_id;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getSpecies() {
@@ -90,15 +81,20 @@ public class CultivarDTO {
         this.synonyms = synonyms;
     }
 
-    public Map<ToIdentifySpecimen,Integer> getCultivar_votes() {
-        return this.cultivar_votes;
+    public Map<Specimen,Integer> getCultivarVotes() {
+        return this.cultivarVotes;
     }
 
-    public void setCultivar_votes(Map<ToIdentifySpecimen,Integer> cultivar_votes) {
-        this.cultivar_votes = cultivar_votes;
+    public void setCultivarVotes(Map<Specimen,Integer> cultivarVotes) {
+        this.cultivarVotes = cultivarVotes;
     }
 
+    public List<CharacteristicValue> getCharacteristicValues() {
+        return characteristicValues;
+    }
 
-    
+    public void setCharacteristicValues(List<CharacteristicValue> characteristicValues) {
+        this.characteristicValues = characteristicValues;
+    }
 }
 
