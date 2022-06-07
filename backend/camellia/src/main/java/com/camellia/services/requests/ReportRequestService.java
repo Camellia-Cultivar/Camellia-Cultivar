@@ -1,13 +1,11 @@
 package com.camellia.services.requests;
 
 import com.camellia.repositories.requests.ReportRequestRepository;
-import com.camellia.repositories.specimens.SpecimenRepository;
-import com.camellia.repositories.specimens.ToIdentifySpecimenRepository;
 import com.camellia.repositories.users.UserRepository;
-import com.camellia.services.users.UserService;
 import com.camellia.models.requests.ReportRequest;
 import com.camellia.models.users.User;
 
+import com.camellia.services.specimens.ToIdentifySpecimenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
@@ -27,7 +25,7 @@ public class ReportRequestService {
     private UserRepository userRepository;
 
     @Autowired
-    private ToIdentifySpecimenRepository specimenRepository;
+    private ToIdentifySpecimenService specimenService;
 
     public Page<ReportRequest> getReportRequests(Pageable pageable) {
         return repository.findAll(pageable);
@@ -38,7 +36,7 @@ public class ReportRequestService {
     }
 
     public ReportRequest getReportRequestById(long id) {
-        return repository.findById((long) id);
+        return repository.findById(id);
     }
 
     public ReportRequest createReportRequest(long specimenId ){
@@ -48,7 +46,7 @@ public class ReportRequestService {
         ReportRequest rq = new ReportRequest();
         rq.setSubmissionDate(LocalDateTime.now());
         rq.setReg_user(submittedBy);
-        rq.setTo_identify_specimen(specimenRepository.findById(specimenId));
+        rq.setTo_identify_specimen(specimenService.getToIdentifySpecimenById(specimenId));
 
         return repository.save(rq);
     }

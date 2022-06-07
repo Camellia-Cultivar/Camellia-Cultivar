@@ -2,7 +2,7 @@ package com.camellia.services.specimens;
 
 import com.camellia.models.cultivars.Cultivar;
 import com.camellia.models.specimens.Specimen;
-import com.camellia.repositories.specimens.ToIdentifySpecimenRepository;
+import com.camellia.repositories.specimens.SpecimenRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -16,18 +16,18 @@ import java.util.*;
 @Service
 public class ToIdentifySpecimenService {
     @Autowired
-    private ToIdentifySpecimenRepository repository;
+    private SpecimenRepository specimenRepository;
 
     public Page<Specimen> getToIdentifySpecimens(Pageable pageable) {
-        return repository.findAll(pageable);
+        return specimenRepository.findAllToIdentify(pageable);
     }
 
     public List<Specimen> getToIdentifySpecimens() {
-        return repository.findAll();
+        return specimenRepository.findAllToIdentify();
     }
 
     public Specimen getToIdentifySpecimenById(long id) {
-        return repository.findById(id);
+        return specimenRepository.findToIdentifyById(id);
     }
 
     public void updateVotes(Specimen specimen, Map<Cultivar, Float> votes){
@@ -35,6 +35,8 @@ public class ToIdentifySpecimenService {
     }
 
     public List<Specimen> getRecentlyUploaded() {
-        return repository.findAllBy(PageRequest.of(0, 10, Sort.by("specimenId").descending()));
+        return specimenRepository.findAllToIdentifyBy(
+                PageRequest.of(0, 10, Sort.by("specimenId").descending())
+        );
     }
 }

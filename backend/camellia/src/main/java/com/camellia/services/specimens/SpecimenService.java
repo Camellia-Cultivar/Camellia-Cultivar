@@ -3,7 +3,6 @@ package com.camellia.services.specimens;
 import com.camellia.repositories.specimens.ReferenceSpecimenRepository;
 import com.camellia.models.characteristics.CharacteristicValue;
 import com.camellia.repositories.specimens.SpecimenRepository;
-import com.camellia.repositories.specimens.ToIdentifySpecimenRepository;
 import com.camellia.models.specimens.Specimen;
 import com.camellia.models.specimens.SpecimenQuizDTO;
 
@@ -26,9 +25,6 @@ public class SpecimenService {
 
     @Autowired
     private ReferenceSpecimenRepository referenceSpecimenRepository;
-
-    @Autowired 
-    private ToIdentifySpecimenRepository toIdentifySpecimenRepository;
 
     private Random r = new Random();
 
@@ -73,7 +69,7 @@ public class SpecimenService {
         List<SpecimenQuizDTO> specimens = new ArrayList<>();
 
         List<Long> idsReference = referenceSpecimenRepository.findAllIds();
-        List<Long> idsToIdentify = toIdentifySpecimenRepository.findAllIds();
+        List<Long> idsToIdentify = specimenRepository.findAllToIdentifyIds();
 
         List<Long> tempList = new ArrayList<>();
         tempList.addAll(answeredQuizzesIds);
