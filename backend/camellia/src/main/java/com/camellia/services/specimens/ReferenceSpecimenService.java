@@ -1,5 +1,6 @@
 package com.camellia.services.specimens;
 
+import com.camellia.models.specimens.ReferenceSpecimenView;
 import com.camellia.repositories.specimens.ReferenceSpecimenRepository;
 import com.camellia.models.specimens.ReferenceSpecimen;
 
@@ -21,6 +22,10 @@ public class ReferenceSpecimenService {
 
     public List<ReferenceSpecimen> getReferenceSpecimens() {
         return repository.findAll();
+    }
+
+    public List<ReferenceSpecimenView> getReferenceSpecimensView() {
+        return repository.findBy();
     }
 
     public ReferenceSpecimen getReferenceSpecimenById(long id) {
