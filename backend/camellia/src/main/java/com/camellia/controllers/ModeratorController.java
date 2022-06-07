@@ -2,9 +2,11 @@ package com.camellia.controllers;
 
 
 import com.camellia.models.requests.CultivarRequestDTO;
+import com.camellia.models.requests.IdentificationRequestDTO;
 import com.camellia.models.requests.ReportRequestDTO;
 import com.camellia.models.specimens.SpecimenDto;
 import com.camellia.services.requests.CultivarRequestService;
+import com.camellia.services.requests.IdentificationRequestService;
 import com.camellia.services.requests.ReportRequestService;
 import com.camellia.services.specimens.ReferenceSpecimenService;
 import com.camellia.services.specimens.SpecimenService;
@@ -32,6 +34,9 @@ public class ModeratorController {
 
     @Autowired
     CultivarRequestService cultivarRequestService;
+
+    @Autowired
+    IdentificationRequestService identificationRequestService;
 
     @DeleteMapping("/report/{id}")
     public ResponseEntity<String> deleteReportRequest(@PathVariable(value="id") long requestId){
@@ -61,6 +66,11 @@ public class ModeratorController {
     @PutMapping("/specimen/demote/{id}")
     public SpecimenDto demoteToToIdentifySpecimen(@PathVariable Long id) {
         return referenceSpecimenService.demoteToToIdentify(id);
+    }
+
+    @PutMapping("/identification/approve/{id}")
+    public IdentificationRequestDTO approveRequest(@PathVariable Long id) {
+        return identificationRequestService.approveIdentificationRequest(id);
     }
 
     @DeleteMapping("/specimen/{id}")
