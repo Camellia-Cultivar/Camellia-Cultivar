@@ -28,7 +28,7 @@ public interface SpecimenRepository extends JpaRepository<Specimen, Long>{
     @Query("SELECT s FROM Specimen s WHERE s.specimenType = 'TO_IDENTIFY'")
     List<Specimen> findAllToIdentify();
 
-    @Query("SELECT specimenId FROM Specimen WHERE specimenId = :id AND specimenType = 'TO_IDENTIFY'")
+    @Query("SELECT s FROM Specimen s WHERE specimenId = :id AND specimenType = 'TO_IDENTIFY'")
     Specimen findToIdentifyById(@Param("id") long id);
 
     @Query("SELECT specimenId FROM Specimen WHERE specimenType = 'TO_IDENTIFY'")

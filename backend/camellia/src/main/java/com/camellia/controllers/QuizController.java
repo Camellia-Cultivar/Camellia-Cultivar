@@ -10,6 +10,7 @@ import com.camellia.services.QuizService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +32,7 @@ public class QuizController {
 
 
     @PostMapping(value="/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public double quizSubmission(@RequestBody List<QuizAnswerDTO> answersList, @PathVariable(value="id") long uId){
+    public ResponseEntity<String> quizSubmission(@RequestBody List<QuizAnswerDTO> answersList, @PathVariable(value="id") long uId){
         return quizService.saveQuizAnswers(uId, answersList);
     }
 

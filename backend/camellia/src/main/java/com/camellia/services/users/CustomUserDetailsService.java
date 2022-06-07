@@ -24,17 +24,16 @@ public class CustomUserDetailsService implements UserDetailsService{
         if (user == null) {
             return null;
         }
-        UserDetails userDetails = org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
+        return org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
                 .password(user.getPassword())
-                .authorities(getAuthorities(user)).build()
+                //.authorities(getAuthorities(user))
+                .build()
                 ;
-
-        return userDetails;
     }
 
     
-    private GrantedAuthority getAuthorities(User user){
-        return new SimpleGrantedAuthority(user.getDecriminatorValue());
-    }
+//    private GrantedAuthority getAuthorities(User user){
+//        return new SimpleGrantedAuthority(user.g());
+//    }
     
 }

@@ -14,6 +14,7 @@ import com.camellia.services.users.RegisteredUserService;
 import com.camellia.services.users.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -59,9 +60,11 @@ public class UserController {
     @GetMapping(value="/verify")
     public String verifyUser(@Param("code") String code) {
         if (userService.verify(code)) {
-            return "Account is verified";
+            return "<html>\n" + "<header><title>Camellia Account Verification</title></header>\n" +
+            "<body>\n" + "<h1> Account Verified </h1>\n" + "<a href=\"" + homepage + "\">Go to the home page</a>" + "</body>\n" + "</html>";
         } else {
-            return "Verification failed";
+            return "<html>\n" + "<header><title>Camellia Account Verification</title></header>\n" +
+            "<body>\n" + "<h1> Verification Failed. If something went wrong, please reach our team.</h1>\n" + "<a href=\"" + homepage + "\">Go to the home page</a>" + "</body>\n" + "</html>";
         }
     }
 
@@ -70,4 +73,8 @@ public class UserController {
         String siteURL = request.getRequestURL().toString();
         return siteURL.replace(request.getServletPath(), "");
     }  
+
+
+    @Value("${homepage.path}")
+    private String homepage;
 }
