@@ -1,7 +1,9 @@
 package com.camellia.services.specimens;
 
+import com.camellia.mappers.SpecimenMapper;
 import com.camellia.models.cultivars.Cultivar;
 import com.camellia.models.specimens.Specimen;
+import com.camellia.models.specimens.SpecimenDto;
 import com.camellia.repositories.specimens.SpecimenRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +40,15 @@ public class ToIdentifySpecimenService {
         return specimenRepository.findAllToIdentifyBy(
                 PageRequest.of(0, 10, Sort.by("specimenId").descending())
         );
+    }
+
+    public SpecimenDto promoteToReferenceFromId(long id) {
+        Specimen promotingSpecimen = this.getToIdentifySpecimenById(id);
+        if (promotingSpecimen == null)
+            return null;
+
+        promotingSpecimen.promoteToReference();
+        specimenRepository.saveAndFlush(promotingSpecimen);
+        return SpecimenMapper.MAPPER.specimenToSpecimenDTO(promotingSpecimen);
     }
 }

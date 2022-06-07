@@ -180,4 +180,12 @@ public class Specimen {
     public boolean needsModeratorApproval() {
         return specimenType.equals(SpecimenType.FOR_APPROVAL);
     }
+
+    public void promoteToReference() {
+        this.setSpecimenType(SpecimenType.REFERENCE);
+    }
+
+    public void demoteToToIdentify() {
+        this.setSpecimenType(SpecimenType.TO_IDENTIFY);
+    }
 }
