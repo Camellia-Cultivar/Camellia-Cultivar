@@ -325,7 +325,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
           height: MediaQuery.of(context).size.height / 3,
           child: FlutterMap(
             options: MapOptions(
-                center: _latLngList[0],
+                center: _latLngList.isNotEmpty ? _latLngList[0] : LatLng(0, 0),
                 zoom: _zoom,
                 plugins: [
                   MarkerClusterPlugin(),

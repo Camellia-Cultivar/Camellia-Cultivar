@@ -110,11 +110,10 @@ class APIService {
       };
 
       if (user.profileImage != "null") {
-        request["profile_image"] = user.profileImage;
+        request["profile_photo"] = user.profileImage;
       }
-      print("profile image\t" + user.profileImage);
+
       var body = jsonEncode(request /*user.toJson()*/);
-      print(body);
       var response = await http.put(url,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',

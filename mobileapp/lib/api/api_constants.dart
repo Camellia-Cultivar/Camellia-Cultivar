@@ -1,6 +1,6 @@
 class APIConstants {
   static String baseUrl = "http://localhost:8085/api";
-  static String quizEndpoint = "/quiz"; //todo
+  static String quizEndpoint = "/quizzes"; /*doing*/
   static String loginEndpoint = "/users/login";
   static String registerEndpoint = "/users/signup";
   static String profileEndpoint = "/users";
@@ -10,7 +10,7 @@ class APIConstants {
   static String uploadedSpecimensEndpoint = "/uploaded"; //todo
   static String recentlyUploadedSpecimensEndpoint =
       "/public/specimen/recent"; //todo
-  static String mapSpecimensEndpoint = "/public/specimen";
+  static String mapSpecimensEndpoint = "/public/specimen/reference";
   static String upovCharacteristicsEndpoint = "/public/upov";
   static String createSpecimenEndpoint = "/public/specimen";
 }

@@ -144,14 +144,16 @@ class _ShowFullMapState extends State<ShowFullMap> {
             child: FlutterMap(
               mapController: _mapController,
               options: MapOptions(
-                center: _latLngList[0],
-                bounds: LatLngBounds.fromPoints(_latLngList),
+                // center: _latLngList.isNotEmpty ? _latLngList[0] : LatLng(0, 0),
+                bounds: _latLngList.isNotEmpty
+                    ? LatLngBounds.fromPoints(_latLngList)
+                    : LatLngBounds.fromPoints([LatLng(20, -8), LatLng(50, -8)]),
                 zoom: _zoom,
                 plugins: [
                   MarkerClusterPlugin(),
                 ],
                 onTap: (_) => setState(() {
-                  infoWindowVisible = false;
+                  // infoWindowVisible = false;
                   for (LatLng b in _openPopUp.keys) {
                     _openPopUp[b] = false;
                   }
