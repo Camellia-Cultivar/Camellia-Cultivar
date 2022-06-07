@@ -6,6 +6,7 @@ import com.camellia.repositories.specimens.ToIdentifySpecimenRepository;
 import com.camellia.repositories.users.UserRepository;
 import com.camellia.services.users.UserService;
 import com.camellia.models.requests.ReportRequest;
+import com.camellia.models.requests.ReportRequestDTO;
 import com.camellia.models.users.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,7 @@ public class ReportRequestService {
         return "Specimen Deleted";
     }
 
-    public ReportRequest getOneRequest(){
-        return repository.findTopByOrderBySubmissionDate();
+    public ReportRequestDTO getOneRequest(){
+        return new ReportRequestDTO(repository.findTopByOrderBySubmissionDate());
     }
 }

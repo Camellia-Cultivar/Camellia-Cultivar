@@ -6,7 +6,15 @@ public class CultivarRequestDTO {
 
     private String icr_link;
     
+    private long regId;
+
     public CultivarRequestDTO(){}
+
+    public CultivarRequestDTO(CultivarRequest cr){
+        this.suggestion = cr.getSuggestion();
+        this.icr_link = cr.getIcr_link();
+        this.regId = cr.getRegId();
+    }
 
 
     public String getSuggestion() {
@@ -24,5 +32,13 @@ public class CultivarRequestDTO {
     public void setIcr_link(String icr_link) {
         this.icr_link = icr_link;
     }
-    
+
+    public long getRegId() {
+        return this.regId;
+    }
+
+    public void setRegId(long regId) {
+        this.regId = regId;
+    }
+
 }

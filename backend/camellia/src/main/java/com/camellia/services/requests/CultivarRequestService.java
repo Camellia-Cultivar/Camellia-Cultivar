@@ -52,11 +52,11 @@ public class CultivarRequestService {
         return ResponseEntity.status(HttpStatus.CREATED).body("Cultivar suggestion added");
     }
 
-    public CultivarRequest getOneRequest(){
+    public CultivarRequestDTO getOneRequest(){
         CultivarRequest cr = repository.findTopByOrderBySubmissionDate();
         if(cr != null)
-            return repository.findTopByOrderBySubmissionDate();
-        return new CultivarRequest();
+            return new CultivarRequestDTO(repository.findTopByOrderBySubmissionDate());
+        return new CultivarRequestDTO();
     }
 
     public ResponseEntity<String> deleteCultivarRequest(long requestId){
