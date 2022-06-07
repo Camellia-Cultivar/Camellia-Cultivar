@@ -28,4 +28,8 @@ public class IdentificationRequest extends Request{
     public void setToIdentifySpecimen(Specimen toIdentifySpecimen) {
         this.toIdentifySpecimen = toIdentifySpecimen;
     }
+
+    public void approveRequest() {
+        this.getToIdentifySpecimen().approve();
+    }
 }

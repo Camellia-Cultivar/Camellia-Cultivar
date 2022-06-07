@@ -197,4 +197,6 @@ public class Specimen {
     public void demoteToToIdentify() {
         this.setSpecimenType(SpecimenType.TO_IDENTIFY);
     }
+
+    public void approve() {this.setSpecimenType(SpecimenType.TO_IDENTIFY);}
 }
