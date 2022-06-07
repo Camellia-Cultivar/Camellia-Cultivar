@@ -24,6 +24,6 @@ public class AdministratorUserService {
     }
 
     public AdministratorUser getAdministratorUserById(long id) {
-        return repository.findById((long) id);
+        return repository.findById(id);
     }
 }

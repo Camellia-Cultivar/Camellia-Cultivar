@@ -1,9 +1,11 @@
 package com.camellia.models.characteristics;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
 
+import com.camellia.models.cultivars.Cultivar;
 import com.camellia.models.specimens.Specimen;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
@@ -45,6 +47,9 @@ public class CharacteristicValue {
 
     @ManyToMany(mappedBy = "characteristicValues")
     Set<Specimen> specimens;
+
+    @ManyToMany(mappedBy = "characteristicValues")
+    List<Cultivar> cultivars;
 
     public Long getCharacteristicValueId() {
         return characteristicValueId;

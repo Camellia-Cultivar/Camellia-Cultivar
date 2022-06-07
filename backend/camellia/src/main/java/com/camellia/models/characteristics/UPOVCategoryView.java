@@ -6,7 +6,7 @@ import java.util.Set;
 
 public interface UPOVCategoryView {
 
-    @Value("#{target.upov_category_id}")
+    @Value("#{target.upovCategoryId}")
     public String getId();
 
     @Value("#{target.name}")

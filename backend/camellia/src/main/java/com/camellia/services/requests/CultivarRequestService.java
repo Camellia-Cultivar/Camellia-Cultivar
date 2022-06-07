@@ -35,7 +35,7 @@ public class CultivarRequestService {
     }
 
     public CultivarRequest getCultivarRequestById(long id) {
-        return repository.findById( id);
+        return repository.findById(id);
     }
 
     public ResponseEntity<String> createCultivarRequest(CultivarRequestDTO cultivarSuggestion){
@@ -61,7 +61,7 @@ public class CultivarRequestService {
 
     public ResponseEntity<String> deleteCultivarRequest(long requestId){
         CultivarRequest cr = repository.findById(requestId);
-        
+
         if(cr != null){
             repository.delete(cr);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body("Request Deleted");

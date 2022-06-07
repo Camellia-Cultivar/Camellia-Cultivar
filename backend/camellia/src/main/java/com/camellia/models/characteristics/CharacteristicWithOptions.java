@@ -11,7 +11,7 @@ public class CharacteristicWithOptions extends Characteristic {
 
     @Override
     @JsonProperty("options")
-    public Set<CharacteristicValue> getCharacteristic_values() {
-        return super.getCharacteristic_values();
+    public Set<CharacteristicValue> getCharacteristicValues() {
+        return super.getCharacteristicValues();
     }
 }
