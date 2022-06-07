@@ -43,6 +43,9 @@ public class UserService {
 
 
     public ResponseEntity<String> editProfile(User tempUser, long id){
+        System.out.println(tempUser.getEmail());
+        System.out.println(tempUser.getPassword());
+        System.out.println(tempUser.getProfile());
         if( tempUser.getFirstName().isEmpty() && tempUser.getLastName().isEmpty() 
                 && tempUser.getPassword().isEmpty() && tempUser.getProfilePhoto().isEmpty())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user data");
