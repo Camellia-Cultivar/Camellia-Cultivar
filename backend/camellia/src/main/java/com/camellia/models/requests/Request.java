@@ -79,4 +79,12 @@ public abstract class Request {
         this.reg_user = reg_user;
     }
 
+    public long getModId(){
+        return mod_user.getUserId();
+    }
+
+    public long getRegId(){
+        return reg_user.getUserId();
+    }
+
 }

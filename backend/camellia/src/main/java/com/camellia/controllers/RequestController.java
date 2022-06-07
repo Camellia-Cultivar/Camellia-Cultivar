@@ -15,6 +15,7 @@ import com.camellia.models.cultivars.CultivarDTO;
 import com.camellia.models.requests.CultivarRequest;
 import com.camellia.models.requests.CultivarRequestDTO;
 import com.camellia.models.requests.ReportRequest;
+import com.camellia.models.requests.ReportRequestDTO;
 import com.camellia.services.requests.CultivarRequestService;
 import com.camellia.services.requests.ReportRequestService;
 
@@ -40,14 +41,14 @@ public class RequestController {
     
     
     @GetMapping("/report")
-    public ReportRequest getReportRequest(){
+    public ReportRequestDTO getReportRequest(){
         return reportRequestService.getOneRequest();
     }
 
 
 
     @GetMapping("/cultivar")
-    public CultivarRequest getCultivarRequest(){
+    public CultivarRequestDTO getCultivarRequest(){
         return cultivarRequestService.getOneRequest();
     }
 

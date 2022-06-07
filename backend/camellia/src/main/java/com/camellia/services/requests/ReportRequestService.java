@@ -3,6 +3,7 @@ package com.camellia.services.requests;
 import com.camellia.repositories.requests.ReportRequestRepository;
 import com.camellia.repositories.users.UserRepository;
 import com.camellia.models.requests.ReportRequest;
+import com.camellia.models.requests.ReportRequestDTO;
 import com.camellia.models.users.User;
 
 import com.camellia.services.specimens.ToIdentifySpecimenService;
@@ -57,7 +58,7 @@ public class ReportRequestService {
         return "Specimen Deleted";
     }
 
-    public ReportRequest getOneRequest(){
-        return repository.findTopByOrderBySubmissionDate();
+    public ReportRequestDTO getOneRequest(){
+        return new ReportRequestDTO(repository.findTopByOrderBySubmissionDate());
     }
 }
