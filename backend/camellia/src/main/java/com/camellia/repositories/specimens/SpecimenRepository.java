@@ -1,5 +1,6 @@
 package com.camellia.repositories.specimens;
 
+import com.camellia.models.specimens.ReferenceSpecimenView;
 import com.camellia.models.specimens.Specimen;
 
 import org.springframework.data.domain.Page;
@@ -19,6 +20,8 @@ public interface SpecimenRepository extends JpaRepository<Specimen, Long>{
     )
     Long countAllPhotos();
 
+
+    // SPECIMENS TO IDENTIFY
     @Query("SELECT s FROM Specimen s WHERE s.specimenType = 'TO_IDENTIFY'")
     Page<Specimen> findAllToIdentify(Pageable pageable);
 
@@ -33,5 +36,21 @@ public interface SpecimenRepository extends JpaRepository<Specimen, Long>{
 
     @Query("SELECT s FROM Specimen s WHERE s.specimenType = 'TO_IDENTIFY'")
     List<Specimen> findAllToIdentifyBy(Pageable pageable);
+
+
+    // REFERENCE SPECIMENS
+    @Query("SELECT s FROM Specimen s WHERE s.specimenType = 'REFERENCE'")
+    Page<Specimen> findAllReference(Pageable pageable);
+
+    @Query("SELECT s FROM Specimen s WHERE s.specimenType = 'REFERENCE'")
+    List<Specimen> findAllReference();
+    @Query(value = "SELECT s FROM Specimen s WHERE s.specimenType = 'REFERENCE' AND s.specimenId = :id")
+    Specimen findReferenceById(@Param("id") long id);
+
+    @Query(value = "SELECT s.specimenId FROM Specimen s WHERE s.specimenType = 'REFERENCE'")
+    List<Long> findAllReferenceIds();
+
+    @Query(value = "SELECT s FROM Specimen s WHERE s.specimenType = 'REFERENCE'")
+    List<ReferenceSpecimenView> findReferenceBy();
 
 }
