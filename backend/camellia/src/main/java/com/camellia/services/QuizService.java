@@ -7,7 +7,6 @@ import com.camellia.services.specimens.SpecimenService;
 import com.camellia.services.users.UserService;
 import com.camellia.models.QuizAnswer;
 import com.camellia.models.QuizAnswerDTO;
-import com.camellia.models.specimens.ReferenceSpecimen;
 import com.camellia.models.specimens.Specimen;
 import com.camellia.models.specimens.SpecimenQuizDTO;
 import com.camellia.models.users.User;
@@ -87,8 +86,9 @@ public class QuizService {
         for(QuizAnswerDTO qa: quizAnswers){
             s = specimenService.getSpecimenById(qa.getSpecimen_id());
 
-            if( s instanceof ReferenceSpecimen 
-                    && referenceSpecimenService.getReferenceSpecimenById(qa.getSpecimen_id()).getCultivar().getEpithet().equals(qa.getAnswer())){
+            if( s.isReference()
+                    && referenceSpecimenService.getReferenceSpecimenById(qa.getSpecimen_id()).getCultivar().getEpithet().equals(qa.getAnswer())
+            ){
                 
 
                 user.setReputation(user.getReputation() + 100);

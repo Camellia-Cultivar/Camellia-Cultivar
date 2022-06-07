@@ -16,7 +16,7 @@ public class SpecimenDto {
     private String garden;
     @JsonIgnoreProperties("specimens")
     private Set<CharacteristicValue> characteristicValues;
-
+    private SpecimenType specimenType;
 
     public long getSpecimenId() {
         return specimenId;
@@ -80,5 +80,13 @@ public class SpecimenDto {
 
     public void setCharacteristicValues(Set<CharacteristicValue> characteristicValues) {
         this.characteristicValues = characteristicValues;
+    }
+
+    public SpecimenType getSpecimenType() {
+        return specimenType;
+    }
+
+    public void setSpecimenType(SpecimenType specimenType) {
+        this.specimenType = specimenType;
     }
 }

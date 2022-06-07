@@ -1,6 +1,9 @@
 package com.camellia.models.cultivars;
 
+import com.camellia.models.characteristics.CharacteristicValueDetailsView;
 import org.springframework.beans.factory.annotation.Value;
+
+import java.util.List;
 
 public interface CultivarView {
 
@@ -10,4 +13,6 @@ public interface CultivarView {
     String getSpecies();
 
     String getEpithet();
+
+    List<CharacteristicValueDetailsView> getCharacteristics();
 }

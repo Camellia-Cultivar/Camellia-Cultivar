@@ -1,9 +1,7 @@
 package com.camellia.services.specimens;
 
-import com.camellia.repositories.specimens.ReferenceSpecimenRepository;
 import com.camellia.models.characteristics.CharacteristicValue;
 import com.camellia.repositories.specimens.SpecimenRepository;
-import com.camellia.repositories.specimens.ToIdentifySpecimenRepository;
 import com.camellia.models.specimens.Specimen;
 import com.camellia.models.specimens.SpecimenQuizDTO;
 
@@ -23,12 +21,6 @@ public class SpecimenService {
 
     @Autowired
     private CharacteristicValueService characteristicValueService;
-
-    @Autowired
-    private ReferenceSpecimenRepository referenceSpecimenRepository;
-
-    @Autowired 
-    private ToIdentifySpecimenRepository toIdentifySpecimenRepository;
 
     private Random r = new Random();
 
@@ -72,8 +64,8 @@ public class SpecimenService {
     public List<SpecimenQuizDTO> getQuizSpecimens( Set<Long> answeredQuizzesIds, int noReferenceSpecimens, int noToIdentifySpecimens ){
         List<SpecimenQuizDTO> specimens = new ArrayList<>();
 
-        List<Long> idsReference = referenceSpecimenRepository.findAllIds();
-        List<Long> idsToIdentify = toIdentifySpecimenRepository.findAllIds();
+        List<Long> idsReference = specimenRepository.findAllReferenceIds();
+        List<Long> idsToIdentify = specimenRepository.findAllToIdentifyIds();
 
         List<Long> tempList = new ArrayList<>();
         tempList.addAll(answeredQuizzesIds);
@@ -120,7 +112,6 @@ public class SpecimenService {
                 specimens.add( new SpecimenQuizDTO(entry.get() ) );
             }
         }
-
 
         return specimens;
     }
