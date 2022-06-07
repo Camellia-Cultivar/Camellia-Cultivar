@@ -121,7 +121,6 @@ public class SpecimenService {
             }
         }
 
-
         return specimens;
     }
     public Long getSpecimenPhotosCount() {return specimenRepository.countAllPhotos();}

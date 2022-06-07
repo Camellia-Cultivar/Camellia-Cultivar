@@ -27,14 +27,15 @@ public class UPOVCategory {
     
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO)
-    private long upov_category_id;
+    @Column(name = "upov_category_id")
+    private long upovCategoryId;
 
     @Column(name = "name")
     private String name;
 
     @OneToMany(
         fetch = FetchType.EAGER,
-        mappedBy = "upov_category",
+        mappedBy = "upovCategory",
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
@@ -42,8 +43,8 @@ public class UPOVCategory {
     private Set<Characteristic> characteristics;
 
     
-    public long getUpov_category_id() {
-        return upov_category_id;
+    public long getUpovCategoryId() {
+        return upovCategoryId;
     }
 
     public String getName() {

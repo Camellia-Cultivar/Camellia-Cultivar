@@ -1,21 +1,22 @@
 package com.camellia.models.specimens;
 
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.*;
 
 import com.camellia.models.QuizAnswer;
 import com.camellia.models.characteristics.CharacteristicValue;
+import com.camellia.models.cultivars.Cultivar;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 
 @Entity
-@NoArgsConstructor
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Table(name = "specimen")
 public class Specimen {
     
     @Id
@@ -38,6 +39,11 @@ public class Specimen {
 
     @Column(name = "garden")
     private String garden;
+
+    @Column(name = "specimen_type", length = 16, columnDefinition = "VARCHAR(16) default 'FOR_APPROVAL'")
+    @Enumerated(value = EnumType.STRING)
+    private SpecimenType specimenType;
+
 
     @OneToMany(
         fetch = FetchType.EAGER,
@@ -63,20 +69,42 @@ public class Specimen {
     @CollectionTable(name = "specimen_photos", joinColumns = @JoinColumn(name = "specimen_id"))
     private Set<String> photos = new LinkedHashSet<>();
 
-    public Set<String> getPhotos() {
-        return photos;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn( referencedColumnName = "cultivar_id", name="cultivar_id")
+    @JsonIgnoreProperties("specimens")
+    private Cultivar cultivar;
+
+    @ElementCollection
+    @CollectionTable(name = "specimen_might_be",
+            joinColumns = @JoinColumn(name = "specimen_id")
+    )
+    @MapKeyJoinColumn(name = "cultivar_id")
+    @JsonIgnore
+    private Map<Cultivar, Float> cultivarProbabilities = new HashMap<>();
+
+
+    public Cultivar getCultivar() {
+        return cultivar;
     }
 
-    public void setPhotos(Set<String> photos) {
-        this.photos = photos;
+    public void setCultivar(Cultivar cultivar) {
+        this.cultivar = cultivar;
+    }
+
+    public Map<Cultivar, Float> getCultivarProbabilities() {
+        return cultivarProbabilities;
+    }
+
+    public void setCultivarProbabilities(Map<Cultivar, Float> cultivarProbabilities) {
+        this.cultivarProbabilities = cultivarProbabilities;
     }
 
     public long getSpecimenId() {
         return specimenId;
     }
 
-    public void setSpecimenId(long specimen_id) {
-        this.specimenId = specimen_id;
+    public void setSpecimenId(long specimenId) {
+        this.specimenId = specimenId;
     }
 
     public String getOwner() {
@@ -119,11 +147,38 @@ public class Specimen {
         this.garden = garden;
     }
 
+    public SpecimenType getSpecimenType() {
+        return specimenType;
+    }
+
+    public void setSpecimenType(SpecimenType specimenType) {
+        this.specimenType = specimenType;
+    }
+
     public Set<CharacteristicValue> getCharacteristicValues() {
         return characteristicValues;
     }
 
     public void setCharacteristicValues(Set<CharacteristicValue> characteristicValues) {
         this.characteristicValues = characteristicValues;
+    }
+
+    public Set<String> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(Set<String> photos) {
+        this.photos = photos;
+    }
+    public boolean isReference() {
+        return specimenType.equals(SpecimenType.REFERENCE);
+    }
+
+    public boolean isToIdentify() {
+        return specimenType.equals(SpecimenType.TO_IDENTIFY);
+    }
+
+    public boolean needsModeratorApproval() {
+        return specimenType.equals(SpecimenType.FOR_APPROVAL);
     }
 }

@@ -1,8 +1,8 @@
 package com.camellia.services.specimens;
 
 import com.camellia.models.specimens.ReferenceSpecimenView;
+import com.camellia.models.specimens.Specimen;
 import com.camellia.repositories.specimens.ReferenceSpecimenRepository;
-import com.camellia.models.specimens.ReferenceSpecimen;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +16,11 @@ public class ReferenceSpecimenService {
     @Autowired
     private ReferenceSpecimenRepository repository;
 
-    public Page<ReferenceSpecimen> getReferenceSpecimens(Pageable pageable) {
+    public Page<Specimen> getReferenceSpecimens(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
-    public List<ReferenceSpecimen> getReferenceSpecimens() {
+    public List<Specimen> getReferenceSpecimens() {
         return repository.findAll();
     }
 
@@ -28,7 +28,7 @@ public class ReferenceSpecimenService {
         return repository.findBy();
     }
 
-    public ReferenceSpecimen getReferenceSpecimenById(long id) {
-        return repository.findById( id);
+    public Specimen getReferenceSpecimenById(long id) {
+        return repository.findById(id);
     }
 }

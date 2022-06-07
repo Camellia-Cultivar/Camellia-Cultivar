@@ -24,6 +24,6 @@ public class CultivarRequestService {
     }
 
     public CultivarRequest getCultivarRequestById(long id) {
-        return repository.findById((long) id);
+        return repository.findById(id);
     }
 }
