@@ -43,4 +43,14 @@ public class CultivarService {
     public Cultivar getCultivarByEpithet(String epithet){
         return repository.findByEpithet(epithet);
     }
+
+    public Cultivar createCultivar(CultivarDTO cultivar){
+        Cultivar c = new Cultivar();
+        c.setEpithet(cultivar.getEpithet());
+        c.setDescription(cultivar.getDescription());
+        c.setPhotograph(cultivar.getPhotograph());
+        c.setSpecies(cultivar.getSpecies());
+
+        return repository.save(c);
+    }
 }
