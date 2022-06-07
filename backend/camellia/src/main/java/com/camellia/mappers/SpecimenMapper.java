@@ -17,4 +17,7 @@ public interface SpecimenMapper {
 
     @Mapping(target = "specimenType", constant = "TO_IDENTIFY")
     Specimen specimenDTOtoToIdentifySpecimen(SpecimenDto specimenDto);
+
+    @Mapping(target = "specimenType", constant = "FOR_APPROVAL")
+    Specimen specimenDTOtoToForApprovalSpecimen(SpecimenDto specimenDto);
 }
