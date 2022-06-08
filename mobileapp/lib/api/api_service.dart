@@ -211,7 +211,7 @@ class APIService {
         'Access-Control-Allow-Origin': '*',
         'Authorization': 'Bearer ${await storage.read(key: 'token')}'
       });
-      url = Uri.parse(APIConstants.baseUrl + "/public/specimen");
+      url = Uri.parse(APIConstants.baseUrl + "/public/specimen/reference");
       response = await http.get(url);
       print(response.body);
       if (response.statusCode == 200) {
@@ -274,7 +274,10 @@ class APIService {
     try {
       var url =
           Uri.parse(APIConstants.baseUrl + APIConstants.mapSpecimensEndpoint);
+      print(url);
       var response = await http.get(url);
+      print(response.statusCode);
+      print(response.body);
       List listOfSpecimens = json.decode(response.body) as List;
       // print(response.body);
       if (response.statusCode == 200) {
@@ -282,8 +285,7 @@ class APIService {
         for (dynamic specimen in listOfSpecimens) {
           // print("goinf through specimens");
           // print(specimen["latitude"].runtimeType);
-          LatLng coordinates =
-              LatLng(specimen["latitude"], specimen["longitude"]);
+          LatLng coordinates = LatLng(specimen["lat"], specimen["long"]);
           // print("wut");
           Map<String, Object> new_obj = {
             "coords": coordinates,
@@ -293,12 +295,13 @@ class APIService {
             "epithet": specimen["cultivar"]["epithet"],
             "species": specimen["cultivar"]["species"],
             "cultivar_id": specimen["cultivar"]["cultivar_id"],
+            "characteristics": specimen["cultivar"]["characteristics"],
             "photos": specimen["photos"],
             "garden": specimen["garden"]
           };
           lst.add(new_obj);
         }
-        // print(lst.toString() + "\t im on the api service");
+        print(lst.toString() + "\t im on the api service");
         return lst;
       }
     } catch (e) {
