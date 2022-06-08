@@ -53,15 +53,16 @@ public class UserService {
         if(!emailVerification(repository.findById(id).getEmail()))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid user profile");
 
-        User user;
+        User user = new User();
         try{
-            user = this.repository.findByEmail(tempUser.getEmail());
+            user = this.repository.findById(id);
         } catch( NullPointerException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
         if(!tempUser.getProfilePhoto().isEmpty())
-            user.setProfilePhoto(tempUser.getProfilePhoto());
+            user.setProfilePhoto(
+                tempUser.getProfilePhoto());
         if(!tempUser.getFirstName().isEmpty())
             user.setFirstName(tempUser.getFirstName());
         if(!tempUser.getLastName().isEmpty())
@@ -71,6 +72,10 @@ public class UserService {
             
         this.repository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(user.getProfile());
+        // System.out.println(tempUser.getProfilePhoto());
+        // System.out.println(user.getProfile());
+
+        
     }
 
     public boolean emailVerification(String email){
