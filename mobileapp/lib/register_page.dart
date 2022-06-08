@@ -1,4 +1,5 @@
 import 'package:camellia_cultivar/api/api_service.dart';
+import 'package:camellia_cultivar/login_page.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:flutter/material.dart';
 import "package:camellia_cultivar/extensions/string_apis.dart";
@@ -119,49 +120,59 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void handleSubmit() async {
     //TODO: send registered password
-    var password = passwordController.text;
+    // var password = passwordController.text;
 
-    User user = User(
-      id: null as int,
-      firstName: firstNameController.text,
-      email: emailController.text,
-      lastName: lastNameController.text,
-      reputation: 0,
-    );
+    // User user = User(
+    //     id: null as int,
+    //     firstName: firstNameController.text,
+    //     email: emailController.text,
+    //     lastName: lastNameController.text,
+    //     password: passwordController.text,
+    //     reputation: 0,
+    //     profileImageUrl:
+    //         "https://cdn.discordapp.com/attachments/958416677777854545/981241254778138664/unknown.png");
+    Map<String, String> signup_user = {
+      'profile_photo':
+          "https://cdn.discordapp.com/attachments/958416677777854545/981241254778138664/unknown.png",
+      'first_name': firstNameController.text,
+      'last_name': lastNameController.text,
+      'email': emailController.text,
+      'password': passwordController.text
+    };
 
-    try {
-      User? existingUser = await api.getUser(user.id);
+    List<Object> response = await api.createUser(signup_user);
+    // User? existingUser = await api.getUser(user.id);
 
-      if (existingUser != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content:
-                  Text('Account already exists! Try with a different email.'),
-              backgroundColor: Colors.red),
-        );
-        return;
-      }
+    // if (existingUser != null) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(
+    //         content:
+    //             Text('Account already exists! Try with a different email.'),
+    //         backgroundColor: Colors.red),
+    //   );
+    //   return;
+    // }
 
-      int uid = await api.createUser(user) as int;
-      user.id = uid;
+    // int uid = await api.createUser(user) as int;
+    // user.id = uid;
 
-      await api.updatePassword(user.id, password);
-      
-    } catch (_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Failed to create account. Please try again later!'),
-            backgroundColor: Colors.red),
-      );
-      return;
+    // await api.updatePassword(user.id, password);
+
+    // await login(context, user);
+    if (response[0] == 201) {
+      showSnackBar("Account create successfuly.", Colors.green);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const LoginPage()));
+    } else if (response[1] == "User already exists") {
+      showSnackBar("Email already in use.", Colors.red);
+    } else {
+      showSnackBar(response[1].toString(), Colors.red);
     }
+  }
 
-    await login(context, user);
-
+  showSnackBar(String message, Color backgroundColor) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content: Text("Account create successfuly."),
-          backgroundColor: Colors.green),
+      SnackBar(content: Text(message), backgroundColor: backgroundColor),
     );
   }
 
@@ -287,9 +298,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       height: screenSize.height / 12.5,
                       width: screenSize.width / 1.8,
                       child: TextButton(
-                          onPressed: () => {
-                                handleSubmit(),
-                              },
+                          onPressed: () => {handleSubmit()},
                           style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(primaryColor),
