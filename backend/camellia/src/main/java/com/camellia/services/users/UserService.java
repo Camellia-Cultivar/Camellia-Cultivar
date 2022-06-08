@@ -43,9 +43,6 @@ public class UserService {
 
 
     public ResponseEntity<String> editProfile(User tempUser, long id){
-        System.out.println(tempUser.getEmail());
-        System.out.println(tempUser.getPassword());
-        System.out.println(tempUser.getProfile());
         if( tempUser.getFirstName().isEmpty() && tempUser.getLastName().isEmpty() 
                 && tempUser.getPassword().isEmpty() && tempUser.getProfilePhoto().isEmpty())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user data");
@@ -53,16 +50,15 @@ public class UserService {
         if(!emailVerification(repository.findById(id).getEmail()))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid user profile");
 
-        User user = new User();
+        User user;
         try{
-            user = this.repository.findById(id);
+            user = this.repository.findByEmail(tempUser.getEmail());
         } catch( NullPointerException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
         if(!tempUser.getProfilePhoto().isEmpty())
-            user.setProfilePhoto(
-                tempUser.getProfilePhoto());
+            user.setProfilePhoto(tempUser.getProfilePhoto());
         if(!tempUser.getFirstName().isEmpty())
             user.setFirstName(tempUser.getFirstName());
         if(!tempUser.getLastName().isEmpty())
@@ -72,10 +68,6 @@ public class UserService {
             
         this.repository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(user.getProfile());
-        // System.out.println(tempUser.getProfilePhoto());
-        // System.out.println(user.getProfile());
-
-        
     }
 
     public boolean emailVerification(String email){
