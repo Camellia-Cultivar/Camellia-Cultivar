@@ -200,12 +200,20 @@ class APIService {
     return null;
   }
 
-  Future<List<Question>?> getQuiz() async {
+  Future<List<Question>?> getQuiz(User user) async {
     List<Question> lst = [];
 
     try {
-      var url = Uri.parse(APIConstants.baseUrl + APIConstants.quizEndpoint);
-      var response = await http.get(url);
+      var url = Uri.parse(
+          APIConstants.baseUrl + APIConstants.quizEndpoint + "/${user.id}");
+      var response = await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': 'Bearer ${await storage.read(key: 'token')}'
+      });
+      url = Uri.parse(APIConstants.baseUrl + "/public/specimen");
+      response = await http.get(url);
+      print(response.body);
       if (response.statusCode == 200) {
         for (dynamic o in json.decode(response.body)) {
           lst.add(Question.fromJson(json.decode(o)));
@@ -217,6 +225,10 @@ class APIService {
     }
     return null;
   }
+
+  // Future<List<String>> getQuizAutocomplete() {
+  //   return null;
+  // }
 
   Future<void> setQuizAnswers(int uid, List<FormItem> answers) async {
     List<Map<String, dynamic>> lst = [];
@@ -300,23 +312,12 @@ class APIService {
       var url = Uri.parse(
           APIConstants.baseUrl + APIConstants.upovCharacteristicsEndpoint);
       var response = await http.get(url);
-      var jsonObject = json.decode(response.body);
-      List<UpovCategory> categories = [];
+      List specimensList = json.decode(response.body) as List;
 
-      List jsonie = jsonObject as List;
-
-      print(jsonie.length);
-
-      for (int i = 0; i < jsonie.length; i++) {
-        print(i);
-        categories.add(UpovCategory.fromJson(Map.from(jsonie[i])));
-      }
+      List<UpovCategory> categories = specimensList
+          .map((catObjJson) => UpovCategory.fromJson(catObjJson))
+          .toList();
       return categories;
-
-      // List<UpovCategory> categories = jsonie
-      //     .map((catObjJson) => UpovCategory.fromJson(catObjJson))
-      //     .toList();
-      // print(categories);
     } catch (e) {
       log(e.toString());
     }
