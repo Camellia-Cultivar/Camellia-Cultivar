@@ -22,35 +22,35 @@ public interface SpecimenRepository extends JpaRepository<Specimen, Long>{
 
 
     // SPECIMENS TO IDENTIFY
-    @Query("SELECT s FROM Specimen s WHERE s.specimenType = 'TO_IDENTIFY'")
+    @Query("SELECT s FROM Specimen s WHERE s.specimenType = com.camellia.models.specimens.SpecimenType.TO_IDENTIFY")
     Page<Specimen> findAllToIdentify(Pageable pageable);
 
-    @Query("SELECT s FROM Specimen s WHERE s.specimenType = 'TO_IDENTIFY'")
+    @Query("SELECT s FROM Specimen s WHERE s.specimenType = com.camellia.models.specimens.SpecimenType.TO_IDENTIFY")
     List<Specimen> findAllToIdentify();
 
-    @Query("SELECT s FROM Specimen s WHERE specimenId = :id AND specimenType = 'TO_IDENTIFY'")
+    @Query("SELECT s FROM Specimen s WHERE s.specimenId = :id AND s.specimenType = com.camellia.models.specimens.SpecimenType.TO_IDENTIFY")
     Specimen findToIdentifyById(@Param("id") long id);
 
-    @Query("SELECT specimenId FROM Specimen WHERE specimenType = 'TO_IDENTIFY'")
+    @Query("SELECT specimenId FROM Specimen WHERE specimenType = com.camellia.models.specimens.SpecimenType.TO_IDENTIFY")
     List<Long> findAllToIdentifyIds();
 
-    @Query("SELECT s FROM Specimen s WHERE s.specimenType = 'TO_IDENTIFY'")
+    @Query("SELECT s FROM Specimen s WHERE s.specimenType = com.camellia.models.specimens.SpecimenType.TO_IDENTIFY")
     List<Specimen> findAllToIdentifyBy(Pageable pageable);
 
 
-    // REFERENCE SPECIMENS
-    @Query("SELECT s FROM Specimen s WHERE s.specimenType = 'REFERENCE'")
+    // R SPECIMENS
+    @Query("SELECT s FROM Specimen s WHERE s.specimenType = com.camellia.models.specimens.SpecimenType.REFERENCE")
     Page<Specimen> findAllReference(Pageable pageable);
 
-    @Query("SELECT s FROM Specimen s WHERE s.specimenType = 'REFERENCE'")
+    @Query("SELECT s FROM Specimen s WHERE s.specimenType = com.camellia.models.specimens.SpecimenType.REFERENCE")
     List<Specimen> findAllReference();
-    @Query(value = "SELECT s FROM Specimen s WHERE s.specimenType = 'REFERENCE' AND s.specimenId = :id")
+    @Query(value = "SELECT s FROM Specimen s WHERE s.specimenType = com.camellia.models.specimens.SpecimenType.REFERENCE AND s.specimenId = :id")
     Specimen findReferenceById(@Param("id") long id);
 
-    @Query(value = "SELECT s.specimenId FROM Specimen s WHERE s.specimenType = 'REFERENCE'")
+    @Query(value = "SELECT s.specimenId FROM Specimen s WHERE s.specimenType = com.camellia.models.specimens.SpecimenType.REFERENCE")
     List<Long> findAllReferenceIds();
 
-    @Query(value = "SELECT s FROM Specimen s WHERE s.specimenType = 'REFERENCE'")
+    @Query(value = "SELECT s FROM Specimen s WHERE s.specimenType = com.camellia.models.specimens.SpecimenType.REFERENCE")
     List<ReferenceSpecimenView> findReferenceBy();
 
 }

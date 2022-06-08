@@ -16,9 +16,12 @@ import com.camellia.services.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,12 +52,16 @@ public class UserController {
 
     @GetMapping(value="/{id}")
     public ResponseEntity<String> getProfile(@PathVariable(value = "id") long id){
-        return userService.getUserProfile(id);
+        if(checkRoleRegistered())
+            return userService.getUserProfile(id);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
     @PutMapping(value="/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> editProfile(@Valid @RequestBody User tempUser, @PathVariable(value = "id") long id){
-        return this.userService.editProfile( tempUser, id );
+        if(checkRoleRegistered())
+            return this.userService.editProfile( tempUser, id );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
     @GetMapping(value="/verify")
@@ -77,4 +84,16 @@ public class UserController {
 
     @Value("${homepage.path}")
     private String homepage;
+
+
+    public boolean checkRoleRegistered(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User u = userService.getUserByEmail(auth.getName());
+
+        if(u != null && ( u.getRolesList().contains("REGISTERED") || u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN") ))
+            return true;
+        
+        return false;
+
+    }
 }

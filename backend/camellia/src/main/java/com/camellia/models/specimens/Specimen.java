@@ -40,8 +40,7 @@ public class Specimen {
     @Column(name = "garden")
     private String garden;
 
-    @Column(name = "specimen_type", length = 16, columnDefinition = "VARCHAR(16) default 'FOR_APPROVAL'")
-    @Enumerated(value = EnumType.STRING)
+    @Column(name = "specimen_type", length = 1, columnDefinition = "VARCHAR(1) default 'A'")
     private SpecimenType specimenType;
 
 
@@ -180,5 +179,13 @@ public class Specimen {
 
     public boolean needsModeratorApproval() {
         return specimenType.equals(SpecimenType.FOR_APPROVAL);
+    }
+
+    public void promoteToReference() {
+        this.setSpecimenType(SpecimenType.REFERENCE);
+    }
+
+    public void demoteToToIdentify() {
+        this.setSpecimenType(SpecimenType.TO_IDENTIFY);
     }
 }

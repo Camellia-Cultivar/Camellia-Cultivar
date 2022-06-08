@@ -40,7 +40,7 @@ public class ReportRequestService {
         return repository.findById(id);
     }
 
-    public ReportRequest createReportRequest(long specimenId ){
+    public void createReportRequest(long specimenId ){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User submittedBy = userRepository.findByEmail( auth.getName() );
 
@@ -49,7 +49,8 @@ public class ReportRequestService {
         rq.setReg_user(submittedBy);
         rq.setTo_identify_specimen(specimenService.getToIdentifySpecimenById(specimenId));
 
-        return repository.save(rq);
+        
+        repository.save(rq);
     }
 
     public String deleteReportRequest(long requestId){

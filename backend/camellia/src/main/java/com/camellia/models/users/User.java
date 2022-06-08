@@ -1,7 +1,8 @@
 package com.camellia.models.users;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -133,7 +134,7 @@ public class User implements Serializable{
     @JoinTable( 
         name = "users_roles", 
         joinColumns = @JoinColumn(
-          name = "user_id", referencedColumnName = "id"), 
+          name = "user_id", referencedColumnName = "userId"), 
         inverseJoinColumns = @JoinColumn(
           name = "role_id", referencedColumnName = "id")) 
     private Set<Role> roles;
@@ -257,6 +258,20 @@ public class User implements Serializable{
 
     public Set<Role> getRoles(){
         return this.roles;
+    }
+
+    public List<String> getRolesList(){
+        Set<Role> rolesSet = getRoles();
+        List<String> authorities = new ArrayList<>();
+         
+        for (Role role : rolesSet) {
+            authorities.add(role.getName());
+        }
+        return authorities;
+    }
+
+    public void addRole(Role role){
+        this.roles.add(role);
     }
 
     public String getProfile(){

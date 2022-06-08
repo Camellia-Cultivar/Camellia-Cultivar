@@ -6,6 +6,8 @@ import com.camellia.models.specimens.Specimen;
 import com.camellia.models.specimens.SpecimenQuizDTO;
 
 import com.camellia.services.characteristics.CharacteristicValueService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,9 @@ public class SpecimenService {
 
     @Autowired
     private CharacteristicValueService characteristicValueService;
+
+
+    Logger logger = LogManager.getLogger(SpecimenService.class);
 
     private Random r = new Random();
 
@@ -46,7 +51,7 @@ public class SpecimenService {
             specimen.setCharacteristicValues(values);
         } catch (NullPointerException e) {
             specimen.setCharacteristicValues(new HashSet<>());
-            System.err.println("No characteristics set to new specimen");
+            logger.warn("Found no characteristics in passed specimen");
         }
         return specimenRepository.save(specimen);
     }
