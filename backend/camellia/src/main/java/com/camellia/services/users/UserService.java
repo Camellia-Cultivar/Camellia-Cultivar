@@ -18,15 +18,6 @@ public class UserService {
     private UserRepository repository;
 
     @Autowired
-    private RegisteredUserService registeredUserService;
-
-    @Autowired
-    private ModeratorUserService moderatorUserService;
-
-    @Autowired
-    private AdministratorUserService administratorUserService;
-
-    @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired

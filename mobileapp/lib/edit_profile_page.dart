@@ -40,7 +40,7 @@ class _EditProfilePage extends State<EditProfilePage> {
     }
   }
 
-  late String profileImageUrl;
+  String? profileImageUrl;
 
   Future<void> uploadInAzure(User user) async {
     var storage = AzureStorage.parse(
@@ -59,6 +59,7 @@ class _EditProfilePage extends State<EditProfilePage> {
       profileImageUrl = baseUrl + azureImgUrl;
     });
   }
+
   final api = APIService();
 
   @override
@@ -76,43 +77,29 @@ class _EditProfilePage extends State<EditProfilePage> {
 
     final firstNameController = TextEditingController(text: user.firstName);
     final lastNameController = TextEditingController(text: user.lastName);
-    //final emailController = TextEditingController(text: user.email);
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
 
     final _formKey = GlobalKey<FormState>();
 
     void handleSubmit(BuildContext context, User user) async {
+      var new_user = User(
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          id: user.id,
+          profileImage: user.profileImage,
+          reputation: user.reputation,
+          verified: user.verified);
       if (_formKey.currentState!.validate()) {
-        //user.email = emailController.text;
-        user.firstName = firstNameController.text;
-        user.lastName = lastNameController.text;
-        // user.password = passwordController.text.isNotEmpty
-        //     ? passwordController.text
-        //     : user.password;
-
-        if (passwordController.text.isNotEmpty) {
-          var password = passwordController.text;
-          await api.updatePassword(user.id, password);
+        new_user.firstName = firstNameController.text;
+        new_user.lastName = lastNameController.text;
+        if (profileImageUrl != null) {
+          new_user.profileImage = profileImageUrl!;
         }
 
-        // try {
-        //   final dbHelper = DatabaseHelper.instance;
-        //   await dbHelper.update("users", user.toJson());
-        //   context.read<UserProvider>().setUser(user);
-        //   Navigator.pop(context,
-        //       MaterialPageRoute(builder: (context) => const ProfilePage()));
-        // } on Exception catch (e) {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     const SnackBar(
-        //         content: Text('Failed to submit changes!'),
-        //         backgroundColor: Colors.red),
-        //   );
-        //   return;
-        // }
-
         try {
-          await api.updateUser(user);
+          await api.updateUser(new_user, passwordController.text);
           context.read<UserProvider>().setUser(user);
           Navigator.pop(context,
               MaterialPageRoute(builder: (context) => const ProfilePage()));
@@ -168,14 +155,26 @@ class _EditProfilePage extends State<EditProfilePage> {
                           ),
                           child: Column(
                             children: [
-                              SizedBox(
-                                height: screenSize.height / 8,
-                                width: screenSize.width / 4,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(90.0),
-                                  child: Image.network(
-                                      user.profileImage as String),
+                              GestureDetector(
+                                child: SizedBox(
+                                  height: screenSize.height / 8,
+                                  width: screenSize.width / 4,
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.grey[100],
+                                    child: ClipRRect(
+                                      borderRadius:
+                                          BorderRadius.circular(100.0),
+                                      child: profileImage == null
+                                          ? Image.network(
+                                              user.profileImage,
+                                            )
+                                          : Image.file(
+                                              profileImage!,
+                                            ),
+                                    ),
+                                  ),
                                 ),
+                                onTap: _getFromGallery,
                               ),
                               Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -366,12 +365,10 @@ class _EditProfilePage extends State<EditProfilePage> {
                                                       controller:
                                                           passwordController,
                                                       validator: (value) {
+                                                        print("Value: " +
+                                                            value.toString());
                                                         if ((value == null ||
-                                                                value
-                                                                    .isEmpty) &&
-                                                            confirmPasswordController
-                                                                .text
-                                                                .isNotEmpty) {
+                                                            value.isEmpty)) {
                                                           return 'Password is required!';
                                                         }
                                                         return null;

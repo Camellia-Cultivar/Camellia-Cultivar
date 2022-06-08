@@ -1,14 +1,16 @@
 class APIConstants {
-  static String baseUrl = "https://localhost:8000";
-  static String quizEndpoint = "/quiz";
-  static String loginEndpoint = "/login";
-  static String registerEndpoint = "/register";
-  static String profileEndpoint = "/profile";
-  static String editProfileEndpoint = "/editprofile";
-  static String editPasswordEndpoint = "/editpassword";
-  static String deleteProfileEndpoint = "/deleteprofile";
-  static String cultivarEdpoint = "/cultivar";
-  static String uploadedSpecimensEndpoint = "/uploaded";
-  static String recentlyUploadedSpecimensEndpoint = "/recentlyuploaded";
-  static String mapSpecimensEndpoint = "/mapspecimens";
+  static String baseUrl = "http://localhost:8085/api";
+  static String quizEndpoint = "/quizzes"; /*doing*/
+  static String loginEndpoint = "/users/login";
+  static String registerEndpoint = "/users/signup";
+  static String profileEndpoint = "/users";
+  static String editProfileEndpoint = "/users";
+  static String deleteProfileEndpoint = "/deleteprofile"; //todo
+  static String cultivarEdpoint = "/cultivar"; //todo
+  static String uploadedSpecimensEndpoint = "/uploaded"; //todo
+  static String recentlyUploadedSpecimensEndpoint =
+      "/public/specimen/recent"; //todo
+  static String mapSpecimensEndpoint = "/public/specimen/reference";
+  static String upovCharacteristicsEndpoint = "/public/upov";
+  static String createSpecimenEndpoint = "/public/specimen";
 }

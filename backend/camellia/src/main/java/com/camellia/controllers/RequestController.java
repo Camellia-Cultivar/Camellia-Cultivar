@@ -1,5 +1,15 @@
 package com.camellia.controllers;
 
+import com.camellia.mappers.IdentificationRequestMapper;
+import com.camellia.mappers.SpecimenMapper;
+import com.camellia.models.requests.IdentificationRequest;
+import com.camellia.models.requests.IdentificationRequestDTO;
+import com.camellia.models.specimens.Specimen;
+import com.camellia.models.specimens.SpecimenDto;
+import com.camellia.models.users.User;
+import com.camellia.services.requests.IdentificationRequestService;
+import com.camellia.services.specimens.SpecimenService;
+import com.camellia.services.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.camellia.models.requests.CultivarRequestDTO;
-import com.camellia.models.requests.ReportRequest;
-import com.camellia.models.users.User;
 import com.camellia.services.requests.CultivarRequestService;
 import com.camellia.services.requests.ReportRequestService;
-import com.camellia.services.users.UserService;
 
 @RestController
 @RequestMapping("/api/requests")
@@ -29,7 +36,13 @@ public class RequestController {
     CultivarRequestService cultivarRequestService;
 
     @Autowired
-    private UserService userService;
+    IdentificationRequestService identificationRequestService;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    SpecimenService specimenService;
 
     @PostMapping("/report/{id}")
     public ResponseEntity<Object> createReportRequest(@PathVariable(value="id") long specimenId){
@@ -47,6 +60,23 @@ public class RequestController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
+    @PostMapping("/identification")
+    public IdentificationRequestDTO createSpecimen(@RequestBody SpecimenDto specimenDto, Authentication authentication) {
+        User user = userService.getUserByEmail(authentication.getName());
+        if (user == null)
+            return null;
+
+        Specimen newSpecimen = specimenService.saveSpecimen(
+                SpecimenMapper.MAPPER.specimenDTOtoToForApprovalSpecimen(specimenDto)
+        );
+
+        IdentificationRequest newIdentificationRequest =
+                identificationRequestService.createNewIdentificationRequestFromSpecimen(newSpecimen);
+
+        return IdentificationRequestMapper.MAPPER.identificationRequestToIdentificationRequestDTO(
+                newIdentificationRequest
+        );
+    }
 
     public boolean checkRoleRegistered(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

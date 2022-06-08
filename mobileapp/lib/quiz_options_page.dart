@@ -1,6 +1,10 @@
+import 'package:camellia_cultivar/model/user.dart';
+import 'package:camellia_cultivar/providers/user.dart';
 import 'package:camellia_cultivar/quiz_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'api/api_service.dart';
 import 'navbar/botnavbar.dart';
 
 class QuizOptionsPage extends StatelessWidget {
@@ -10,6 +14,13 @@ class QuizOptionsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     Color primaryColor = Theme.of(context).primaryColor;
+    User? user = context.watch<UserProvider>().user;
+
+    final api = APIService();
+
+    _handleStartNewQuiz() async {
+      api.getQuiz(user!);
+    }
 
     return Scaffold(
       backgroundColor: const Color(0XFFF6F6F7),
@@ -37,10 +48,12 @@ class QuizOptionsPage extends StatelessWidget {
                     width: screenSize.width / 1.8,
                     child: TextButton(
                         onPressed: () => {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const QuizPage()))
+                              //load quizz
+                              _handleStartNewQuiz()
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => const QuizPage()))
                             },
                         style: ButtonStyle(
                           backgroundColor:
