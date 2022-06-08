@@ -1,7 +1,6 @@
 package com.camellia.repositories.cultivars;
 
 import com.camellia.models.cultivars.Cultivar;
-import com.camellia.models.cultivars.CultivarDTO;
 import com.camellia.views.CultivarListView;
 
 import org.springframework.data.jpa.repository.JpaRepository;

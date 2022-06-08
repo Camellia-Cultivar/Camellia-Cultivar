@@ -1,9 +1,11 @@
 package com.camellia.models.characteristics;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
 
+import com.camellia.models.cultivars.Cultivar;
 import com.camellia.models.specimens.Specimen;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
@@ -20,9 +22,17 @@ import lombok.Setter;
 public class CharacteristicValue {
 
     @Id
-    @GeneratedValue( strategy =  GenerationType.AUTO)
+    @GeneratedValue(
+            strategy =  GenerationType.SEQUENCE,
+            generator = "characteristic_value_id_generator"
+    )
+    @SequenceGenerator(
+            name = "characteristic_value_id_generator",
+            sequenceName = "characteristic_value_id_seq",
+            allocationSize = 1
+    )
     @JsonProperty("id")
-    private long characteristicValueId;
+    private Long characteristicValueId;
 
     @Column( name = "value")
     private Short value;
@@ -32,13 +42,16 @@ public class CharacteristicValue {
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn( referencedColumnName = "characteristic_id", name="characteristic_id", nullable=false)
-    @JsonIncludeProperties("characteristic_id")
+    @JsonIncludeProperties("id")
     private Characteristic characteristic;
 
     @ManyToMany(mappedBy = "characteristicValues")
     Set<Specimen> specimens;
 
-    public long getCharacteristicValueId() {
+    @ManyToMany(mappedBy = "characteristicValues")
+    List<Cultivar> cultivars;
+
+    public Long getCharacteristicValueId() {
         return characteristicValueId;
     }
 

@@ -1,6 +1,5 @@
 package com.camellia.controllers;
 
-import com.camellia.models.characteristics.Characteristic;
 import com.camellia.models.characteristics.UPOVCategoryView;
 import com.camellia.services.characteristics.CharacteristicService;
 import com.camellia.services.characteristics.UPOVCategoryService;

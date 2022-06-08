@@ -1,8 +1,11 @@
 package com.camellia.services.specimens;
 
-import com.camellia.repositories.specimens.ReferenceSpecimenRepository;
-import com.camellia.models.specimens.ReferenceSpecimen;
+import com.camellia.mappers.SpecimenMapper;
+import com.camellia.models.specimens.ReferenceSpecimenView;
+import com.camellia.models.specimens.Specimen;
 
+import com.camellia.models.specimens.SpecimenDto;
+import com.camellia.repositories.specimens.SpecimenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
@@ -13,17 +16,31 @@ import java.util.List;
 @Service
 public class ReferenceSpecimenService {
     @Autowired
-    private ReferenceSpecimenRepository repository;
+    private SpecimenRepository specimenRepository;
 
-    public Page<ReferenceSpecimen> getReferenceSpecimens(Pageable pageable) {
-        return repository.findAll(pageable);
+    public Page<Specimen> getReferenceSpecimens(Pageable pageable) {
+        return specimenRepository.findAllReference(pageable);
     }
 
-    public List<ReferenceSpecimen> getReferenceSpecimens() {
-        return repository.findAll();
+    public List<Specimen> getReferenceSpecimens() {
+        return specimenRepository.findAllReference();
     }
 
-    public ReferenceSpecimen getReferenceSpecimenById(long id) {
-        return repository.findById((long) id);
+    public List<ReferenceSpecimenView> getReferenceSpecimensView() {
+        return specimenRepository.findReferenceBy();
+    }
+
+    public Specimen getReferenceSpecimenById(long id) {
+        return specimenRepository.findReferenceById(id);
+    }
+
+    public SpecimenDto demoteToToIdentify(long id) {
+        Specimen demotingSpecimen = this.getReferenceSpecimenById(id);
+        if (demotingSpecimen == null)
+            return null;
+
+        demotingSpecimen.demoteToToIdentify();
+        specimenRepository.saveAndFlush(demotingSpecimen);
+        return SpecimenMapper.MAPPER.specimenToSpecimenDTO(demotingSpecimen);
     }
 }

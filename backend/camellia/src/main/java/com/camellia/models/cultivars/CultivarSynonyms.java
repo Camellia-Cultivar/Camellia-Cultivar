@@ -24,8 +24,9 @@ import lombok.Setter;
 public class CultivarSynonyms {
     
     @Id
+    @Column(name = "cultivar_synonym_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long cultivar_synonym_id;
+    private long cultivarSynonymId;
 
     @Column(name = "synonym")
     private String synonym;
@@ -36,11 +37,11 @@ public class CultivarSynonyms {
     private Cultivar cultivar;
 
     public long getCultivarSynonymId() {
-        return cultivar_synonym_id;
+        return cultivarSynonymId;
     }
 
-    public void setCultivarSynonymSd(long cultivar_synonym_id) {
-        this.cultivar_synonym_id = cultivar_synonym_id;
+    public void setCultivarSynonymSd(long cultivarSynonymId) {
+        this.cultivarSynonymId = cultivarSynonymId;
     }
 
     public String getSynonym() {

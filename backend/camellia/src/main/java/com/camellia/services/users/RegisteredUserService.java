@@ -60,7 +60,7 @@ public class RegisteredUserService {
 
             sendRegistrationEmail( user, siteUrl);
 
-        } catch(  DataIntegrityViolationException e){
+        } catch(  DataIntegrityViolationException | NullPointerException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data. User was not created");
         }
         
