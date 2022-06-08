@@ -7,6 +7,7 @@ import com.camellia.services.specimens.SpecimenService;
 import com.camellia.services.users.UserService;
 import com.camellia.models.QuizAnswer;
 import com.camellia.models.QuizAnswerDTO;
+import com.camellia.models.cultivars.Cultivar;
 import com.camellia.models.specimens.Specimen;
 import com.camellia.models.specimens.SpecimenQuizDTO;
 import com.camellia.models.users.User;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,6 +31,9 @@ public class QuizService {
 
     @Autowired
     private QuizParametersService quizParametersService;
+
+    @Autowired
+    private ReputationParametersService reputationParametersService;
 
     @Autowired
     private SpecimenService specimenService;
@@ -76,31 +82,54 @@ public class QuizService {
     }
 
 
-    public double saveQuizAnswers(long userId, List<QuizAnswerDTO> quizAnswers){
+    public ResponseEntity<String> saveQuizAnswers(long userId, List<QuizAnswerDTO> quizAnswers){
         Specimen s;
         User user = userService.getUserById(userId);
 
+        if(user == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user");
+        }
+
         QuizAnswer qaSaved;
-        
+        boolean correct;
 
         for(QuizAnswerDTO qa: quizAnswers){
             s = specimenService.getSpecimenById(qa.getSpecimen_id());
 
-            if( s.isReference()
-                    && referenceSpecimenService.getReferenceSpecimenById(qa.getSpecimen_id()).getCultivar().getEpithet().equals(qa.getAnswer())
-            ){
+            if( s.isReference()){
                 
 
-                user.setReputation(user.getReputation() + 100);
-                
+                Cultivar c = cultivarService.getCultivarByEpithet(qa.getAnswer());
+
+                if(c == null){
+                    ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Cultivar");
+                }
+
                 qaSaved = new QuizAnswer();
                 qaSaved.setCultivar(cultivarService.getCultivarByEpithet(qa.getAnswer()));
-                qaSaved.setSpecimen(specimenService.getSpecimenById(qa.getSpecimen_id()));
+                qaSaved.setSpecimen(s);
+
+
                 qaSaved.setUser(user);
+
+                if(referenceSpecimenService.getReferenceSpecimenById(qa.getSpecimen_id()).getCultivar().getEpithet().equals(qa.getAnswer())){
+                    correct = true;
+                } 
+                else {
+                    correct = false;
+                }
+
+                qaSaved.setCorrect(correct);
 
                 repository.save(qaSaved);
             }
         }
-        return user.getReputation();
+
+        Long correctAnsweredQuizzes = repository.getUserCorrectAnswersCount(userId);
+        Long totalAnsweredQuizzes = repository.getUserAnswersCount(userId);
+
+        user.setReputation( reputationParametersService.getQuizWeight() * correctAnsweredQuizzes / totalAnsweredQuizzes) ;
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(user.getReputation() + "");
     }
 }

@@ -2,6 +2,7 @@ package com.camellia.services.users;
 
 import com.camellia.models.users.User;
 import com.camellia.repositories.users.UserRepository;
+import com.camellia.services.RoleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,8 @@ public class UserService {
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private RoleService roleService;
 
     public ResponseEntity<String> getUserProfile(long id){
         User attemptingUser = repository.findById(id);
@@ -41,12 +44,7 @@ public class UserService {
         if(!emailVerification(repository.findById(id).getEmail()))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid user profile");
 
-        User user;
-        try{
-            user = this.repository.findByEmail(tempUser.getEmail());
-        } catch( NullPointerException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
+        User user = repository.findById(id);
 
         if(!tempUser.getProfilePhoto().isEmpty())
             user.setProfilePhoto(tempUser.getProfilePhoto());
@@ -66,10 +64,6 @@ public class UserService {
         return auth.getName().equals(email);
     }
 
-    public User getUserByEmail(String email) {
-        return repository.findByEmail(email);
-    }
-
 
     public boolean verify(String verificationCode) {
         User user = repository.findByVerificationCode(verificationCode);
@@ -79,6 +73,7 @@ public class UserService {
         } else {
             user.setVerificationCode(null);
             user.setVerified(true);
+            user.addRole(roleService.getRoleByName("REGISTERED"));
             repository.save(user);
              
             return true;
@@ -91,5 +86,10 @@ public class UserService {
 
     public User getUserById(long id){
         return repository.findById(id);
+    }
+
+
+    public User getUserByEmail(String name) {
+        return repository.findByEmail(name);
     }
 }

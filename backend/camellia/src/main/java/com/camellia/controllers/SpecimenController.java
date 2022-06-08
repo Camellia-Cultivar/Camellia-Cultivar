@@ -51,4 +51,11 @@ public class SpecimenController {
                 .collect(Collectors.toList());
     }
 
+    @PostMapping
+    public SpecimenDto createSpecimen(@RequestBody SpecimenDto specimenDto) {
+
+        Specimen newSpecimen = specimenService.saveSpecimen(SpecimenMapper.MAPPER.specimenDTOtoToIdentifySpecimen(specimenDto));
+
+        return SpecimenMapper.MAPPER.specimenToSpecimenDTO(newSpecimen);
+    }
 }

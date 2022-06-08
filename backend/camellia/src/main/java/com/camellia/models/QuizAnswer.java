@@ -20,6 +20,9 @@ public class QuizAnswer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @Column(name = "correct")
+    private boolean correct;
+
     @ManyToOne
     @JoinColumn( name="userId", nullable=false)
     @JsonIgnoreProperties("user")
@@ -44,6 +47,13 @@ public class QuizAnswer {
         this.user = user;
     }
 
+    public void setCorrect(boolean isCorrect){
+        this.correct = isCorrect;
+    }
+
+    public boolean getCorrect(){
+        return this.correct;
+    }
 
     public void setSpecimen(Specimen specimen) {
         this.specimen = specimen;
