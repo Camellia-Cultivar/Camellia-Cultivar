@@ -275,11 +275,14 @@ class APIService {
           // print("wut");
           Map<String, Object> new_obj = {
             "coords": coordinates,
-            // "epithet": specimen["cultivar"]["epithet"],
-            // "species": specimen["cultivar"]["species"],
-            // "cultivar_id": specimen["cultivar"]["cultivar_id"],
+            "specimen_id": specimen["specimenId"],
+            "address": specimen["address"],
+            "owner": specimen["owner"],
+            "epithet": specimen["cultivar"]["epithet"],
+            "species": specimen["cultivar"]["species"],
+            "cultivar_id": specimen["cultivar"]["cultivar_id"],
             "photos": specimen["photos"],
-            "specimen_id": specimen["specimenId"]
+            "garden": specimen["garden"]
           };
           lst.add(new_obj);
         }

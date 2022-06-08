@@ -61,6 +61,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
   }
 
   final api = APIService();
+  List<LatLng> _latLngList = [];
+  List<Marker> _markers = [];
 
   @override
   Widget build(BuildContext context) {
@@ -262,8 +264,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                       ],
                     );
                   }
-                  List<LatLng> _latLngList = [];
-                  List<Marker> _markers = [];
 
                   // late Map<LatLng, bool> _openPopUp;
 
@@ -279,22 +279,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
 
                   if (snapshot.hasData) {
                     var specimens = snapshot.data! as List;
-                    _latLngList = specimens
-                        .map((specimen) => specimen!["coords"] as LatLng)
-                        .toList();
-                    _markers = _latLngList
-                        .map((point) => Marker(
-                              point: point,
-                              width: 30,
-                              height: 30,
-                              builder: (context) => Icon(
-                                Icons.location_on_outlined,
-                                size: 30,
-                                color: primaryColor,
-                              ),
-                            ))
-                        .toList();
-                    return _buildMap(context, _latLngList, _markers);
+
+                    return _buildMap(context, specimens);
                   }
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -309,10 +295,24 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
     );
   }
 
-  Widget _buildMap(
-      BuildContext context, List<LatLng> _latLngList, List<Marker> _markers) {
+  Widget _buildMap(BuildContext context, List<dynamic> specimens) {
     Color primaryColor = Theme.of(context).primaryColor;
     double _zoom = 1;
+
+    _latLngList =
+        specimens.map((specimen) => specimen!["coords"] as LatLng).toList();
+    _markers = _latLngList
+        .map((point) => Marker(
+              point: point,
+              width: 30,
+              height: 30,
+              builder: (context) => Icon(
+                Icons.location_on_outlined,
+                size: 30,
+                color: primaryColor,
+              ),
+            ))
+        .toList();
 
     return Column(
       children: [
@@ -333,7 +333,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                 onTap: (_) => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ShowFullMap()))),
+                        builder: (context) => ShowFullMap(specimens)))),
             layers: [
               TileLayerOptions(
                 minZoom: 1,

@@ -13,11 +13,11 @@ class SpecimenPopup extends StatefulWidget {
 }
 
 class SpecimenPopupState extends State<SpecimenPopup> {
-  final list = [
-    "https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455__340.jpg",
-    "https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg?w=2000",
-    "https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8&w=1000&q=80"
-  ];
+  // var photos = [
+  //   "https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455__340.jpg",
+  //   "https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg?w=2000",
+  //   "https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8&w=1000&q=80"
+  // ];
 
   @override
   void initState() {
@@ -27,7 +27,7 @@ class SpecimenPopupState extends State<SpecimenPopup> {
   @override
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
-    // list = widget.specimen!["photos"];
+    print("costum popup");
     return _buildDialogContent();
   }
 
@@ -43,8 +43,8 @@ class SpecimenPopupState extends State<SpecimenPopup> {
           _buildImagesContainer(),
           Column(
             children: <Widget>[
-              // _buildCultivarName(),
-              // _buildSpeciesName(),
+              _buildCultivarName(),
+              _buildSpeciesName(),
               _buildViewCultivarDetailsBtn()
             ],
           ),
@@ -58,32 +58,32 @@ class SpecimenPopupState extends State<SpecimenPopup> {
         decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(5))),
-        child: expandForMoreImages(list));
+        child: expandForMoreImages(widget.specimen!["photos"]));
   }
 
-  // Container _buildCultivarName() {
-  //   return Container(
-  //     margin: const EdgeInsets.only(top: 5),
-  //     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-  //       Text(
-  //         widget.specimen!["epithet"],
-  //         style: TextStyle(fontSize: 20),
-  //       )
-  //     ]),
-  //   );
-  // }
+  Container _buildCultivarName() {
+    return Container(
+      margin: const EdgeInsets.only(top: 5),
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text(
+          widget.specimen!["epithet"],
+          style: TextStyle(fontSize: 20),
+        )
+      ]),
+    );
+  }
 
-  // Container _buildSpeciesName() {
-  //   return Container(
-  //     margin: const EdgeInsets.only(top: 3),
-  //     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-  //       Text(
-  //         widget.specimen!["species"],
-  //         style: TextStyle(fontSize: 12),
-  //       )
-  //     ]),
-  //   );
-  // }
+  Container _buildSpeciesName() {
+    return Container(
+      margin: const EdgeInsets.only(top: 3),
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text(
+          widget.specimen!["species"],
+          style: TextStyle(fontSize: 12),
+        )
+      ]),
+    );
+  }
 
   MaterialButton _buildViewCultivarDetailsBtn() {
     return MaterialButton(
@@ -95,10 +95,7 @@ class SpecimenPopupState extends State<SpecimenPopup> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    //const EditProfilePage()))
-                    CultivarPage(
-                        specimenId:
-                            widget.specimen!["specimen_id" /*"cultivar_id"*/])))
+                    CultivarPage(specimenId: widget.specimen!["cultivar_id"])))
       },
       child: const Text(
         "Cultivar Details",

@@ -39,13 +39,15 @@ import 'specimen_popup.dart';
 // ];
 
 class ShowFullMap extends StatefulWidget {
-  const ShowFullMap({Key? key}) : super(key: key);
+  final List<dynamic>? specimens;
+  const ShowFullMap(this.specimens, {Key? key}) : super(key: key);
   @override
   _ShowFullMapState createState() => _ShowFullMapState();
 }
 
 class _ShowFullMapState extends State<ShowFullMap> {
-  late Map<LatLng, bool> _openPopUp;
+  late Map<LatLng, bool> _openPopUp = {};
+  final api = APIService();
 
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];
@@ -55,70 +57,61 @@ class _ShowFullMapState extends State<ShowFullMap> {
     return result;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final api = APIService();
+  List<LatLng> _latLngList = [];
+  List<Marker> _markers = [];
 
-    return FutureBuilder(
-      future: api.getMapSpecimens(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Column(
-            children: [
-              Text(
-                snapshot.error.toString(),
-              ),
-            ],
-          );
-        }
-        List<LatLng> _latLngList = [];
-        List<Marker> _markers = [];
+  Map<LatLng, bool> initOpenPopUp() {
+    Map<LatLng, bool> pop = {};
 
-        Map<LatLng, bool> initOpenPopUp() {
-          Map<LatLng, bool> pop = {};
-
-          for (var latlng in _latLngList) {
-            pop[latlng] = false;
-          }
-          return pop;
-        }
-
-        if (snapshot.hasData) {
-          var specimens = snapshot.data! as List;
-          _latLngList = specimens
-              .map((specimen) => specimen!["coords"] as LatLng)
-              .toList();
-
-          _openPopUp = initOpenPopUp();
-          // _openPopUp = initOpenPopUp();
-
-          _markers = _latLngList
-              .map((point) => Marker(
-                    point: point,
-                    width: 200,
-                    height: 220,
-                    builder: (context) => GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _openPopUp[point] = !_openPopUp[point]!;
-                          });
-                        },
-                        child: _buildCustomMarker(
-                            point, getSpecimenByLatLong(point, specimens))),
-                  ))
-              .toList();
-          return _buildMap(context, _latLngList, _markers);
-        }
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [Text('Something went wrong!')],
-        );
-      },
-    );
+    for (var latlng in _latLngList) {
+      pop[latlng] = false;
+    }
+    return pop;
   }
 
-  Widget _buildMap(
-      BuildContext context, List<LatLng> _latLngList, List<Marker> _markers) {
+  @override
+  void initState() {
+    super.initState();
+    _latLngList = widget.specimens!
+        .map((specimen) => specimen!["coords"] as LatLng)
+        .toList();
+
+    // _openPopUp = initOpenPopUp();
+    // if (_latLngList.isEmpty) {
+    //   _latLngList.add(LatLng(40, -8));
+    // }
+    _openPopUp = initOpenPopUp();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Color primaryColor = Theme.of(context).primaryColor;
+    double _zoom = 12;
+    MapController _mapController = MapController();
+    print(_openPopUp);
+
+    setState(() {
+      _markers = _latLngList
+          .map((point) => Marker(
+                point: point,
+                width: 200,
+                height: 220,
+                builder: (context) => GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _openPopUp[point] = !_openPopUp[point]!;
+                      });
+                    },
+                    child: _buildCustomMarker(
+                        point, getSpecimenByLatLong(point, widget.specimens!))),
+              ))
+          .toList();
+    });
+
+    return _buildMap(context);
+  }
+
+  Widget _buildMap(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
     double _zoom = 12;
     MapController _mapController = MapController();
@@ -207,6 +200,7 @@ class _ShowFullMapState extends State<ShowFullMap> {
   var infoWindowVisible = false;
 
   Opacity popup(LatLng point, Map<String, dynamic>? specimen) {
+    print(_openPopUp[point]);
     return Opacity(
       opacity: _openPopUp[point]! ? 1.0 : 0.0,
       child: Container(
@@ -237,6 +231,7 @@ class _ShowFullMapState extends State<ShowFullMap> {
 }
 
 Map<String, dynamic>? getSpecimenByLatLong(LatLng point, List specimens) {
+  print(point);
   for (Map<String, dynamic> specimen in specimens) {
     if (point == specimen["coords"]) {
       return specimen;
