@@ -23,6 +23,9 @@ public class QuizAnswer {
     @Column(name = "correct")
     private boolean correct;
 
+    @Column(name = "specimen_type")
+    private String specimenType;
+
     @ManyToOne
     @JoinColumn( name="userId", nullable=false)
     @JsonIgnoreProperties("user")
@@ -53,6 +56,14 @@ public class QuizAnswer {
 
     public boolean getCorrect(){
         return this.correct;
+    }
+
+    public void setSpecimenType(String specimenType){
+        this.specimenType = specimenType;
+    }
+
+    public String getSpecimenType(){
+        return this.specimenType;
     }
 
     public void setSpecimen(Specimen specimen) {

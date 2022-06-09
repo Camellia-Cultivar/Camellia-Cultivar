@@ -1,7 +1,9 @@
 package com.camellia.controllers;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.camellia.models.QuizAnswerDTO;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +46,7 @@ public class QuizController {
 
 
     @PostMapping(value="/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<String> quizSubmission(@RequestBody List<QuizAnswerDTO> answersList, @PathVariable(value="id") long uId){
+    public ResponseEntity<String> quizSubmission(@RequestBody List<QuizAnswerDTO> answersList, @PathVariable(value="id") long uId) throws MailException, UnsupportedEncodingException, MessagingException{
         if(checkRoleRegistered())
             return quizService.saveQuizAnswers(uId, answersList);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
