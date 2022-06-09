@@ -63,7 +63,7 @@ class _QuizPageState extends State<QuizPage> {
   //   'C. Japonica Debutante',
   //   'C. Sasanqua Mine No Uki',
   // ];
-  List<String> lst = [];
+  List<String> optionsList = [];
 
   Map<String, int> autocompleteOptions = {};
 
@@ -270,7 +270,7 @@ class _QuizPageState extends State<QuizPage> {
                             }
 
                             await getAutocomplete(textEditingValue.text);
-                            return lst;
+                            return optionsList;
                           },
                         )),
                     Row(
@@ -348,25 +348,11 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 
-  // void getAutocomplete(String input) async {
-  //   List<String> lista = await getAutocompleteFuture(input);
-  //   setState(() {
-  //     lst = lista;
-  //   });
-  // }
-
   Future<void> getAutocomplete(String input) async {
-    // if (input.length < 3) {
-    //   return;
-    // }
     var options = await api.getAutocomplete(input);
-    print(options);
-    // if (options == null) {
-    //   return;
-    // }
     setState(() {
       autocompleteOptions = options;
-      lst =
+      optionsList =
           autocompleteOptions.keys.map((denomination) => denomination).toList();
     });
   }

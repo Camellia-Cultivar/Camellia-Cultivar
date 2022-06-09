@@ -23,11 +23,7 @@ class UniqueQuizPage extends StatefulWidget {
 class _UniqueQuizPageState extends State<UniqueQuizPage> {
   final api = APIService();
 
-  List<String> lst = <String>[
-    'C. Japonica April Dawn',
-    'C. Japonica Debutante',
-    'C. Sasanqua Mine No Uki',
-  ];
+  List<String> optionsList = [];
 
   List<T> map<T>(List data, Function handler) {
     List<T> result = [];
@@ -38,6 +34,7 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
   }
 
   Map<int, FormItem> form = {};
+  Map<String, int> autocompleteOptions = {};
 
   TextEditingController? _cultivarNameController;
   FocusNode? _focusInput;
@@ -51,12 +48,14 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
   @override
   void initState() {
     super.initState();
+    _cultivarNameController?.text = form[widget.specimenId]?.answer ?? "";
   }
 
   void handleEditingComplete() {
+    String answer = _cultivarNameController!.text;
     setState(() {
-      // form[widget.specimenId!] =
-      //     FormItem(widget.specimenId, _cultivarNameController?.text);
+      form[widget.specimenId!] = FormItem(
+          widget.specimenId, answer, autocompleteOptions[answer.trim()]);
     });
     _focusInput?.unfocus();
   }
@@ -95,8 +94,6 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
     var screenSize = MediaQuery.of(context).size;
 
     User? user = context.read<UserProvider>().user;
-
-    _cultivarNameController?.text = form[widget.specimenId]?.answer ?? "";
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6F7),
@@ -165,14 +162,13 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
                                   const TextStyle(fontWeight: FontWeight.bold),
                             );
                           },
-                          optionsBuilder: (TextEditingValue textEditingValue) {
+                          optionsBuilder:
+                              (TextEditingValue textEditingValue) async {
                             if (textEditingValue.text == '') {
                               return const Iterable<String>.empty();
                             }
-                            return lst.where((String option) {
-                              return option.toLowerCase().contains(
-                                  textEditingValue.text.toLowerCase());
-                            });
+                            await getAutocomplete(textEditingValue.text);
+                            return optionsList;
                           },
                         )),
                     Padding(
@@ -204,5 +200,15 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
             ))),
       ),
     );
+  }
+
+  Future<void> getAutocomplete(String input) async {
+    var options = await api.getAutocomplete(input);
+    // print(options);
+    setState(() {
+      autocompleteOptions = options;
+      optionsList =
+          autocompleteOptions.keys.map((denomination) => denomination).toList();
+    });
   }
 }
