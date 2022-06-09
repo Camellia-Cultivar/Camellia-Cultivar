@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 import '../home/homepage.dart';
-import '../login_page.dart';
+import '../authentication/login_page.dart';
 
 Future<void> login(BuildContext context, User user) async {
   context.read<UserProvider>().setUser(user);

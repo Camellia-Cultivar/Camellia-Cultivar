@@ -9,10 +9,20 @@ class Question {
 
   Question({required this.specimenId, required this.images});
 
+  @override
+  String toString() {
+    return 'specimenId: $specimenId, images: $images';
+  }
+
   Map<String, dynamic> toJson() {
     return {'specimenId': specimenId, 'images': images};
   }
 
-  factory Question.fromJson(Map<String, dynamic> json) =>
-      Question(specimenId: json["specimenId"], images: json["images"]);
+  factory Question.fromJson(Map<String, dynamic> json) {
+    List<String> _images = [];
+    _images = (json["photographs"] as List)
+        .map((imageUrl) => imageUrl.toString())
+        .toList();
+    return Question(specimenId: json["specimenId"], images: _images);
+  }
 }
