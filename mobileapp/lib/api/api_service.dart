@@ -12,7 +12,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong/latlong.dart';
 
-import '../quiz_page.dart';
+import '../quizzes/quiz_page.dart';
 import 'api_constants.dart';
 import '../model/user.dart';
 
@@ -211,13 +211,13 @@ class APIService {
         'Access-Control-Allow-Origin': '*',
         'Authorization': 'Bearer ${await storage.read(key: 'token')}'
       });
-      url = Uri.parse(APIConstants.baseUrl + "/public/specimen");
-      response = await http.get(url);
-      print(response.body);
       if (response.statusCode == 200) {
-        for (dynamic o in json.decode(response.body)) {
-          lst.add(Question.fromJson(json.decode(o)));
+        List questionJsonList = json.decode(response.body) as List;
+        for (dynamic questionJson in questionJsonList) {
+          print(questionJson);
+          lst.add(Question.fromJson(questionJson));
         }
+        print(lst);
         return lst;
       }
     } catch (e) {
@@ -237,15 +237,25 @@ class APIService {
       lst.add(i.getData());
     }
 
+    if (lst.isEmpty) {
+      return;
+    }
+
     try {
-      var url = Uri.parse(APIConstants.baseUrl + APIConstants.quizEndpoint);
-      var obj = {"uid": uid, "answers": lst};
-      var body = jsonEncode(obj);
+      var url =
+          Uri.parse(APIConstants.baseUrl + APIConstants.quizEndpoint + "/$uid");
+      // var obj = {"answers": lst};
+      var body = jsonEncode(lst);
+      print(lst);
       var response = await http.post(url,
           headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8'
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Access-Control-Allow-Origin': '*',
+            'Authorization': 'Bearer ${await storage.read(key: 'token')}'
           },
           body: body);
+      print(response.statusCode);
+      print(response.body);
       if (response.statusCode != 200) {
         throw Exception("Submission of quiz answers did not suceed!");
       }
@@ -276,15 +286,9 @@ class APIService {
           Uri.parse(APIConstants.baseUrl + APIConstants.mapSpecimensEndpoint);
       var response = await http.get(url);
       List listOfSpecimens = json.decode(response.body) as List;
-      // print(response.body);
       if (response.statusCode == 200) {
-        // print("Sou code 200");
         for (dynamic specimen in listOfSpecimens) {
-          // print("goinf through specimens");
-          // print(specimen["latitude"].runtimeType);
-          LatLng coordinates =
-              LatLng(specimen["latitude"], specimen["longitude"]);
-          // print("wut");
+          LatLng coordinates = LatLng(specimen["lat"], specimen["long"]);
           Map<String, Object> new_obj = {
             "coords": coordinates,
             "specimen_id": specimen["specimenId"],
@@ -293,12 +297,13 @@ class APIService {
             "epithet": specimen["cultivar"]["epithet"],
             "species": specimen["cultivar"]["species"],
             "cultivar_id": specimen["cultivar"]["cultivar_id"],
+            "characteristics": specimen["cultivar"]["characteristics"],
             "photos": specimen["photos"],
             "garden": specimen["garden"]
           };
           lst.add(new_obj);
         }
-        // print(lst.toString() + "\t im on the api service");
+        print(lst.toString() + "\t im on the api service");
         return lst;
       }
     } catch (e) {
@@ -312,12 +317,14 @@ class APIService {
       var url = Uri.parse(
           APIConstants.baseUrl + APIConstants.upovCharacteristicsEndpoint);
       var response = await http.get(url);
-      List specimensList = json.decode(response.body) as List;
+      if (response.statusCode == 200) {
+        List specimensList = json.decode(response.body) as List;
 
-      List<UpovCategory> categories = specimensList
-          .map((catObjJson) => UpovCategory.fromJson(catObjJson))
-          .toList();
-      return categories;
+        List<UpovCategory> categories = specimensList
+            .map((catObjJson) => UpovCategory.fromJson(catObjJson))
+            .toList();
+        return categories;
+      }
     } catch (e) {
       log(e.toString());
     }
@@ -340,5 +347,37 @@ class APIService {
       log(e.toString());
     }
     return -1;
+  }
+
+  Future<Map<String, int>> getAutocomplete(String substring) async {
+    try {
+      var url = Uri.parse(APIConstants.baseUrl +
+          APIConstants.autocomplete +
+          "?substring=$substring");
+      var response = await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': 'Bearer ${await storage.read(key: 'token')}'
+      });
+      // print(response.statusCode.toString() + response.body);
+      if (response.statusCode == 200) {
+        List<dynamic> optionsJson = json.decode(response.body) as List;
+//{"cultivarId":21976,"denomination":"Camelia Oleifera Abel 31"}
+        Map<String, int> options =
+            {}; /*optionsJson
+            .map((optionJson) => {
+                  optionJson["denomination"] as String:
+                      optionJson["cultivarId"] as int
+                }).to;*/
+        for (dynamic specimen in optionsJson) {
+          var map = specimen as Map;
+          options[map["denomination"] as String] = map["cultivarId"] as int;
+        }
+        return options;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return {};
   }
 }

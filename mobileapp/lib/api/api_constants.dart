@@ -13,4 +13,5 @@ class APIConstants {
   static String mapSpecimensEndpoint = "/public/specimen/reference";
   static String upovCharacteristicsEndpoint = "/public/upov";
   static String createSpecimenEndpoint = "/public/specimen";
+  static String autocomplete = "/autocomplete"; /*doing*/
 }
