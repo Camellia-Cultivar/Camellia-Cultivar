@@ -1,7 +1,12 @@
 package com.camellia.services.users;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
+
 import javax.transaction.Transactional;
 
+import com.camellia.models.users.Role;
 import com.camellia.models.users.User;
 import com.camellia.repositories.users.UserRepository;
 
@@ -24,17 +29,23 @@ public class CustomUserDetailsService implements UserDetailsService{
         if (user == null) {
             return null;
         }
-        UserDetails userDetails = org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
+        return org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
                 .password(user.getPassword())
-                .authorities(getAuthorities(user)).build()
+                .authorities(getAuthorities(user))
+                .build()
                 ;
 
-        return userDetails;
     }
 
     
-    private GrantedAuthority getAuthorities(User user){
-        return new SimpleGrantedAuthority(user.getDecriminatorValue());
+    private Collection<GrantedAuthority> getAuthorities(User user){
+        Set<Role> roles = user.getRoles();
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+         
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
+        return authorities;
     }
     
 }

@@ -3,22 +3,21 @@ import 'package:flutter/material.dart';
 
 import 'image_full_slider_map.dart';
 
-class CustomPopup extends StatefulWidget {
-
+class SpecimenPopup extends StatefulWidget {
   final Map<String, dynamic>? specimen;
 
-  const CustomPopup({Key? key, this.specimen}) : super(key: key);
+  const SpecimenPopup({Key? key, this.specimen}) : super(key: key);
 
   @override
-  CustomPopupState createState() => CustomPopupState();
+  SpecimenPopupState createState() => SpecimenPopupState();
 }
 
-class CustomPopupState extends State<CustomPopup> {
-  final list = [
-    "https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455__340.jpg",
-    "https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg?w=2000",
-    "https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8&w=1000&q=80"
-  ];
+class SpecimenPopupState extends State<SpecimenPopup> {
+  // var photos = [
+  //   "https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455__340.jpg",
+  //   "https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg?w=2000",
+  //   "https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8&w=1000&q=80"
+  // ];
 
   @override
   void initState() {
@@ -28,6 +27,7 @@ class CustomPopupState extends State<CustomPopup> {
   @override
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
+    print("costum popup");
     return _buildDialogContent();
   }
 
@@ -36,7 +36,6 @@ class CustomPopupState extends State<CustomPopup> {
       decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(5))),
-
       width: 200,
       height: 250,
       child: Column(
@@ -59,7 +58,7 @@ class CustomPopupState extends State<CustomPopup> {
         decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(5))),
-        child: expandForMoreImages(list));
+        child: expandForMoreImages(widget.specimen!["photos"]));
   }
 
   Container _buildCultivarName() {
@@ -67,7 +66,7 @@ class CustomPopupState extends State<CustomPopup> {
       margin: const EdgeInsets.only(top: 5),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Text(
-          widget.specimen!["cultivar_name"],
+          widget.specimen!["epithet"],
           style: TextStyle(fontSize: 20),
         )
       ]),
@@ -76,10 +75,10 @@ class CustomPopupState extends State<CustomPopup> {
 
   Container _buildSpeciesName() {
     return Container(
-      margin: const EdgeInsets.only(top: 3),
+      margin: const EdgeInsets.only(top: 3, bottom: 10),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Text(
-          widget.specimen!["species_name"],
+          widget.specimen!["species"],
           style: TextStyle(fontSize: 12),
         )
       ]),
@@ -92,12 +91,11 @@ class CustomPopupState extends State<CustomPopup> {
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(15.0))),
       onPressed: () => {
-         Navigator.push(
+        Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    //const EditProfilePage()))
-                    CultivarPage(specimenId: widget.specimen!["specimen_id"])))
+                    CultivarPage(specimenId: widget.specimen!["cultivar_id"])))
       },
       child: const Text(
         "Cultivar Details",
@@ -106,8 +104,17 @@ class CustomPopupState extends State<CustomPopup> {
     );
   }
 
-  ClipRRect expandForMoreImages(List list) {
+  Widget expandForMoreImages(List list) {
     var idx = 0;
+    if (list.isEmpty) {
+      return SizedBox(
+        height: 120,
+        width: MediaQuery.of(context).size.width,
+        child: const Center(
+          child: Text("No images to show"),
+        ),
+      );
+    }
     var obj = ClipRRect(
         borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(5), topRight: Radius.circular(5)),

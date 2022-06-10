@@ -4,9 +4,9 @@ import 'package:camellia_cultivar/home/map_page.dart';
 import 'package:camellia_cultivar/local_auth_api.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/navbar/botnavbar.dart';
-import 'package:camellia_cultivar/profile_page.dart';
+import 'package:camellia_cultivar/profile/profile_page.dart';
 import 'package:camellia_cultivar/providers/user.dart';
-import 'package:camellia_cultivar/unique_quiz_page.dart';
+import 'package:camellia_cultivar/quizzes/unique_quiz_page.dart';
 import 'package:camellia_cultivar/utils/auth.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -17,16 +17,32 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong/latlong.dart';
 
+import '../api/api_service.dart';
 import '../new_specimen/new_specimen_page.dart';
 import 'specimen_popup.dart';
 
-
 List<Map<String, dynamic>> recentlyUploadedJson = [
-	{"image": "https://www.significados.com.br/foto/camelia-29.jpg", "location": "Parque da Macaca, Aveiro", "request_date": "26-Jun-2022", "specimen_id": 2},
-	{"image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBA5mAFxS9mjuuD-AWAGB_z1676LSGYIBoNA&usqp=CAU", "location": "Estufa Fria, Lisboa", "request_date": "20-May-2022",  "specimen_id": 3},
-  {"image": "https://media.istockphoto.com/photos/white-camellia-flower-isolated-on-white-background-picture-id1251528600?k=20&m=1251528600&s=612x612&w=0&h=AW64ZIfakH0ROp3WJeh_Gd5bjaJtOOyokx-NMjAho7E=", "location": "Jardim Botânico do Porto", "request_date": "01-Jan-2022",  "specimen_id": 7}
+  {
+    "image": "https://www.significados.com.br/foto/camelia-29.jpg",
+    "location": "Parque da Macaca, Aveiro",
+    "request_date": "26-Jun-2022",
+    "specimen_id": 2
+  },
+  {
+    "image":
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBA5mAFxS9mjuuD-AWAGB_z1676LSGYIBoNA&usqp=CAU",
+    "location": "Estufa Fria, Lisboa",
+    "request_date": "20-May-2022",
+    "specimen_id": 3
+  },
+  {
+    "image":
+        "https://media.istockphoto.com/photos/white-camellia-flower-isolated-on-white-background-picture-id1251528600?k=20&m=1251528600&s=612x612&w=0&h=AW64ZIfakH0ROp3WJeh_Gd5bjaJtOOyokx-NMjAho7E=",
+    "location": "Jardim Botânico do Porto",
+    "request_date": "01-Jan-2022",
+    "specimen_id": 7
+  }
 ];
-
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -36,31 +52,17 @@ class HomePage extends StatefulWidget {
 }
 
 class Home extends State<HomePage> with WidgetsBindingObserver {
-
-  List<LatLng> _latLngList = [];
-  List<Marker> _markers = [];
-
-  late Map<LatLng, bool> _openPopUp;
-
-  Map<LatLng, bool> initOpenPopUp() {
-    Map<LatLng, bool> pop = {};
-    for (var latlng in _latLngList) {
-      pop[latlng] = false;
-    }
-    return pop;
-  }
-
+  late final Future? specimenMapFuture;
   @override
   void initState() {
-    _latLngList = [
-      LatLng(40.6384943, -8.6540832),
-      LatLng(40.6391863, -8.6563771),
-      LatLng(40.6364017, -8.6532305)
-    ];
-    _openPopUp = initOpenPopUp();
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    specimenMapFuture = api.getMapSpecimens();
+    WidgetsBinding.instance.addObserver(this);
   }
+
+  final api = APIService();
+  List<LatLng> _latLngList = [];
+  List<Marker> _markers = [];
 
   @override
   Widget build(BuildContext context) {
@@ -68,23 +70,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
     var screenSize = MediaQuery.of(context).size;
 
     User? user = context.watch<UserProvider>().user;
-
-    // final PopupController _popupController = PopupController();
-    // MapController _mapController = MapController();
-    double _zoom = 1;
-
-    _markers = _latLngList
-        .map((point) => Marker(
-              point: point,
-              width: 30,
-              height: 30,
-              builder: (context) => Icon(
-                Icons.location_on_outlined,
-                size: 30,
-                color: primaryColor,
-              ),
-            ))
-        .toList();
 
     return Scaffold(
       backgroundColor: primaryColor,
@@ -160,7 +145,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                                           topLeft: Radius.circular(5),
                                           topRight: Radius.circular(5)),
                                       child: Image.network(
-                                        recentlyUploadedJson.elementAt(i)["image"].toString(),
+                                        recentlyUploadedJson
+                                            .elementAt(i)["image"]
+                                            .toString(),
                                         height: screenSize.height / 5.5,
                                         width:
                                             MediaQuery.of(context).size.width,
@@ -178,7 +165,10 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                                         size: 30,
                                         color: primaryColor,
                                       ),
-                                       Text(recentlyUploadedJson.elementAt(i)["location"].toString(),
+                                      Text(
+                                          recentlyUploadedJson
+                                              .elementAt(i)["location"]
+                                              .toString(),
                                           style: const TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold))
@@ -188,8 +178,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Text(recentlyUploadedJson.elementAt(i)["request_date"].toString(),
-                                            style: const TextStyle(fontSize: 12))
+                                        Text(
+                                            recentlyUploadedJson
+                                                .elementAt(i)["request_date"]
+                                                .toString(),
+                                            style:
+                                                const TextStyle(fontSize: 12))
                                       ]),
                                   const SizedBox(height: 10),
                                   MaterialButton(
@@ -199,14 +193,22 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                                       shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(150.0))),
-                                       onPressed: () => {
+                                      onPressed: () => {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) =>
-                                                      UniqueQuizPage(specimenId: recentlyUploadedJson.elementAt(i)["specimen_id"], 
-                                                      image: recentlyUploadedJson.elementAt(i)["image"].toString())))
-                                         },
+                                                    builder: (context) => UniqueQuizPage(
+                                                        specimenId:
+                                                            recentlyUploadedJson
+                                                                    .elementAt(
+                                                                        i)[
+                                                                "specimen_id"],
+                                                        image:
+                                                            recentlyUploadedJson
+                                                                .elementAt(
+                                                                    i)["image"]
+                                                                .toString())))
+                                          },
                                       child: const Text(
                                         'Identify',
                                         style: TextStyle(
@@ -226,43 +228,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                           color: Colors.grey,
                         ),
                       ),
-                      // GestureDetector(
-                      //     onTap: () {
-                      //       Navigator.push(
-                      //           context,
-                      //           MaterialPageRoute(
-                      //               builder: (context) =>
-                      //                   const NewSpecimenPage()));
-                      //     },
-                      //     child: Container(
-                      //         height: 125,
-                      //         decoration: BoxDecoration(
-                      //             color: primaryColor,
-                      //             borderRadius:
-                      //                 BorderRadius.all(Radius.circular(15))),
-                      //         child: Row(
-                      //           children: const [
-                      //             Padding(
-                      //               padding: EdgeInsets.only(left: 20),
-                      //             ),
-                      //             Center(
-                      //                 child: Icon(
-                      //               Icons.add_circle,
-                      //               color: Colors.white,
-                      //               size: 50,
-                      //             )),
-                      //             Padding(
-                      //               padding: EdgeInsets.only(left: 10),
-                      //             ),
-                      //             Text(
-                      //               'New Identification\nRequest',
-                      //               style: TextStyle(
-                      //                   fontSize: 20,
-                      //                   color: Colors.white,
-                      //                   fontWeight: FontWeight.bold),
-                      //             )
-                      //           ],
-                      //         ))),
                       Container(
                         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                         child: const Divider(
@@ -270,7 +235,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                           color: Colors.grey,
                         ),
                       ),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -288,64 +252,125 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                   ),
                 ),
               ),
-              Padding(padding: const EdgeInsets.only(top: 10, bottom: 5), 
-                child: Text("Click to see specimens", 
-                  style: TextStyle(color: Colors.grey[500]))
-              ),
-              const Padding(padding: EdgeInsets.only(top: 10)),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 3,
-                child: FlutterMap(
-                  options: MapOptions(
-                      center: _latLngList[0],
-                      zoom: _zoom,
-                      plugins: [
-                        MarkerClusterPlugin(),
+              FutureBuilder(
+                future: specimenMapFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Column(
+                      children: [
+                        Text(
+                          snapshot.error.toString(),
+                        ),
                       ],
-                      onTap: (_) => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ShowFullMap()))),
-                  layers: [
-                    TileLayerOptions(
-                      minZoom: 1,
-                      maxZoom: 18,
-                      backgroundColor: primaryColor,
-                      urlTemplate:
-                          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      subdomains: ['a', 'b', 'c'],
-                    ),
-                    MarkerClusterLayerOptions(
-                      // maxClusterRadius: 190,
-                      disableClusteringAtZoom: 16,
-                      size: const Size(50, 50),
-                      fitBoundsOptions: const FitBoundsOptions(
-                        padding: EdgeInsets.all(50),
-                      ),
-                      markers: _markers,
-                      polygonOptions: PolygonOptions(
-                          borderColor: primaryColor,
-                          color: Colors.black12,
-                          borderStrokeWidth: 3),
-                      builder: (context, markers) {
-                        return Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: primaryColor, shape: BoxShape.circle),
-                          child: Text(
-                            '${markers.length}',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
+                    );
+                  }
+
+                  // late Map<LatLng, bool> _openPopUp;
+
+                  // Map<LatLng, bool> initOpenPopUp() {
+                  //   Map<LatLng, bool> pop = {};
+                  //   for (var latlng in _latLngList) {
+                  //     pop[latlng] = false;
+                  //   }
+                  //   return pop;
+                  // }
+
+                  // _openPopUp = initOpenPopUp();
+
+                  if (snapshot.hasData) {
+                    var specimens = snapshot.data! as List;
+
+                    return _buildMap(context, specimens);
+                  }
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [Text('Something went wrong!')],
+                  );
+                },
+              )
               // r
             ])),
       ]),
       bottomNavigationBar: const BotNavbar(pageIndex: 1),
+    );
+  }
+
+  Widget _buildMap(BuildContext context, List<dynamic> specimens) {
+    Color primaryColor = Theme.of(context).primaryColor;
+    double _zoom = 1;
+
+    _latLngList =
+        specimens.map((specimen) => specimen!["coords"] as LatLng).toList();
+    _markers = _latLngList
+        .map((point) => Marker(
+              point: point,
+              width: 30,
+              height: 30,
+              builder: (context) => Icon(
+                Icons.location_on_outlined,
+                size: 30,
+                color: primaryColor,
+              ),
+            ))
+        .toList();
+
+    return Column(
+      children: [
+        Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 5),
+            child: Text("Click on the map to see the specimens",
+                style: TextStyle(color: Colors.grey[500]))),
+        const Padding(padding: EdgeInsets.only(top: 10)),
+        SizedBox(
+          height: MediaQuery.of(context).size.height / 3,
+          child: FlutterMap(
+            options: MapOptions(
+                center: _latLngList.isNotEmpty ? _latLngList[0] : LatLng(0, 0),
+                zoom: _zoom,
+                plugins: [
+                  MarkerClusterPlugin(),
+                ],
+                onTap: (_) => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ShowFullMap(specimens)))),
+            layers: [
+              TileLayerOptions(
+                minZoom: 1,
+                maxZoom: 18,
+                backgroundColor: primaryColor,
+                urlTemplate:
+                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                subdomains: ['a', 'b', 'c'],
+              ),
+              MarkerClusterLayerOptions(
+                // maxClusterRadius: 190,
+                disableClusteringAtZoom: 16,
+                size: const Size(50, 50),
+                fitBoundsOptions: const FitBoundsOptions(
+                  padding: EdgeInsets.all(50),
+                ),
+                markers: _markers,
+                polygonOptions: PolygonOptions(
+                    borderColor: primaryColor,
+                    color: Colors.black12,
+                    borderStrokeWidth: 3),
+                builder: (context, markers) {
+                  return Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: primaryColor, shape: BoxShape.circle),
+                    child: Text(
+                      '${markers.length}',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

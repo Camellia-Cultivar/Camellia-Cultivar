@@ -1,10 +1,10 @@
 import 'package:camellia_cultivar/new_specimen/uploaded_specimens_page.dart';
-import 'package:camellia_cultivar/profile_page.dart';
+import 'package:camellia_cultivar/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 
 import 'new_specimen_icon.dart';
 import '../home/homepage.dart';
-import '../quiz_options_page.dart';
+import '../quizzes/quiz_options_page.dart';
 import 'gbutton.dart';
 import 'gnav.dart';
 

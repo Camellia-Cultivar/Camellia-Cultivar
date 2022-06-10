@@ -53,4 +53,6 @@ public interface SpecimenRepository extends JpaRepository<Specimen, Long>{
     @Query(value = "SELECT s FROM Specimen s WHERE s.specimenType = com.camellia.models.specimens.SpecimenType.REFERENCE")
     List<ReferenceSpecimenView> findReferenceBy();
 
+    @Query(nativeQuery = true, value = "SELECT user_id FROM specimen WHERE specimen_id = :id")
+    Long findUserById(@Param("id") Long specimenId);
 }

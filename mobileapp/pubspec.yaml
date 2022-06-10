@@ -56,6 +56,7 @@ dependencies:
   smart_select: ^4.3.2
   azblob: ^2.3.0
   mime: ^1.0.2
+  geocoding: ^2.0.4
 
 dev_dependencies:
   flutter_test:
