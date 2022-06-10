@@ -17,9 +17,9 @@ import java.util.List;
 @Service
 public class QuizParametersService {
 
-    private int no_to_identify_specimens = 3;
+    private int noToIdentifySpecimens = 3;
 
-    private int no_reference_specimens = 6;
+    private int noReferenceSpecimens = 6;
 
     @Autowired
     private QuizParametersRepository repository;
@@ -36,28 +36,28 @@ public class QuizParametersService {
     }
 
     public QuizParameters getQuizParametersById(long id) {
-        return repository.findById((long) id);
+        return repository.findById(id);
     }
 
     public int getToIdentifyNo(){
-        return this.no_to_identify_specimens;
+        return this.noToIdentifySpecimens;
     }
 
     public int getReferenceNo(){
-        return this.no_reference_specimens;
+        return this.noReferenceSpecimens;
     }
 
-    public void changeParameters(int no_reference_specimens2, int no_to_identify_specimens2) {
+    public void changeParameters(int noReferenceSpecimens, int noToIdentifySpecimens) {
         QuizParameters qp = new QuizParameters();
-        qp.setChange_date(LocalDateTime.now());
-        qp.setNo_reference_specimens(no_reference_specimens2);
-        qp.setNo_to_identify_specimens(no_to_identify_specimens2);
+        qp.setChangeDate(LocalDateTime.now());
+        qp.setNoReferenceSpecimens(noReferenceSpecimens);
+        qp.setNoToIdentifySpecimens(noToIdentifySpecimens);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        qp.setAdmin_user(userService.getUserByEmail( auth.getName()) );
+        qp.setAdminUser(userService.getUserByEmail( auth.getName()) );
 
-        this.no_reference_specimens = no_reference_specimens2;
-        this.no_to_identify_specimens = no_to_identify_specimens2;
+        this.noReferenceSpecimens = noReferenceSpecimens;
+        this.noToIdentifySpecimens = noToIdentifySpecimens;
 
         repository.save(qp);
     }

@@ -36,7 +36,7 @@ public class ReputationParametersService {
     }
 
     public ReputationParameters getReputationParametersById(long id) {
-        return repository.findById((long) id);
+        return repository.findById(id);
     }
 
     public double getQuizWeight(){
@@ -55,17 +55,17 @@ public class ReputationParametersService {
         this.votesWeight = votesWeight;
     }
 
-    public void changeParameters(double weight_standard_specimen_answers, double weight_user_total_values) {
+    public void changeParameters(double weightStandardSpecimenAnswers, double weightUserTotalValues) {
         ReputationParameters rp = new ReputationParameters();
-        rp.setChange_date(LocalDateTime.now());
-        rp.setWeight_standard_specimen_answers(weight_standard_specimen_answers);
-        rp.setWeight_user_total_values(weight_user_total_values);
+        rp.setChangeDate(LocalDateTime.now());
+        rp.setWeightStandardSpecimenAnswers(weightStandardSpecimenAnswers);
+        rp.setWeightUserTotalValues(weightUserTotalValues);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        rp.setAdmin_user(userService.getUserByEmail( auth.getName()) );
+        rp.setAdminUser(userService.getUserByEmail( auth.getName()) );
 
-        this.quizWeight = weight_standard_specimen_answers;
-        this.votesWeight = weight_user_total_values;
+        this.quizWeight = weightStandardSpecimenAnswers;
+        this.votesWeight = weightUserTotalValues;
 
         repository.save(rp);
     }

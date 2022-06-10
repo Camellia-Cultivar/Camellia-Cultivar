@@ -27,16 +27,19 @@ public class AdminController {
     private UserService userService;
 
     @PostMapping("/reputation")
-    public void changeReputationParameters(@RequestParam(value="quiz") double weight_standard_specimen_answers, @RequestParam(value="votes") double weight_user_total_values){
+    public void changeReputationParameters(
+            @RequestParam(value="quiz") double weightStandardSpecimenAnswers,
+            @RequestParam(value="votes") double weightUserTotalValues
+    ){
         if(checkAdminRole()){
-            reputationParametersService.changeParameters(weight_standard_specimen_answers, weight_user_total_values);
+            reputationParametersService.changeParameters(weightStandardSpecimenAnswers, weightUserTotalValues);
         }
     }
 
     @PostMapping("/quiz")
-    public void changeQuizParameters(@RequestParam(value="reference") int no_reference_specimens, @RequestParam(value="identify") int no_to_identify_specimens){
+    public void changeQuizParameters(@RequestParam(value="reference") int noReferenceSpecimens, @RequestParam(value="identify") int noToIdentifySpecimens){
         if(checkAdminRole()){
-            quizParametersService.changeParameters(no_reference_specimens, no_to_identify_specimens);
+            quizParametersService.changeParameters(noReferenceSpecimens, noToIdentifySpecimens);
         }
     }
 
@@ -45,9 +48,6 @@ public class AdminController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User u = userService.getUserByEmail(auth.getName());
 
-        if(u != null && u.getRolesList().contains("ADMIN") )
-            return true;
-        
-        return false;
+        return u != null && u.getRolesList().contains("ADMIN");
     }
 }

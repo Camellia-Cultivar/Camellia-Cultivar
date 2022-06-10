@@ -123,7 +123,7 @@ public class User implements Serializable{
     @Transient
     @OneToMany(
             fetch = FetchType.EAGER,
-            mappedBy = "admin_user",
+            mappedBy = "adminUser",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
@@ -133,7 +133,7 @@ public class User implements Serializable{
     @Transient
     @OneToMany(
         fetch = FetchType.EAGER,
-        mappedBy = "admin_user",
+        mappedBy = "adminUser",
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )

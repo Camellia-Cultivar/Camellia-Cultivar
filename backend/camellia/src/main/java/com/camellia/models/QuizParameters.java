@@ -28,63 +28,64 @@ public class QuizParameters {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long parameters_id;
+    @Column(name = "parameters_id")
+    private long parametersId;
 
     @Column(name = "change_date", nullable = false)
-    private LocalDateTime change_date;
+    private LocalDateTime changeDate;
 
     @Column(name = "no_reference_specimens")
-    private int no_reference_specimens;
+    private int noReferenceSpecimens;
 
     @Column(name = "no_to_identify_specimens")
-    private int no_to_identify_specimens;
+    private int noToIdentifySpecimens;
 
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn( referencedColumnName = "userId", name="user_id", nullable=false)
     @JsonIgnoreProperties("userId")
-    private User admin_user;
+    private User adminUser;
 
 
-    public long getParameters_id() {
-        return this.parameters_id;
+    public long getParametersId() {
+        return this.parametersId;
     }
 
-    public void setParameters_id(long parameters_id) {
-        this.parameters_id = parameters_id;
+    public void setParametersId(long parametersId) {
+        this.parametersId = parametersId;
     }
 
-    public LocalDateTime getChange_date() {
-        return this.change_date;
+    public LocalDateTime getChangeDate() {
+        return this.changeDate;
     }
 
-    public void setChange_date(LocalDateTime change_date) {
-        this.change_date = change_date;
+    public void setChangeDate(LocalDateTime changeDate) {
+        this.changeDate = changeDate;
     }
 
-    public int getNo_reference_specimens() {
-        return this.no_reference_specimens;
+    public int getNoReferenceSpecimens() {
+        return this.noReferenceSpecimens;
     }
 
-    public void setNo_reference_specimens(int no_reference_specimens) {
-        this.no_reference_specimens = no_reference_specimens;
+    public void setNoReferenceSpecimens(int noReferenceSpecimens) {
+        this.noReferenceSpecimens = noReferenceSpecimens;
     }
 
-    public int getNo_to_identify_specimens() {
-        return this.no_to_identify_specimens;
+    public int getNoToIdentifySpecimens() {
+        return this.noToIdentifySpecimens;
     }
 
-    public void setNo_to_identify_specimens(int no_to_identify_specimens) {
-        this.no_to_identify_specimens = no_to_identify_specimens;
+    public void setNoToIdentifySpecimens(int noToIdentifySpecimens) {
+        this.noToIdentifySpecimens = noToIdentifySpecimens;
     }
 
 
-    public User getAdmin_user() {
-        return this.admin_user;
+    public User getAdminUser() {
+        return this.adminUser;
     }
 
-    public void setAdmin_user(User admin_user) {
-        this.admin_user = admin_user;
+    public void setAdminUser(User adminUser) {
+        this.adminUser = adminUser;
     }
 
 }
