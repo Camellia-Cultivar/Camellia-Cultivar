@@ -7,14 +7,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../model/question.dart';
+
 class UniqueQuizPage extends StatefulWidget {
-  final int? specimenId;
+  final Question question;
 
-  final String image;
-
-  const UniqueQuizPage(
-      {Key? key, required this.specimenId, required this.image})
-      : super(key: key);
+  const UniqueQuizPage({Key? key, required this.question}) : super(key: key);
 
   @override
   _UniqueQuizPageState createState() => _UniqueQuizPageState();
@@ -48,14 +46,15 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
   @override
   void initState() {
     super.initState();
-    _cultivarNameController?.text = form[widget.specimenId]?.answer ?? "";
+    _cultivarNameController?.text =
+        form[widget.question.specimenId]?.answer ?? "";
   }
 
   void handleEditingComplete() {
     String answer = _cultivarNameController!.text;
     setState(() {
-      form[widget.specimenId!] = FormItem(
-          widget.specimenId, answer, autocompleteOptions[answer.trim()]);
+      form[widget.question.specimenId] = FormItem(widget.question.specimenId,
+          answer, autocompleteOptions[answer.trim()]);
     });
     _focusInput?.unfocus();
   }
@@ -139,9 +138,16 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
                     SizedBox(
                         width: screenSize.width / 1.5,
                         height: screenSize.height / 3,
-                        child: Image.network(widget.image,
-                            width: screenSize.width / 1.5,
-                            fit: BoxFit.fitHeight)),
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: widget.question.toJson()["images"].length,
+                          itemBuilder: (BuildContext context, int position) {
+                            return Image.network(
+                                widget.question.images[position],
+                                width: screenSize.width / 1.5,
+                                fit: BoxFit.fitHeight);
+                          },
+                        )),
                     Container(
                         padding: const EdgeInsets.only(top: 20, bottom: 20),
                         width: screenSize.width / 1.5,

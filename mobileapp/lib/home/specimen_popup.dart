@@ -103,11 +103,23 @@ class SpecimenPopupState extends State<SpecimenPopup> {
           borderRadius: BorderRadius.all(Radius.circular(15.0))),
       onPressed: () async => {
         await getCultivarDetails(widget.specimen!["cultivar_id"]),
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    CultivarPage(cultivarDetails: cultivarDetails)))
+        if (cultivarDetails.isEmpty)
+          {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text(
+                      "Couldn't access the specimen, please try again later."),
+                  backgroundColor: Colors.red),
+            ),
+          }
+        else
+          {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        CultivarPage(cultivarDetails: cultivarDetails)))
+          }
       },
       child: const Text(
         "Cultivar Details",

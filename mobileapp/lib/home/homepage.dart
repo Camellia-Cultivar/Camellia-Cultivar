@@ -18,6 +18,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong/latlong.dart';
 
 import '../api/api_service.dart';
+import '../model/question.dart';
 import '../new_specimen/new_specimen_page.dart';
 import 'specimen_popup.dart';
 
@@ -53,10 +54,12 @@ class HomePage extends StatefulWidget {
 
 class Home extends State<HomePage> with WidgetsBindingObserver {
   late final Future? specimenMapFuture;
+  late final Future? recentlyUploadedFuture;
   @override
   void initState() {
     super.initState();
     specimenMapFuture = api.getMapSpecimens();
+    recentlyUploadedFuture = api.getRecentlyUploadedSpecimens();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -123,103 +126,31 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                         textAlign: TextAlign.left,
                       ),
                       const Padding(padding: EdgeInsets.all(5)),
-                      CarouselSlider(
-                        options: CarouselOptions(
-                            aspectRatio: 1.3,
-                            viewportFraction: 0.8,
-                            autoPlay: true,
-                            enableInfiniteScroll: false,
-                            enlargeStrategy: CenterPageEnlargeStrategy.height),
-                        items: [
-                          for (int i = 0; i < recentlyUploadedJson.length; i++)
-                            Card(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    // padding: EdgeInsets.only(bottom: 100),
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5))),
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(5),
-                                          topRight: Radius.circular(5)),
-                                      child: Image.network(
-                                        recentlyUploadedJson
-                                            .elementAt(i)["image"]
-                                            .toString(),
-                                        height: screenSize.height / 5.5,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        fit: BoxFit.fitWidth,
-                                      ),
-                                    ),
-                                  ),
-                                  const Padding(
-                                      padding: EdgeInsets.only(top: 10)),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.location_on_rounded,
-                                        size: 30,
-                                        color: primaryColor,
-                                      ),
-                                      Text(
-                                          recentlyUploadedJson
-                                              .elementAt(i)["location"]
-                                              .toString(),
-                                          style: const TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold))
-                                    ],
-                                  ),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                            recentlyUploadedJson
-                                                .elementAt(i)["request_date"]
-                                                .toString(),
-                                            style:
-                                                const TextStyle(fontSize: 12))
-                                      ]),
-                                  const SizedBox(height: 10),
-                                  MaterialButton(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          60, 10, 60, 10),
-                                      color: primaryColor,
-                                      shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(150.0))),
-                                      onPressed: () => {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => UniqueQuizPage(
-                                                        specimenId:
-                                                            recentlyUploadedJson
-                                                                    .elementAt(
-                                                                        i)[
-                                                                "specimen_id"],
-                                                        image:
-                                                            recentlyUploadedJson
-                                                                .elementAt(
-                                                                    i)["image"]
-                                                                .toString())))
-                                          },
-                                      child: const Text(
-                                        'Identify',
-                                        style: TextStyle(
-                                            fontSize: 18, color: Colors.white),
-                                      ))
-                                ],
-                              ),
-                              elevation: 3,
-                              shadowColor: Colors.blueGrey,
-                            ),
-                        ],
+                      FutureBuilder(
+                        future: recentlyUploadedFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Column(
+                              children: [
+                                Text(
+                                  snapshot.error.toString(),
+                                ),
+                              ],
+                            );
+                          }
+
+                          if (snapshot.hasData &&
+                              (snapshot.data as List).isNotEmpty) {
+                            List<Map<String, dynamic>> specimens =
+                                (snapshot.data!) as List<Map<String, dynamic>>;
+
+                            return _buildRecentlyUploaded(context, specimens);
+                          }
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [Text('Something went wrong!')],
+                          );
+                        },
                       ),
                       Container(
                         padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -265,21 +196,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                     );
                   }
 
-                  // late Map<LatLng, bool> _openPopUp;
-
-                  // Map<LatLng, bool> initOpenPopUp() {
-                  //   Map<LatLng, bool> pop = {};
-                  //   for (var latlng in _latLngList) {
-                  //     pop[latlng] = false;
-                  //   }
-                  //   return pop;
-                  // }
-
-                  // _openPopUp = initOpenPopUp();
-
                   if (snapshot.hasData) {
                     var specimens = snapshot.data! as List;
-
                     return _buildMap(context, specimens);
                   }
                   return Row(
@@ -292,6 +210,99 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
             ])),
       ]),
       bottomNavigationBar: const BotNavbar(pageIndex: 1),
+    );
+  }
+
+  Widget _buildRecentlyUploaded(
+      BuildContext context, List<Map<String, dynamic>> recentSpecimens) {
+    _handleIdentify(Map<String, dynamic> specimen) {
+      List<String> images =
+          (specimen["photos"] as List).map((pic) => pic as String).toList();
+      Question question =
+          Question(specimenId: specimen["specimenId"] as int, images: images);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => UniqueQuizPage(question: question)));
+    }
+
+    Color primaryColor = Theme.of(context).primaryColor;
+    var screenSize = MediaQuery.of(context).size;
+    return CarouselSlider(
+      options: CarouselOptions(
+          height: 250,
+          viewportFraction: 0.8,
+          autoPlay: true,
+          enableInfiniteScroll: false,
+          enlargeStrategy: CenterPageEnlargeStrategy.height),
+      items: [
+        for (int i = 0; i < recentSpecimens.length; i++)
+          Card(
+            child: Column(
+              children: [
+                Container(
+                  // padding: EdgeInsets.only(bottom: 100),
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(5),
+                          topRight: Radius.circular(5)),
+                      child: SizedBox(
+                        // width: screenSize.width / 1.5,
+                        height: 120,
+                        child: (recentSpecimens.elementAt(i)["photos"] as List)
+                                .isNotEmpty
+                            ? Image.network(
+                                recentSpecimens
+                                    .elementAt(i)["photos"][0]
+                                    .toString(),
+                                height: screenSize.height / 5.5,
+                                width: MediaQuery.of(context).size.width,
+                                fit: BoxFit.fitWidth,
+                              )
+                            : const Center(
+                                child: Text("No images to show"),
+                              ),
+                      )),
+                ),
+                const Padding(padding: EdgeInsets.only(top: 10)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.location_on_rounded,
+                      size: 30,
+                      color: primaryColor,
+                    ),
+                    Text(recentSpecimens.elementAt(i)["garden"].toString(),
+                        style: const TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold))
+                  ],
+                ),
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Text(recentSpecimens.elementAt(i)["owner"].toString(),
+                      style: const TextStyle(fontSize: 12))
+                ]),
+                const SizedBox(height: 10),
+                MaterialButton(
+                    padding: const EdgeInsets.fromLTRB(60, 10, 60, 10),
+                    color: primaryColor,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(150.0))),
+                    onPressed: () => {
+                          _handleIdentify(recentSpecimens.elementAt(i)),
+                        },
+                    child: const Text(
+                      'Identify',
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ))
+              ],
+            ),
+            elevation: 3,
+            shadowColor: Colors.blueGrey,
+          ),
+      ],
     );
   }
 

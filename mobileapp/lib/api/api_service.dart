@@ -33,7 +33,6 @@ class APIService {
   final storage = FlutterSecureStorage();
 
   Future<List<Object>> login(Map login_user) async {
-    var er;
     try {
       var url = Uri.parse(APIConstants.baseUrl + APIConstants.loginEndpoint);
 
@@ -50,7 +49,6 @@ class APIService {
       return [response.statusCode, response.body];
     } catch (e) {
       log(e.toString());
-      er = e;
     }
     return [-1, "Failed to authenticate. Please try again!"];
   }
@@ -167,19 +165,19 @@ class APIService {
     // }
   }
 
-  Future<Map<String, dynamic>?> getCultivarInformation(int cultivarId) async {
-    try {
-      var url = Uri.parse(
-          APIConstants.baseUrl + APIConstants.cultivarEdpoint + "/$cultivarId");
-      var response = await http.get(url);
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      }
-    } catch (e) {
-      log(e.toString());
-    }
-    return null;
-  }
+  // Future<Map<String, dynamic>?> getCultivarInformation(int cultivarId) async {
+  //   try {
+  //     var url = Uri.parse(
+  //         APIConstants.baseUrl + APIConstants.cultivarEdpoint + "/$cultivarId");
+  //     var response = await http.get(url);
+  //     if (response.statusCode == 200) {
+  //       return json.decode(response.body);
+  //     }
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  //   return null;
+  // }
 
   Future<List<UploadedSpecimen>?> getUploadedSpecimens(int uid) async {
     List<UploadedSpecimen> lst = [];
@@ -264,18 +262,34 @@ class APIService {
     }
   }
 
-  Future<List<Map<String, dynamic>?>?> getRecentlyUploadedSpecimens() async {
+  Future<List<Map<String, dynamic>>> getRecentlyUploadedSpecimens() async {
     try {
       var url = Uri.parse(APIConstants.baseUrl +
           APIConstants.recentlyUploadedSpecimensEndpoint);
-      var response = await http.get(url);
+      var response = await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      });
+      print(response.statusCode);
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        List<Map> specimensMaps = (json.decode(response.body) as List)
+            .map((specimen) => (specimen as Map))
+            .toList();
+        List<Map<String, dynamic>> specimens = [];
+
+        for (Map map in specimensMaps) {
+          Map<String, dynamic> newMap = {};
+          for (dynamic key in map.keys) {
+            newMap[key.toString()] = map[key];
+          }
+          specimens.add(newMap);
+        }
+
+        return specimens;
       }
-      return null;
     } catch (e) {
       log(e.toString());
     }
+    return [];
   }
 
   Future<List<Map<String, Object>?>?> getMapSpecimens() async {

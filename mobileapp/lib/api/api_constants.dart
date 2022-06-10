@@ -8,7 +8,7 @@ class APIConstants {
   static String cultivarEdpoint = "/cultivars"; /*doing*/
   static String uploadedSpecimensEndpoint = "/uploaded"; //todo
   static String recentlyUploadedSpecimensEndpoint =
-      "/public/specimen/recent"; //todo
+      "/public/specimen/recent"; /*doing*/
   static String mapSpecimensEndpoint = "/public/specimen/reference";
   static String upovCharacteristicsEndpoint = "/public/upov";
   static String createSpecimenEndpoint = "/public/specimen";
