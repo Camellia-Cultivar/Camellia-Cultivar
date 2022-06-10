@@ -54,7 +54,7 @@ public class CultivarController {
 
     @GetMapping("/{id}")
     public CultivarDTO getCultivarById(@PathVariable Long id) {
-        return cultivarService.getCultivarById(id);
+        return cultivarService.getCultivarDTOById(id);
     }
 
     @PostMapping("/{id}")
@@ -70,7 +70,7 @@ public class CultivarController {
     public ResponseEntity<CultivarSynonyms> createCultivarSynonym( @RequestBody CultivarSynonymDTO cultivar,  @PathVariable(value="id") long requestId){
         if(checkRoleMod()){
             cultivarRequestService.deleteCultivarRequest(requestId);
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(cultivarSynonymsService.createCultivarSynonym(cultivar));
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(cultivarSynonymsService.createCultivarSynonym(cultivar));
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body( null);
 

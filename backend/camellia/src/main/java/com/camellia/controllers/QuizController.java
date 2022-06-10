@@ -39,7 +39,7 @@ public class QuizController {
     @GetMapping(value="/{id}")
     public ResponseEntity<List<SpecimenQuizDTO>> generateQuiz(@PathVariable(value = "id") Long userId, HttpServletRequest request){
         if(checkRoleRegistered())
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(quizService.generateQuiz(userId));
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(quizService.generateQuiz(userId));
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 
     }

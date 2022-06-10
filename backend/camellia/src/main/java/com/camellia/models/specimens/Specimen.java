@@ -10,6 +10,7 @@ import javax.persistence.*;
 import com.camellia.models.QuizAnswer;
 import com.camellia.models.characteristics.CharacteristicValue;
 import com.camellia.models.cultivars.Cultivar;
+import com.camellia.models.users.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -90,6 +91,11 @@ public class Specimen {
     @JsonIgnore
     private Map<Cultivar, Integer> cultivarProbabilities = new HashMap<>();
 
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn( referencedColumnName = "userId", name="user_id")
+    //@JsonIgnoreProperties("specimens")
+    private User user;
 
     public Cultivar getCultivar() {
         return cultivar;
@@ -196,6 +202,10 @@ public class Specimen {
 
     public void demoteToToIdentify() {
         this.setSpecimenType(SpecimenType.TO_IDENTIFY);
+    }
+
+    public void setUser(User u){
+        this.user = u;
     }
 
     public void approve() {this.setSpecimenType(SpecimenType.TO_IDENTIFY);}

@@ -2,10 +2,13 @@ package com.camellia.controllers;
 
 
 import com.camellia.models.requests.CultivarRequestDTO;
+import com.camellia.models.requests.IdentificationRequestDTO;
 import com.camellia.models.requests.ReportRequestDTO;
 import com.camellia.models.specimens.SpecimenDto;
 import com.camellia.models.users.User;
+import com.camellia.services.cultivars.CultivarService;
 import com.camellia.services.requests.CultivarRequestService;
+import com.camellia.services.requests.IdentificationRequestService;
 import com.camellia.services.requests.ReportRequestService;
 import com.camellia.services.specimens.ReferenceSpecimenService;
 import com.camellia.services.specimens.SpecimenService;
@@ -44,7 +47,13 @@ public class ModeratorController {
     CultivarRequestService cultivarRequestService;
 
     @Autowired
+    CultivarService cultivarService;
+
+    @Autowired
     UserService userService;
+
+    @Autowired
+    IdentificationRequestService identificationRequestService;
 
     @DeleteMapping("/report/{id}")
     public ResponseEntity<String> deleteReportRequest(@PathVariable(value="id") long requestId){
@@ -56,7 +65,7 @@ public class ModeratorController {
     @GetMapping("/report")
     public ResponseEntity<ReportRequestDTO> getReportRequest(){
         if(checkRole())
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(reportRequestService.getOneRequest());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(reportRequestService.getOneRequest());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
@@ -76,9 +85,9 @@ public class ModeratorController {
     }
 
     @PutMapping("/specimen/promote/{id}")
-    public ResponseEntity<SpecimenDto> promoteToReferenceSpecimen(@PathVariable Long id) throws MailException, UnsupportedEncodingException, MessagingException {
+    public ResponseEntity<SpecimenDto> promoteToReferenceSpecimen(@PathVariable Long id, @RequestParam(value="cultivar") Long cultivarId) throws MailException, UnsupportedEncodingException, MessagingException {
         if(checkRole())
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(toIdentifySpecimenService.promoteToReferenceFromId(id));
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(toIdentifySpecimenService.promoteToReferenceFromId(id, cultivarService.getCultivarById(cultivarId)));
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 
     }
@@ -86,7 +95,7 @@ public class ModeratorController {
     @PutMapping("/specimen/demote/{id}")
     public ResponseEntity<SpecimenDto> demoteToToIdentifySpecimen(@PathVariable Long id) {
         if(checkRole())
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(referenceSpecimenService.demoteToToIdentify(id));
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(referenceSpecimenService.demoteToToIdentify(id));
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 
     }
@@ -97,6 +106,13 @@ public class ModeratorController {
             reportRequestService.deleteReportRequest(requestId);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body( specimenService.deleteSpecimen(specimenId) );
         }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+
+    @PutMapping("/identification/approve/{id}")
+    public ResponseEntity<IdentificationRequestDTO> approveRequest(@PathVariable Long id) {
+        if(checkRole())
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(identificationRequestService.approveIdentificationRequest(id));
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 

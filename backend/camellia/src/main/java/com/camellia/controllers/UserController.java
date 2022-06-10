@@ -64,6 +64,28 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
+    @PutMapping(value="/autoapproval/{id}")
+    public ResponseEntity<String> giveAutoApproval(@PathVariable(value = "id") long userId){
+        if(checkRole())
+            return userService.giveAutoApproval(userId);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+
+    @PutMapping(value="/admin/{id}")
+    public ResponseEntity<String> giveAdminRole(@PathVariable(value = "id") long userId){
+        if(checkAdminRole())
+            return userService.giveAdminRole(userId);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+
+    @PutMapping(value="/mod/{id}")
+    public ResponseEntity<String> giveModRole(@PathVariable(value = "id") long userId){
+        if(checkRole())
+            return userService.giveModRole(userId);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+
+
     @GetMapping(value="/verify")
     public String verifyUser(@Param("code") String code) {
         if (userService.verify(code)) {
@@ -95,5 +117,25 @@ public class UserController {
         
         return false;
 
+    }
+
+    public boolean checkRole(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User u = userService.getUserByEmail(auth.getName());
+
+        if(u != null && ( u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN") ))
+            return true;
+        
+        return false;
+    }
+
+    public boolean checkAdminRole(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User u = userService.getUserByEmail(auth.getName());
+
+        if(u != null && u.getRolesList().contains("ADMIN") )
+            return true;
+        
+        return false;
     }
 }

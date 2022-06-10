@@ -44,4 +44,46 @@ public class ReputationParameters {
     @JsonIncludeProperties("user_id")
     private User admin_user;
     
+
+    public long getParameters_id() {
+        return this.parameters_id;
+    }
+
+    public void setParameters_id(long parameters_id) {
+        this.parameters_id = parameters_id;
+    }
+
+    public LocalDateTime getChange_date() {
+        return this.change_date;
+    }
+
+    public void setChange_date(LocalDateTime change_date) {
+        this.change_date = change_date;
+    }
+
+    public double getWeight_standard_specimen_answers() {
+        return this.weight_standard_specimen_answers;
+    }
+
+    public void setWeight_standard_specimen_answers(double weight_standard_specimen_answers) {
+        this.weight_standard_specimen_answers = weight_standard_specimen_answers;
+    }
+
+    public double getWeight_user_total_values() {
+        return this.weight_user_total_values;
+    }
+
+    public void setWeight_user_total_values(double weight_user_total_values) {
+        this.weight_user_total_values = weight_user_total_values;
+    }
+
+
+    public User getAdmin_user() {
+        return this.admin_user;
+    }
+
+    public void setAdmin_user(User admin_user) {
+        this.admin_user = admin_user;
+    }
+
 }

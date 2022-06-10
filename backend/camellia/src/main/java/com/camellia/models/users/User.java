@@ -13,6 +13,7 @@ import com.camellia.models.ReputationParameters;
 import com.camellia.models.requests.CultivarRequest;
 import com.camellia.models.requests.IdentificationRequest;
 import com.camellia.models.requests.ReportRequest;
+import com.camellia.models.specimens.Specimen;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -61,7 +62,7 @@ public class User implements Serializable{
     private String profilePhoto;
 
     @Column(name = "reputation", nullable = false)
-    private double reputation;
+    private double reputation = 0;
 
     @Column(name = "verification_code", length = 64)
     private String verificationCode;
@@ -78,6 +79,16 @@ public class User implements Serializable{
     )
     //@JsonIgnoreProperties("user")
     private Set<QuizAnswer> quizAnswers;
+
+    @Transient
+    @OneToMany (
+        fetch = FetchType.EAGER,
+        mappedBy = "user",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    //@JsonIgnoreProperties("user")
+    private Set<Specimen> specimensSubmited;
 
     @Transient
     @OneToMany(
@@ -138,6 +149,18 @@ public class User implements Serializable{
         inverseJoinColumns = @JoinColumn(
           name = "role_id", referencedColumnName = "id")) 
     private Set<Role> roles;
+
+    @Column(name = "auto_approval", nullable = false)
+    private boolean autoApproval;
+
+
+    public boolean getAutoApproval() {
+        return this.autoApproval;
+    }
+
+    public void setAutoApproval(boolean autoApproval) {
+        this.autoApproval = autoApproval;
+    }
 
     public long getUserId() {
         return this.userId;
@@ -235,13 +258,6 @@ public class User implements Serializable{
         this.cultivarRequest = cultivarRequest;
     }
 
-    public Set<ReputationParameters> getReputationParameters() {
-        return this.reputationParameters;
-    }
-
-    public void setReputationParameters(Set<ReputationParameters> reputationParameters) {
-        this.reputationParameters = reputationParameters;
-    }
 
     @Transient
     public String getDecriminatorValue() {
@@ -271,15 +287,19 @@ public class User implements Serializable{
     }
 
     public void addRole(Role role){
+        System.out.println(role);
+        System.out.println(this.roles);
         this.roles.add(role);
     }
 
     public String getProfile(){
-        return "\"profile_image\":\"" + getProfilePhoto() +
+        return "{" + "\"profile_image\":\"" + getProfilePhoto() +
             "\", " + "\"first_name\":\""  +  getFirstName() + 
             "\", " + "\"last_name\":\"" + getLastName() + 
             "\", " + "\"email\":\"" + getEmail() + 
             "\", " + "\"reputation\":" + getReputation()+
-            ", " + "\"verified\":" + getVerified(); 
+            ", " + "\"verified\":" + getVerified() + 
+            ", " + "\"auto_approval\":" + getAutoApproval()  +
+            "}";
         }
 }

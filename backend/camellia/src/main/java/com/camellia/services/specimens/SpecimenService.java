@@ -6,12 +6,16 @@ import com.camellia.models.specimens.Specimen;
 import com.camellia.models.specimens.SpecimenQuizDTO;
 
 import com.camellia.services.characteristics.CharacteristicValueService;
+import com.camellia.services.users.UserService;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,6 +27,9 @@ public class SpecimenService {
 
     @Autowired
     private CharacteristicValueService characteristicValueService;
+
+    @Autowired
+    private UserService userService;
 
 
     Logger logger = LogManager.getLogger(SpecimenService.class);
@@ -47,6 +54,9 @@ public class SpecimenService {
                     .map(characteristicValueService::getOrSaveCharacteristicValue)
                     .filter(Objects::nonNull)
                     .collect(Collectors.toSet());
+
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            specimen.setUser(userService.getUserByEmail( auth.getName() ));
 
             specimen.setCharacteristicValues(values);
         } catch (NullPointerException e) {

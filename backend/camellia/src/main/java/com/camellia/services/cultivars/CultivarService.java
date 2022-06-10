@@ -33,11 +33,18 @@ public class CultivarService {
         return repository.retrieveAllPaged(page , CULTIVARS_PER_PAGE);
     }
 
-    public CultivarDTO getCultivarById(Long id) {
+    public CultivarDTO getCultivarDTOById(Long id) {
         Optional<Cultivar> c = repository.findById(id);
         if(c.isPresent())
             return CultivarMapper.MAPPER.cultivarToCultivarDTO(c.get());
         return new CultivarDTO();
+    }
+
+    public Cultivar getCultivarById(Long id) {
+        Optional<Cultivar> c = repository.findById(id);
+        if(c.isPresent())
+            return c.get();
+        return new Cultivar();
     }
 
     public Cultivar getCultivarByEpithet(String epithet){

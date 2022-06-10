@@ -148,13 +148,20 @@ public class QuizService {
 
                 int totalVotes = s.getCultivarProbabilities().values().stream().reduce(0, Integer::sum);
 
-                int reputationSum = 0;
-                for(Long id : repository.getUsersFromSpecimen(s.getSpecimenId())){
-                    reputationSum += userService.getUserById(id).getReputation();
-                }
 
-                if( reputationSum / totalVotes * 100 > 80)
-                    toIdentifySpecimenService.promoteToReferenceFromId(s.getSpecimenId());
+                int reputationSum;
+
+                for(Cultivar tempC : s.getCultivarProbabilities().keySet()){
+                    reputationSum = 0;
+                    for(Long id : repository.getUsersFromCultivar(s.getSpecimenId(), tempC.getId())){
+                        reputationSum += userService.getUserById(id).getReputation();
+                    }
+
+                    if( reputationSum / totalVotes * 100 > 80){
+                        toIdentifySpecimenService.promoteToReferenceFromId(s.getSpecimenId(), tempC);
+                        break;
+                    }
+                }
 
                 
             }
