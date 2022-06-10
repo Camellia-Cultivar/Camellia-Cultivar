@@ -42,7 +42,6 @@ public class UPOVCategory {
     @JsonIgnoreProperties("upov_category")
     private Set<Characteristic> characteristics;
 
-    
     public long getUpovCategoryId() {
         return upovCategoryId;
     }
@@ -53,5 +52,17 @@ public class UPOVCategory {
 
     public Set<Characteristic> getCharacteristics() {
         return characteristics;
+    }
+
+    public void setUpovCategoryId(long upovCategoryId) {
+        this.upovCategoryId = upovCategoryId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCharacteristics(Set<Characteristic> characteristics) {
+        this.characteristics = characteristics;
     }
 }

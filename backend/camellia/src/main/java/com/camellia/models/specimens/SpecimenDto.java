@@ -1,7 +1,6 @@
 package com.camellia.models.specimens;
 
-import com.camellia.models.characteristics.CharacteristicValue;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.camellia.models.characteristics.CharacteristicValueDTO;
 
 import java.util.Set;
 
@@ -14,8 +13,7 @@ public class SpecimenDto {
     private double latitude;
     private double longitude;
     private String garden;
-    @JsonIgnoreProperties("specimens")
-    private Set<CharacteristicValue> characteristicValues;
+    private Set<CharacteristicValueDTO> characteristicValues;
     private SpecimenType specimenType;
 
     public long getSpecimenId() {
@@ -74,11 +72,11 @@ public class SpecimenDto {
         this.garden = garden;
     }
 
-    public Set<CharacteristicValue> getCharacteristicValues() {
+    public Set<CharacteristicValueDTO> getCharacteristicValues() {
         return characteristicValues;
     }
 
-    public void setCharacteristicValues(Set<CharacteristicValue> characteristicValues) {
+    public void setCharacteristicValues(Set<CharacteristicValueDTO> characteristicValues) {
         this.characteristicValues = characteristicValues;
     }
 
