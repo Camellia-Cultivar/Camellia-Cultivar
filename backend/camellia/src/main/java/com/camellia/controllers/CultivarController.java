@@ -1,19 +1,16 @@
 package com.camellia.controllers;
 
-import com.camellia.models.cultivars.Cultivar;
-import com.camellia.models.cultivars.CultivarDTO;
-import com.camellia.models.cultivars.CultivarSynonymDTO;
-import com.camellia.models.cultivars.CultivarSynonyms;
+import com.camellia.models.cultivars.*;
 import com.camellia.models.users.User;
 import com.camellia.services.cultivars.CultivarService;
 import com.camellia.services.cultivars.CultivarSynonymsService;
 import com.camellia.services.requests.CultivarRequestService;
 import com.camellia.services.users.UserService;
-import com.camellia.views.CultivarListView;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -24,11 +21,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
@@ -44,8 +39,15 @@ public class CultivarController {
     private UserService userService;
 
     @GetMapping("/public/cultivars")
-    public List<CultivarListView> getCultivarList(@Valid @RequestParam long page){
-        return cultivarService.getCultivars(page);
+    public Page<CultivarCardView> getCultivarPage(
+            @RequestParam(name = "page") Optional<Integer> page,
+            @RequestParam(name = "number") Optional<Integer> quantity,
+            @RequestParam(name = "search") Optional<String> searchBy
+    ){
+        Pageable pageable = PageRequest.of(page.orElse(0), quantity.orElse(9));
+        return searchBy.isPresent() ?
+                cultivarService.getCultivarsBySearchTermAndPage(searchBy.get(), pageable) :
+                cultivarService.getCultivarsByPage(pageable);
     }
 
     @GetMapping("/public/cultivars/{id}")
@@ -88,10 +90,7 @@ public class CultivarController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User u = userService.getUserByEmail(auth.getName());
 
-        if(u != null && ( u.getRolesList().contains("REGISTERED") || u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN") ))
-            return true;
-        
-        return false;
+        return u != null && (u.getRolesList().contains("REGISTERED") || u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN"));
 
     }
 
@@ -100,10 +99,7 @@ public class CultivarController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User u = userService.getUserByEmail(auth.getName());
 
-        if(u != null && ( u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN") ))
-            return true;
-        
-        return false;
+        return u != null && (u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN"));
 
     }
 }
