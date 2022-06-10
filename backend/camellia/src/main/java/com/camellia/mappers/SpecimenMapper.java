@@ -1,11 +1,12 @@
 package com.camellia.mappers;
 
+import com.camellia.mappers.characteristics.CharacteristicValueMapper;
 import com.camellia.models.specimens.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(uses = CharacteristicValueMapper.class)
 public interface SpecimenMapper {
 
     SpecimenMapper MAPPER = Mappers.getMapper(SpecimenMapper.class );
