@@ -109,7 +109,14 @@ public class ModeratorController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
-    @PutMapping("/identification/approve/{id}")
+    @GetMapping("/identification")
+    public ResponseEntity<IdentificationRequestDTO> getOldestIdentificationRequest() {
+        if(checkRole())
+            return ResponseEntity.status(HttpStatus.OK).body(identificationRequestService.getOldestUnapprovedRequest());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+
+    @PutMapping("/identification/{id}/approve")
     public ResponseEntity<IdentificationRequestDTO> approveRequest(@PathVariable Long id) {
         if(checkRole())
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(identificationRequestService.approveIdentificationRequest(id));
