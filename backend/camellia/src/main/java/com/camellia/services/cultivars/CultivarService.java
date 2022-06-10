@@ -2,13 +2,13 @@ package com.camellia.services.cultivars;
 
 import com.camellia.mappers.CultivarMapper;
 import com.camellia.models.cultivars.Cultivar;
+import com.camellia.models.cultivars.CultivarCardView;
 import com.camellia.repositories.cultivars.CultivarRepository;
 import com.camellia.views.CultivarListView;
 import com.camellia.models.cultivars.CultivarDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,8 +25,12 @@ public class CultivarService {
     @Autowired
     private CultivarRepository repository;
 
-    public Page<Cultivar> getCultivars(Pageable pageable) {
-        return repository.findAll(pageable);
+    public Page<CultivarCardView> getCultivarsByPage(Pageable pageable) {
+        return repository.findBy(pageable);
+    }
+
+    public Page<CultivarCardView> getCultivarsBySearchTermAndPage(String searchTerm, Pageable pageable) {
+        return repository.findByEpithetStartsWithIgnoreCase(searchTerm, pageable);
     }
 
     public List<CultivarListView> getCultivars(long page) {
@@ -44,9 +48,7 @@ public class CultivarService {
 
     public Cultivar getCultivarById(Long id) {
         Optional<Cultivar> c = repository.findById(id);
-        if(c.isPresent())
-            return c.get();
-        return new Cultivar();
+        return c.orElseGet(Cultivar::new);
     }
 
     public Optional<Cultivar> getOptionalCultivarById(Long id) {
@@ -54,7 +56,7 @@ public class CultivarService {
     }
 
     public Cultivar getCultivarByEpithet(String epithet){
-        return repository.findByEpithet(epithet);
+        return repository.findByEpithetStartsWithIgnoreCase(epithet);
     }
 
     public Cultivar createCultivar(CultivarDTO cultivar){
