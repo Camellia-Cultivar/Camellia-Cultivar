@@ -13,6 +13,7 @@ import com.camellia.services.users.ModeratorUserService;
 import com.camellia.services.users.RegisteredUserService;
 import com.camellia.services.users.UserService;
 
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
@@ -54,7 +55,7 @@ public class UserController {
     public ResponseEntity<String> getProfile(@PathVariable(value = "id") long id){
         if(checkRoleRegistered())
             return userService.getUserProfile(id);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
 
     @PutMapping(value="/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -89,7 +90,7 @@ public class UserController {
     public boolean checkRoleRegistered(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User u = userService.getUserByEmail(auth.getName());
-
+        Logger.getLogger(this.getClass().getName()).info(u.getRolesList());
         if(u != null && ( u.getRolesList().contains("REGISTERED") || u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN") ))
             return true;
         

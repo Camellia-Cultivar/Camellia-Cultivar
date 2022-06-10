@@ -31,7 +31,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/cultivars")
+@RequestMapping("/api/public/cultivars")
 public class CultivarController {
     
     @Autowired
