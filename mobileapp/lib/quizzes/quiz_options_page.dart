@@ -30,7 +30,6 @@ class QuizOptionsPage extends StatelessWidget {
 
     _handleStartNewQuiz(BuildContext context) async {
       questions = await api.getQuiz(user!);
-      print(questions);
       if (questions == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

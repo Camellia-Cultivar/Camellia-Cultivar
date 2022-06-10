@@ -27,13 +27,11 @@ class UpovSubcategory {
   }
 
   factory UpovSubcategory.fromJson(Map<String, dynamic> json) {
-    // print(json);
     var charObjsJson = json["options"] as List;
     if (charObjsJson == null) {
       return UpovSubcategory(options: [], name: json["name"], id: json["id"]);
     }
 
-    // print(charObjsJson);
     List<UpovSubcategoryOption> _options = charObjsJson
         .map((optJson) => UpovSubcategoryOption.fromJson(optJson))
         .toList();

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:camellia_cultivar/model/List_of_categories.dart';
 import 'package:camellia_cultivar/model/coordinates.dart';
 import 'package:camellia_cultivar/model/question.dart';
 import 'package:camellia_cultivar/model/uploaded_specimen.dart';
@@ -64,7 +63,6 @@ class APIService {
       });
       if (response.statusCode == 202) {
         User api_user = userFromJson(response.body, uid);
-        print("user from api" + api_user.toString());
         // api_user.profileImage = "\x00";
         return api_user;
       }
@@ -77,7 +75,6 @@ class APIService {
   Future<List<Object>> createUser(Map signup_user) async {
     try {
       var url = Uri.parse(APIConstants.baseUrl + APIConstants.registerEndpoint);
-      // print(url);
       var body = jsonEncode(signup_user);
       var response = await http.post(url,
           headers: <String, String>{
@@ -100,7 +97,6 @@ class APIService {
       var url = Uri.parse(APIConstants.baseUrl +
           APIConstants.editProfileEndpoint +
           "/${user.id}");
-      print(user);
       Map<String, String> request = {
         "first_name": user.firstName,
         "last_name": user.lastName,
@@ -119,7 +115,6 @@ class APIService {
             'Authorization': 'Bearer ${await storage.read(key: 'token')}'
           },
           body: body);
-      print(response.body);
 
       if (response.statusCode != 200) {
         throw Exception("Update of profile did not suceed!");
@@ -212,10 +207,8 @@ class APIService {
       if (response.statusCode == 200) {
         List questionJsonList = json.decode(response.body) as List;
         for (dynamic questionJson in questionJsonList) {
-          print(questionJson);
           lst.add(Question.fromJson(questionJson));
         }
-        print(lst);
         return lst;
       }
     } catch (e) {
@@ -244,7 +237,6 @@ class APIService {
           Uri.parse(APIConstants.baseUrl + APIConstants.quizEndpoint + "/$uid");
       // var obj = {"answers": lst};
       var body = jsonEncode(lst);
-      print(lst);
       var response = await http.post(url,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
@@ -252,8 +244,6 @@ class APIService {
             'Authorization': 'Bearer ${await storage.read(key: 'token')}'
           },
           body: body);
-      print(response.statusCode);
-      print(response.body);
       if (response.statusCode != 200) {
         throw Exception("Submission of quiz answers did not suceed!");
       }
@@ -269,7 +259,6 @@ class APIService {
       var response = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       });
-      print(response.statusCode);
       if (response.statusCode == 200) {
         List<Map> specimensMaps = (json.decode(response.body) as List)
             .map((specimen) => (specimen as Map))
@@ -317,7 +306,6 @@ class APIService {
           };
           lst.add(new_obj);
         }
-        print(lst.toString() + "\t im on the api service");
         return lst;
       }
     } catch (e) {
@@ -350,7 +338,6 @@ class APIService {
       var url =
           Uri.parse(APIConstants.baseUrl + APIConstants.createSpecimenEndpoint);
       var body = jsonEncode(specimenToUpload);
-      print(body);
       var response = await http.post(url,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8'
@@ -406,8 +393,6 @@ class APIService {
         'Authorization': 'Bearer ${await storage.read(key: 'token')}'
       });
 
-      // print(response.statusCode.toString() + "\n" + response.body);
-
       // {"id":1,"species":"C. japonica",
       // "epithet":"A. Markley Lee",
       // "description":"Fruitland Nursery Catalogue, 1943-1944, p.20: Imbricated pink similar to 'Pink Perfection' (Otome). Raised in USA.",
@@ -423,7 +408,6 @@ class APIService {
             ]
           }
         ];
-        // print(cultivarDetails);
         return cultivarDetails;
       }
     } catch (e) {
@@ -448,8 +432,6 @@ class APIService {
         'Content-Type': 'application/json; charset=UTF-8',
       });
 
-      // print(response.statusCode.toString() + "\n" + response.body);
-
       // {"id":1,"species":"C. japonica",
       // "epithet":"A. Markley Lee",
       // "description":"Fruitland Nursery Catalogue, 1943-1944, p.20: Imbricated pink similar to 'Pink Perfection' (Otome). Raised in USA.",
@@ -459,7 +441,6 @@ class APIService {
         List<String> cultivarPhotos = (json.decode(response.body) as List)
             .map((e) => e as String)
             .toList();
-        // print(cultivarDetails);
         return cultivarPhotos;
       }
     } catch (e) {

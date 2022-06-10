@@ -272,7 +272,6 @@ class _CultivarPage extends State<CultivarPage> {
   handleMorePhotos(BuildContext context) async {
     List<String> photos =
         await APIService().getCultivarPhotos(widget.cultivarDetails["id"]);
-    print(photos);
     if (photos.isNotEmpty) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => SliderShowFullmages(

@@ -28,7 +28,6 @@ class SpecimenPopupState extends State<SpecimenPopup> {
   @override
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
-    print("costum popup");
     return _buildDialogContent();
   }
 

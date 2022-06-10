@@ -25,7 +25,6 @@ class UpovSubcategoryOption {
   }
 
   factory UpovSubcategoryOption.fromJson(Map<String, dynamic> json) {
-    // print(json);
     return UpovSubcategoryOption(
         id: json["id"], descriptor: json["descriptor"], value: json["value"]);
   }

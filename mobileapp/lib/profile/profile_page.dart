@@ -107,7 +107,6 @@ class _ProfilePage extends State<ProfilePage> {
   }
 
   void handleLogout(BuildContext context, User user) async {
-    print(one_call.toString() + "heres 2nd onecall");
     await logout(context, user);
 
     ScaffoldMessenger.of(context).showSnackBar(

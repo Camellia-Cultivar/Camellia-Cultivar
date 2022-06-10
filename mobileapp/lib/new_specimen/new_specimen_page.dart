@@ -86,7 +86,6 @@ class NewSpecimen extends State<NewSpecimenPage> {
         List<Placemark> placemarks = await GeocodingPlatform.instance
             .placemarkFromCoordinates(position.latitude, position.longitude);
         var first_address = placemarks.first;
-        print(first_address.toString());
         setState(() {
           userAddress = first_address.toJson();
         });
@@ -232,7 +231,6 @@ class NewSpecimen extends State<NewSpecimenPage> {
         //   'longitude': userLocation!.longitude,
         //   'characteristicValues': characteristicValues
         // };
-        // print("specimen to upload\t" + specimenToUpload.toString());
       } else {
         if (userAddress == null) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -282,7 +280,6 @@ class NewSpecimen extends State<NewSpecimenPage> {
           'characteristicValues': characteristicValues
         };
         var statusCode = await api.postSpecimenRequest(specimenToUpload);
-        print(statusCode);
         if (statusCode == 200 || statusCode == 201 || statusCode == 202) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -689,7 +686,6 @@ class NewSpecimen extends State<NewSpecimenPage> {
 
                       if (snapshot.hasData) {
                         var upovs = snapshot.data! as List;
-                        print("length of upovs\t" + upovs.length.toString());
                         return _buildUpovs(context, upovs);
                       }
                       return Row(

@@ -365,8 +365,6 @@ class _EditProfilePage extends State<EditProfilePage> {
                                                       controller:
                                                           passwordController,
                                                       validator: (value) {
-                                                        print("Value: " +
-                                                            value.toString());
                                                         if ((value == null ||
                                                             value.isEmpty)) {
                                                           return 'Password is required!';
