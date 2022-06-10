@@ -7,6 +7,8 @@ import com.camellia.views.CultivarListView;
 import com.camellia.models.cultivars.CultivarDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,6 +49,10 @@ public class CultivarService {
         return new Cultivar();
     }
 
+    public Optional<Cultivar> getOptionalCultivarById(Long id) {
+        return repository.findById(id);
+    }
+
     public Cultivar getCultivarByEpithet(String epithet){
         return repository.findByEpithet(epithet);
     }
@@ -59,5 +65,9 @@ public class CultivarService {
         c.setSpecies(cultivar.getSpecies());
 
         return repository.save(c);
+    }
+
+    public Page<String> getPhotosOfReferenceSpecimensByCultivarId(Cultivar cultivar, PageRequest pageRequest) {
+        return repository.getPhotosOfReferenceSpecimensFromCultivarByPage(cultivar, pageRequest);
     }
 }

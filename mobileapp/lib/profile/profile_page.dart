@@ -1,12 +1,12 @@
 import 'package:camellia_cultivar/cultivar_page.dart';
-import 'package:camellia_cultivar/edit_profile_page.dart';
+import 'package:camellia_cultivar/profile/edit_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:camellia_cultivar/providers/user.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/utils/auth.dart';
-import 'api/api_service.dart';
-import 'navbar/botnavbar.dart';
+import '../api/api_service.dart';
+import '../navbar/botnavbar.dart';
 
 class UserDetailWidget extends StatelessWidget {
   const UserDetailWidget({Key? key, required this.icon, required this.text})

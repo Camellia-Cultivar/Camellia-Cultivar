@@ -74,8 +74,11 @@ public class Specimen {
     Set<CharacteristicValue> characteristicValues;
 
     @ElementCollection
-    @Column(name = "photo")
-    @CollectionTable(name = "specimen_photos", joinColumns = @JoinColumn(name = "specimen_id"))
+    @Column(name = "url")
+    @CollectionTable(
+            name = "specimen_photos",
+            joinColumns = @JoinColumn(name = "specimen_id", referencedColumnName = "specimen_id")
+    )
     private Set<String> photos = new LinkedHashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)

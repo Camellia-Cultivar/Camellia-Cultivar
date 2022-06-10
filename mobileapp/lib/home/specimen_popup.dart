@@ -75,7 +75,7 @@ class SpecimenPopupState extends State<SpecimenPopup> {
 
   Container _buildSpeciesName() {
     return Container(
-      margin: const EdgeInsets.only(top: 3),
+      margin: const EdgeInsets.only(top: 3, bottom: 10),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Text(
           widget.specimen!["species"],
@@ -104,8 +104,17 @@ class SpecimenPopupState extends State<SpecimenPopup> {
     );
   }
 
-  ClipRRect expandForMoreImages(List list) {
+  Widget expandForMoreImages(List list) {
     var idx = 0;
+    if (list.isEmpty) {
+      return SizedBox(
+        height: 120,
+        width: MediaQuery.of(context).size.width,
+        child: const Center(
+          child: Text("No images to show"),
+        ),
+      );
+    }
     var obj = ClipRRect(
         borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(5), topRight: Radius.circular(5)),

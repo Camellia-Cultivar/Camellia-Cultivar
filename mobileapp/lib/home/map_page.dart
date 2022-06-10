@@ -231,7 +231,6 @@ class _ShowFullMapState extends State<ShowFullMap> {
 }
 
 Map<String, dynamic>? getSpecimenByLatLong(LatLng point, List specimens) {
-  print(point);
   for (Map<String, dynamic> specimen in specimens) {
     if (point == specimen["coords"]) {
       return specimen;

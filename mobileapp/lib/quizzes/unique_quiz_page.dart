@@ -2,7 +2,7 @@ import 'package:camellia_cultivar/api/api_service.dart';
 import 'package:camellia_cultivar/home/homepage.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/providers/user.dart';
-import 'package:camellia_cultivar/quiz_page.dart';
+import 'package:camellia_cultivar/quizzes/quiz_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +12,9 @@ class UniqueQuizPage extends StatefulWidget {
 
   final String image;
 
-  const UniqueQuizPage({Key? key, required this.specimenId, required this.image}) : super(key: key);
+  const UniqueQuizPage(
+      {Key? key, required this.specimenId, required this.image})
+      : super(key: key);
 
   @override
   _UniqueQuizPageState createState() => _UniqueQuizPageState();
@@ -21,14 +23,11 @@ class UniqueQuizPage extends StatefulWidget {
 class _UniqueQuizPageState extends State<UniqueQuizPage> {
   final api = APIService();
 
-
   List<String> lst = <String>[
     'C. Japonica April Dawn',
     'C. Japonica Debutante',
     'C. Sasanqua Mine No Uki',
   ];
-
-
 
   List<T> map<T>(List data, Function handler) {
     List<T> result = [];
@@ -56,8 +55,8 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
 
   void handleEditingComplete() {
     setState(() {
-      form[widget.specimenId!] =
-          FormItem(widget.specimenId, _cultivarNameController?.text);
+      // form[widget.specimenId!] =
+      //     FormItem(widget.specimenId, _cultivarNameController?.text);
     });
     _focusInput?.unfocus();
   }
@@ -84,8 +83,7 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text(
-              'Thank you for answering this quiz!'),
+          content: Text('Thank you for answering this quiz!'),
           backgroundColor: Colors.green),
     );
   }
@@ -123,8 +121,7 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
                             Navigator.pop(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const HomePage()))
+                                    builder: (context) => const HomePage()))
                           })),
                       icon: const Icon(
                         IconData(0xe16a, fontFamily: 'MaterialIcons'),
@@ -143,12 +140,11 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
                             fontSize: screenSize.height / 35)),
                     const Padding(padding: EdgeInsets.all(30)),
                     SizedBox(
-                      width: screenSize.width / 1.5,
-                      height: screenSize.height / 3,
-                      child: Image.network(widget.image,
-                                width: screenSize.width / 1.5,
-                                fit: BoxFit.fitHeight)
-                    ),
+                        width: screenSize.width / 1.5,
+                        height: screenSize.height / 3,
+                        child: Image.network(widget.image,
+                            width: screenSize.width / 1.5,
+                            fit: BoxFit.fitHeight)),
                     Container(
                         padding: const EdgeInsets.only(top: 20, bottom: 20),
                         width: screenSize.width / 1.5,

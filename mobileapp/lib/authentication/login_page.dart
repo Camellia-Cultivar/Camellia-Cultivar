@@ -3,7 +3,7 @@ import 'package:camellia_cultivar/extensions/string_apis.dart';
 import 'package:camellia_cultivar/home/homepage.dart';
 import 'package:camellia_cultivar/local_auth_api.dart';
 import 'package:camellia_cultivar/model/user.dart';
-import 'package:camellia_cultivar/register_page.dart';
+import 'package:camellia_cultivar/authentication/register_page.dart';
 import 'package:camellia_cultivar/utils/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
