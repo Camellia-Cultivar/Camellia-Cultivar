@@ -14,10 +14,14 @@ import com.camellia.services.users.RegisteredUserService;
 import com.camellia.services.users.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,20 +52,48 @@ public class UserController {
 
     @GetMapping(value="/{id}")
     public ResponseEntity<String> getProfile(@PathVariable(value = "id") long id){
-        return userService.getUserProfile(id);
+        if(checkRoleRegistered())
+            return userService.getUserProfile(id);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
     @PutMapping(value="/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> editProfile(@Valid @RequestBody User tempUser, @PathVariable(value = "id") long id){
-        return this.userService.editProfile( tempUser, id );
+        if(checkRoleRegistered())
+            return this.userService.editProfile( tempUser, id );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
+
+    @PutMapping(value="/autoapproval/{id}")
+    public ResponseEntity<String> giveAutoApproval(@PathVariable(value = "id") long userId){
+        if(checkRole())
+            return userService.giveAutoApproval(userId);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+
+    @PutMapping(value="/admin/{id}")
+    public ResponseEntity<String> giveAdminRole(@PathVariable(value = "id") long userId){
+        if(checkAdminRole())
+            return userService.giveAdminRole(userId);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+
+    @PutMapping(value="/mod/{id}")
+    public ResponseEntity<String> giveModRole(@PathVariable(value = "id") long userId){
+        if(checkRole())
+            return userService.giveModRole(userId);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+
 
     @GetMapping(value="/verify")
     public String verifyUser(@Param("code") String code) {
         if (userService.verify(code)) {
-            return "Account is verified";
+            return "<html>\n" + "<header><title>Camellia Account Verification</title></header>\n" +
+            "<body>\n" + "<h1> Account Verified </h1>\n" + "<a href=\"" + homepage + "\">Go to the home page</a>" + "</body>\n" + "</html>";
         } else {
-            return "Verification failed";
+            return "<html>\n" + "<header><title>Camellia Account Verification</title></header>\n" +
+            "<body>\n" + "<h1> Verification Failed. If something went wrong, please reach our team.</h1>\n" + "<a href=\"" + homepage + "\">Go to the home page</a>" + "</body>\n" + "</html>";
         }
     }
 
@@ -70,4 +102,40 @@ public class UserController {
         String siteURL = request.getRequestURL().toString();
         return siteURL.replace(request.getServletPath(), "");
     }  
+
+
+    @Value("${homepage.path}")
+    private String homepage;
+
+
+    public boolean checkRoleRegistered(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User u = userService.getUserByEmail(auth.getName());
+
+        if(u != null && ( u.getRolesList().contains("REGISTERED") || u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN") ))
+            return true;
+        
+        return false;
+
+    }
+
+    public boolean checkRole(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User u = userService.getUserByEmail(auth.getName());
+
+        if(u != null && ( u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN") ))
+            return true;
+        
+        return false;
+    }
+
+    public boolean checkAdminRole(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User u = userService.getUserByEmail(auth.getName());
+
+        if(u != null && u.getRolesList().contains("ADMIN") )
+            return true;
+        
+        return false;
+    }
 }

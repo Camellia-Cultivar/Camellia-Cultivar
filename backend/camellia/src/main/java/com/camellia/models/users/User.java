@@ -1,6 +1,8 @@
 package com.camellia.models.users;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -11,6 +13,7 @@ import com.camellia.models.ReputationParameters;
 import com.camellia.models.requests.CultivarRequest;
 import com.camellia.models.requests.IdentificationRequest;
 import com.camellia.models.requests.ReportRequest;
+import com.camellia.models.specimens.Specimen;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -59,7 +62,7 @@ public class User implements Serializable{
     private String profilePhoto;
 
     @Column(name = "reputation", nullable = false)
-    private double reputation;
+    private double reputation = 0;
 
     @Column(name = "verification_code", length = 64)
     private String verificationCode;
@@ -76,6 +79,16 @@ public class User implements Serializable{
     )
     //@JsonIgnoreProperties("user")
     private Set<QuizAnswer> quizAnswers;
+
+    @Transient
+    @OneToMany (
+        fetch = FetchType.EAGER,
+        mappedBy = "user",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    //@JsonIgnoreProperties("user")
+    private Set<Specimen> specimensSubmited;
 
     @Transient
     @OneToMany(
@@ -110,7 +123,7 @@ public class User implements Serializable{
     @Transient
     @OneToMany(
             fetch = FetchType.EAGER,
-            mappedBy = "admin_user",
+            mappedBy = "adminUser",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
@@ -120,12 +133,34 @@ public class User implements Serializable{
     @Transient
     @OneToMany(
         fetch = FetchType.EAGER,
-        mappedBy = "admin_user",
+        mappedBy = "adminUser",
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
     @JsonIgnoreProperties("admin_user")
     private Set<QuizParameters> quizParameters;
+
+
+    @ManyToMany 
+    @JoinTable( 
+        name = "users_roles", 
+        joinColumns = @JoinColumn(
+          name = "user_id", referencedColumnName = "userId"), 
+        inverseJoinColumns = @JoinColumn(
+          name = "role_id", referencedColumnName = "id")) 
+    private Set<Role> roles;
+
+    @Column(name = "auto_approval", nullable = false)
+    private boolean autoApproval;
+
+
+    public boolean getAutoApproval() {
+        return this.autoApproval;
+    }
+
+    public void setAutoApproval(boolean autoApproval) {
+        this.autoApproval = autoApproval;
+    }
 
     public long getUserId() {
         return this.userId;
@@ -223,13 +258,6 @@ public class User implements Serializable{
         this.cultivarRequest = cultivarRequest;
     }
 
-    public Set<ReputationParameters> getReputationParameters() {
-        return this.reputationParameters;
-    }
-
-    public void setReputationParameters(Set<ReputationParameters> reputationParameters) {
-        this.reputationParameters = reputationParameters;
-    }
 
     @Transient
     public String getDecriminatorValue() {
@@ -244,12 +272,34 @@ public class User implements Serializable{
         this.verificationCode = verificationCode;
     }
 
+    public Set<Role> getRoles(){
+        return this.roles;
+    }
+
+    public List<String> getRolesList(){
+        Set<Role> rolesSet = getRoles();
+        List<String> authorities = new ArrayList<>();
+         
+        for (Role role : rolesSet) {
+            authorities.add(role.getName());
+        }
+        return authorities;
+    }
+
+    public void addRole(Role role){
+        System.out.println(role);
+        System.out.println(this.roles);
+        this.roles.add(role);
+    }
+
     public String getProfile(){
-        return "\"profile_image\":\"" + getProfilePhoto() +
+        return "{" + "\"profile_image\":\"" + getProfilePhoto() +
             "\", " + "\"first_name\":\""  +  getFirstName() + 
             "\", " + "\"last_name\":\"" + getLastName() + 
             "\", " + "\"email\":\"" + getEmail() + 
             "\", " + "\"reputation\":" + getReputation()+
-            ", " + "\"verified\":" + getVerified(); 
+            ", " + "\"verified\":" + getVerified() + 
+            ", " + "\"auto_approval\":" + getAutoApproval()  +
+            "}";
         }
 }

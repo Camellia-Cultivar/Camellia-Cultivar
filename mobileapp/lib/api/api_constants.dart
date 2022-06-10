@@ -5,7 +5,7 @@ class APIConstants {
   static String registerEndpoint = "/users/signup";
   static String profileEndpoint = "/users";
   static String editProfileEndpoint = "/users";
-  static String cultivarEdpoint = "/cultivars"; /*doing*/
+  static String cultivarEdpoint = "/public/cultivars"; /*doing*/
   static String uploadedSpecimensEndpoint = "/uploaded"; //todo
   static String recentlyUploadedSpecimensEndpoint =
       "/public/specimen/recent"; /*doing*/

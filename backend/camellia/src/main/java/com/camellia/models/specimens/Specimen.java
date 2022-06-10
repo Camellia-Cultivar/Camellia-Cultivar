@@ -10,6 +10,7 @@ import javax.persistence.*;
 import com.camellia.models.QuizAnswer;
 import com.camellia.models.characteristics.CharacteristicValue;
 import com.camellia.models.cultivars.Cultivar;
+import com.camellia.models.users.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -18,9 +19,18 @@ import org.hibernate.annotations.Cascade;
 @Entity
 @Table(name = "specimen")
 public class Specimen {
-    
+
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(
+            strategy =  GenerationType.SEQUENCE,
+            generator = "specimen_sequence_generator"
+    )
+    @SequenceGenerator(
+            name = "specimen_sequence_generator",
+            sequenceName = "specimen_sequence",
+            allocationSize = 1
+    )
     @Column(name = "specimen_id")
     private long specimenId;
 
@@ -64,8 +74,11 @@ public class Specimen {
     Set<CharacteristicValue> characteristicValues;
 
     @ElementCollection
-    @Column(name = "photo")
-    @CollectionTable(name = "specimen_photos", joinColumns = @JoinColumn(name = "specimen_id"))
+    @Column(name = "url")
+    @CollectionTable(
+            name = "specimen_photos",
+            joinColumns = @JoinColumn(name = "specimen_id", referencedColumnName = "specimen_id")
+    )
     private Set<String> photos = new LinkedHashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -79,8 +92,13 @@ public class Specimen {
     )
     @MapKeyJoinColumn(name = "cultivar_id")
     @JsonIgnore
-    private Map<Cultivar, Float> cultivarProbabilities = new HashMap<>();
+    private Map<Cultivar, Integer> cultivarProbabilities = new HashMap<>();
 
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn( referencedColumnName = "userId", name="user_id")
+    //@JsonIgnoreProperties("specimens")
+    private User user;
 
     public Cultivar getCultivar() {
         return cultivar;
@@ -90,11 +108,11 @@ public class Specimen {
         this.cultivar = cultivar;
     }
 
-    public Map<Cultivar, Float> getCultivarProbabilities() {
+    public Map<Cultivar, Integer> getCultivarProbabilities() {
         return cultivarProbabilities;
     }
 
-    public void setCultivarProbabilities(Map<Cultivar, Float> cultivarProbabilities) {
+    public void setCultivarProbabilities(Map<Cultivar, Integer> cultivarProbabilities) {
         this.cultivarProbabilities = cultivarProbabilities;
     }
 
@@ -187,5 +205,17 @@ public class Specimen {
 
     public void demoteToToIdentify() {
         this.setSpecimenType(SpecimenType.TO_IDENTIFY);
+    }
+
+    public void setUser(User u){
+        this.user = u;
+    }
+
+    public void approve() {this.setSpecimenType(SpecimenType.TO_IDENTIFY);}
+
+    public void addCultivarVote(Cultivar c){
+        if(this.cultivarProbabilities.containsKey(c))
+            this.cultivarProbabilities.put(c, this.cultivarProbabilities.get(c) + 1);
+        this.cultivarProbabilities.put(c, 1);
     }
 }

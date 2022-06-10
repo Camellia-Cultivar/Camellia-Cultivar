@@ -431,4 +431,40 @@ class APIService {
     }
     return {};
   }
+
+  Future<List<String>> getCultivarPhotos(int cultivarId) async {
+    var url;
+    try {
+      if (cultivarId == null) {
+        url = Uri.parse(
+            APIConstants.baseUrl + APIConstants.cultivarEdpoint + "/1/photos");
+        //"/$cultivarId");
+      } else {
+        url = Uri.parse(APIConstants.baseUrl +
+            APIConstants.cultivarEdpoint +
+            "/$cultivarId/photos");
+      }
+      var response = await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      });
+
+      // print(response.statusCode.toString() + "\n" + response.body);
+
+      // {"id":1,"species":"C. japonica",
+      // "epithet":"A. Markley Lee",
+      // "description":"Fruitland Nursery Catalogue, 1943-1944, p.20: Imbricated pink similar to 'Pink Perfection' (Otome). Raised in USA.",
+      // "photograph":null,"synonyms":[],"characteristicValues":[],"cultivarVotes":{}}
+
+      if (response.statusCode == 200) {
+        List<String> cultivarPhotos = (json.decode(response.body) as List)
+            .map((e) => e as String)
+            .toList();
+        // print(cultivarDetails);
+        return cultivarPhotos;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return [];
+  }
 }

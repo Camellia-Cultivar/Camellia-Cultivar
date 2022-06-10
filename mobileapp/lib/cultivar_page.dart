@@ -249,13 +249,7 @@ class _CultivarPage extends State<CultivarPage> {
                         child: TextButton(
                             style: const ButtonStyle(
                                 alignment: Alignment.centerLeft),
-                            onPressed: () => {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => SliderShowFullmages(
-                                          listImagesModel: json["photos"],
-                                          current: 0,
-                                          isNetworkImg: true)))
-                                },
+                            onPressed: () => handleMorePhotos(context),
                             child: Wrap(
                               crossAxisAlignment: WrapCrossAlignment.center,
                               children: [
@@ -273,5 +267,23 @@ class _CultivarPage extends State<CultivarPage> {
                 ],
               ),
             )));
+  }
+
+  handleMorePhotos(BuildContext context) async {
+    List<String> photos =
+        await APIService().getCultivarPhotos(widget.cultivarDetails["id"]);
+    print(photos);
+    if (photos.isNotEmpty) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SliderShowFullmages(
+              listImagesModel: photos, current: 0, isNetworkImg: true)));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            "There aren't more photos.",
+            style: TextStyle(color: Colors.blue),
+          ),
+          backgroundColor: Colors.white));
+    }
   }
 }
