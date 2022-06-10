@@ -359,21 +359,51 @@ class APIService {
         'Access-Control-Allow-Origin': '*',
         'Authorization': 'Bearer ${await storage.read(key: 'token')}'
       });
-      // print(response.statusCode.toString() + response.body);
       if (response.statusCode == 200) {
         List<dynamic> optionsJson = json.decode(response.body) as List;
-//{"cultivarId":21976,"denomination":"Camelia Oleifera Abel 31"}
-        Map<String, int> options =
-            {}; /*optionsJson
-            .map((optionJson) => {
-                  optionJson["denomination"] as String:
-                      optionJson["cultivarId"] as int
-                }).to;*/
+        Map<String, int> options = {};
         for (dynamic specimen in optionsJson) {
           var map = specimen as Map;
           options[map["denomination"] as String] = map["cultivarId"] as int;
         }
         return options;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return {};
+  }
+
+  Future<Map<String, dynamic>> getCultivar(int cultivarId) async {
+    try {
+      var url =
+          Uri.parse(APIConstants.baseUrl + APIConstants.cultivarEdpoint + "/1");
+      //"/$cultivarId");
+      var response = await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': 'Bearer ${await storage.read(key: 'token')}'
+      });
+
+      // print(response.statusCode.toString() + "\n" + response.body);
+
+      // {"id":1,"species":"C. japonica",
+      // "epithet":"A. Markley Lee",
+      // "description":"Fruitland Nursery Catalogue, 1943-1944, p.20: Imbricated pink similar to 'Pink Perfection' (Otome). Raised in USA.",
+      // "photograph":null,"synonyms":[],"characteristicValues":[],"cultivarVotes":{}}
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> cultivarDetails = json.decode(response.body);
+        cultivarDetails["characteristicValues"] = [
+          {
+            "category": "Leaf",
+            "subcategories": [
+              {"subcat": "name", "option": "option"}
+            ]
+          }
+        ];
+        print(cultivarDetails);
+        return cultivarDetails;
       }
     } catch (e) {
       log(e.toString());

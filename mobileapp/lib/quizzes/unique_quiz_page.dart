@@ -204,7 +204,6 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
 
   Future<void> getAutocomplete(String input) async {
     var options = await api.getAutocomplete(input);
-    // print(options);
     setState(() {
       autocompleteOptions = options;
       optionsList =
