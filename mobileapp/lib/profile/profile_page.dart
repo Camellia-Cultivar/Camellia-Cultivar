@@ -281,33 +281,33 @@ class _ProfilePage extends State<ProfilePage> {
                                               color: Colors.white,
                                               fontWeight: FontWeight.w300))),
                                 )),
-                            Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                child: SizedBox(
-                                  height: screenSize.height / 12.5,
-                                  width: screenSize.width / 1.8,
-                                  child: TextButton(
-                                      onPressed: () =>
-                                          handleDelete(context, user as User),
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Colors.red),
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        150.0),
-                                                side: const BorderSide(
-                                                    color: Colors.red))),
-                                      ),
-                                      child: Text(
-                                          "Delete account".toUpperCase(),
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w300))),
-                                )),
+                            // Padding(
+                            //     padding: const EdgeInsets.only(bottom: 20),
+                            //     child: SizedBox(
+                            //       height: screenSize.height / 12.5,
+                            //       width: screenSize.width / 1.8,
+                            //       child: TextButton(
+                            //           onPressed: () =>
+                            //               handleDelete(context, user as User),
+                            //           style: ButtonStyle(
+                            //             backgroundColor:
+                            //                 MaterialStateProperty.all(
+                            //                     Colors.red),
+                            //             shape: MaterialStateProperty.all<
+                            //                     RoundedRectangleBorder>(
+                            //                 RoundedRectangleBorder(
+                            //                     borderRadius:
+                            //                         BorderRadius.circular(
+                            //                             150.0),
+                            //                     side: const BorderSide(
+                            //                         color: Colors.red))),
+                            //           ),
+                            //           child: Text(
+                            //               "Delete account".toUpperCase(),
+                            //               style: const TextStyle(
+                            //                   color: Colors.white,
+                            //                   fontWeight: FontWeight.w300))),
+                            //     )),
                           ],
                         ))
                   ]))),
