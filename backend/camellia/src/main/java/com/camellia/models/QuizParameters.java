@@ -28,20 +28,64 @@ public class QuizParameters {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long parameters_id;
+    @Column(name = "parameters_id")
+    private long parametersId;
 
     @Column(name = "change_date", nullable = false)
-    private LocalDateTime change_date;
+    private LocalDateTime changeDate;
 
     @Column(name = "no_reference_specimens")
-    private int no_reference_specimens;
+    private int noReferenceSpecimens;
 
     @Column(name = "no_to_identify_specimens")
-    private int no_to_identify_specimens;
+    private int noToIdentifySpecimens;
 
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn( referencedColumnName = "userId", name="user_id", nullable=false)
     @JsonIgnoreProperties("userId")
-    private User admin_user;
+    private User adminUser;
+
+
+    public long getParametersId() {
+        return this.parametersId;
+    }
+
+    public void setParametersId(long parametersId) {
+        this.parametersId = parametersId;
+    }
+
+    public LocalDateTime getChangeDate() {
+        return this.changeDate;
+    }
+
+    public void setChangeDate(LocalDateTime changeDate) {
+        this.changeDate = changeDate;
+    }
+
+    public int getNoReferenceSpecimens() {
+        return this.noReferenceSpecimens;
+    }
+
+    public void setNoReferenceSpecimens(int noReferenceSpecimens) {
+        this.noReferenceSpecimens = noReferenceSpecimens;
+    }
+
+    public int getNoToIdentifySpecimens() {
+        return this.noToIdentifySpecimens;
+    }
+
+    public void setNoToIdentifySpecimens(int noToIdentifySpecimens) {
+        this.noToIdentifySpecimens = noToIdentifySpecimens;
+    }
+
+
+    public User getAdminUser() {
+        return this.adminUser;
+    }
+
+    public void setAdminUser(User adminUser) {
+        this.adminUser = adminUser;
+    }
+
 }

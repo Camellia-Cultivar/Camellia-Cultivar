@@ -14,24 +14,5 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue("REGISTERED")
 public class RegisteredUser extends User{
 
-
-    @Column(name = "auto_approval", nullable = false)
-    private boolean autoApproval;
-
-
-    public boolean getAutoApproval() {
-        return this.autoApproval;
-    }
-
-    public void setAutoApproval(boolean autoApproval) {
-        this.autoApproval = autoApproval;
-    }
-   
-    @Override
-    public String getProfile() {
-        return "{" + super.getProfile() + 
-            ", " + "\"auto_approval\":" + getAutoApproval()  +
-            "}";
-    }
     
 }

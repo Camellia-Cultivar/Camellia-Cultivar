@@ -2,11 +2,13 @@ package com.camellia.services.cultivars;
 
 import com.camellia.mappers.CultivarMapper;
 import com.camellia.models.cultivars.Cultivar;
+import com.camellia.models.cultivars.CultivarCardView;
 import com.camellia.repositories.cultivars.CultivarRepository;
 import com.camellia.views.CultivarListView;
 import com.camellia.models.cultivars.CultivarDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,8 +25,12 @@ public class CultivarService {
     @Autowired
     private CultivarRepository repository;
 
-    public Page<Cultivar> getCultivars(Pageable pageable) {
-        return repository.findAll(pageable);
+    public Page<CultivarCardView> getCultivarsByPage(Pageable pageable) {
+        return repository.findBy(pageable);
+    }
+
+    public Page<CultivarCardView> getCultivarsBySearchTermAndPage(String searchTerm, Pageable pageable) {
+        return repository.findByEpithetStartsWithIgnoreCase(searchTerm, pageable);
     }
 
     public List<CultivarListView> getCultivars(long page) {
@@ -33,15 +39,24 @@ public class CultivarService {
         return repository.retrieveAllPaged(page , CULTIVARS_PER_PAGE);
     }
 
-    public CultivarDTO getCultivarById(Long id) {
+    public CultivarDTO getCultivarDTOById(Long id) {
         Optional<Cultivar> c = repository.findById(id);
         if(c.isPresent())
             return CultivarMapper.MAPPER.cultivarToCultivarDTO(c.get());
         return new CultivarDTO();
     }
 
+    public Cultivar getCultivarById(Long id) {
+        Optional<Cultivar> c = repository.findById(id);
+        return c.orElseGet(Cultivar::new);
+    }
+
+    public Optional<Cultivar> getOptionalCultivarById(Long id) {
+        return repository.findById(id);
+    }
+
     public Cultivar getCultivarByEpithet(String epithet){
-        return repository.findByEpithet(epithet);
+        return repository.findByEpithetStartsWithIgnoreCase(epithet);
     }
 
     public Cultivar createCultivar(CultivarDTO cultivar){
@@ -52,5 +67,9 @@ public class CultivarService {
         c.setSpecies(cultivar.getSpecies());
 
         return repository.save(c);
+    }
+
+    public Page<String> getPhotosOfReferenceSpecimensByCultivarId(Cultivar cultivar, PageRequest pageRequest) {
+        return repository.getPhotosOfReferenceSpecimensFromCultivarByPage(cultivar, pageRequest);
     }
 }

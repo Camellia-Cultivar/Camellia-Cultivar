@@ -42,6 +42,17 @@ public class IdentificationRequestService {
         return repository.saveAndFlush(newIdentificationRequest);
     }
 
+    public IdentificationRequestDTO getOldestUnapprovedRequest() {
+        try {
+            return IdentificationRequestMapper.MAPPER.identificationRequestToIdentificationRequestDTO(
+                    repository.findAllByOrderBySubmissionDateAsc(Pageable.ofSize(1)).getContent().get(0)
+            );
+        } catch (IndexOutOfBoundsException e) {
+            logger.info("No identification requests were found");
+            return null;
+        }
+    }
+
     public Page<IdentificationRequest> getIdentificationRequests(Pageable pageable) {
         return repository.findAll(pageable);
     }
