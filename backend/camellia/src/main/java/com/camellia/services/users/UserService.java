@@ -92,4 +92,39 @@ public class UserService {
     public User getUserByEmail(String name) {
         return repository.findByEmail(name);
     }
+
+
+    public ResponseEntity<String> giveAutoApproval(long userId) {
+        User user = repository.getById(userId);
+        user.setAutoApproval(true);
+        repository.save(user);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Operation completed");
+    }
+
+
+    public ResponseEntity<String> giveAdminRole(long userId) {
+        User user = repository.getById(userId);
+        user.addRole(roleService.getRoleByName("ADMIN"));
+
+        if(!user.getRolesList().contains("MOD"))
+            user.addRole(roleService.getRoleByName("MOD"));
+
+        repository.save(user);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Operation completed");    
+    }
+
+
+    public ResponseEntity<String> giveModRole(long userId) {
+        User user = repository.getById(userId);
+        user.addRole(roleService.getRoleByName("MOD"));
+        repository.save(user);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Operation completed");    
+    }
+
+    public void giveRegisteredRole(long userId) {
+        User user = repository.getById(userId);
+        user.addRole(roleService.getRoleByName("REGISTERED"));
+        repository.save(user);
+    }
 }

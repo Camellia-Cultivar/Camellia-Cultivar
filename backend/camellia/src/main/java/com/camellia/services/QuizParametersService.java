@@ -1,24 +1,31 @@
 package com.camellia.services;
 
 import com.camellia.repositories.QuizParametersRepository;
+import com.camellia.services.users.UserService;
 import com.camellia.models.QuizParameters;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class QuizParametersService {
 
-    private int no_to_identify_specimens = 3;
+    private int noToIdentifySpecimens = 3;
 
-    private int no_reference_specimens = 6;
+    private int noReferenceSpecimens = 6;
 
     @Autowired
     private QuizParametersRepository repository;
+
+    @Autowired
+    private UserService userService;
 
     public Page<QuizParameters> getQuizParameters(Pageable pageable) {
         return repository.findAll(pageable);
@@ -29,14 +36,29 @@ public class QuizParametersService {
     }
 
     public QuizParameters getQuizParametersById(long id) {
-        return repository.findById((long) id);
+        return repository.findById(id);
     }
 
     public int getToIdentifyNo(){
-        return this.no_to_identify_specimens;
+        return this.noToIdentifySpecimens;
     }
 
     public int getReferenceNo(){
-        return this.no_reference_specimens;
+        return this.noReferenceSpecimens;
+    }
+
+    public void changeParameters(int noReferenceSpecimens, int noToIdentifySpecimens) {
+        QuizParameters qp = new QuizParameters();
+        qp.setChangeDate(LocalDateTime.now());
+        qp.setNoReferenceSpecimens(noReferenceSpecimens);
+        qp.setNoToIdentifySpecimens(noToIdentifySpecimens);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        qp.setAdminUser(userService.getUserByEmail( auth.getName()) );
+
+        this.noReferenceSpecimens = noReferenceSpecimens;
+        this.noToIdentifySpecimens = noToIdentifySpecimens;
+
+        repository.save(qp);
     }
 }

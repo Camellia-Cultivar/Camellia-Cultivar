@@ -1,6 +1,7 @@
 package com.camellia.services.specimens;
 
 import com.camellia.mappers.SpecimenMapper;
+import com.camellia.models.characteristics.CharacteristicValue;
 import com.camellia.models.cultivars.Cultivar;
 import com.camellia.models.specimens.Specimen;
 import com.camellia.models.specimens.SpecimenDto;
@@ -57,13 +58,27 @@ public class ToIdentifySpecimenService {
         );
     }
 
-    public SpecimenDto promoteToReferenceFromId(long id) throws MailException, UnsupportedEncodingException, MessagingException {
+    public SpecimenDto promoteToReferenceFromId(long id, Cultivar c) throws MailException, UnsupportedEncodingException, MessagingException {
         Specimen promotingSpecimen = this.getToIdentifySpecimenById(id);
         if (promotingSpecimen == null)
             return null;
 
         promotingSpecimen.promoteToReference();
+        promotingSpecimen.setCultivar(c);
+
+        //if(promotingSpecimen.getPhotos().iterator().hasNext())
+        //    c.setPhotograph(promotingSpecimen.getPhotos().iterator().next());
+
+        if(c.getCharacteristicValues().isEmpty()){
+            Iterator<CharacteristicValue> it =  promotingSpecimen.getCharacteristicValues().iterator();
+            List<CharacteristicValue> list = new ArrayList<>();
+            while(it.hasNext())
+                list.add(it.next());
+            System.out.println(list);
+            c.setCharacteristicValues(list);
+        }
         specimenRepository.saveAndFlush(promotingSpecimen);
+
 
         sendSpecimneIdentifiedEmail(promotingSpecimen);
 

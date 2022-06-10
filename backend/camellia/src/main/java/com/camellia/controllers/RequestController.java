@@ -6,6 +6,7 @@ import com.camellia.models.requests.IdentificationRequest;
 import com.camellia.models.requests.IdentificationRequestDTO;
 import com.camellia.models.specimens.Specimen;
 import com.camellia.models.specimens.SpecimenDto;
+import com.camellia.models.users.RegisteredUser;
 import com.camellia.models.users.User;
 import com.camellia.services.requests.IdentificationRequestService;
 import com.camellia.services.specimens.SpecimenService;
@@ -66,16 +67,27 @@ public class RequestController {
         if (user == null)
             return null;
 
-        Specimen newSpecimen = specimenService.saveSpecimen(
-                SpecimenMapper.MAPPER.specimenDTOtoToForApprovalSpecimen(specimenDto)
-        );
 
-        IdentificationRequest newIdentificationRequest =
-                identificationRequestService.createNewIdentificationRequestFromSpecimen(newSpecimen);
+        if(user.getAutoApproval() || user.getRolesList().contains("MOD") || user.getRolesList().contains("ADMIN")){
+            specimenService.saveSpecimen(
+                SpecimenMapper.MAPPER.specimenDTOtoToIdentifySpecimen(specimenDto)
+            );
+            return null;
 
-        return IdentificationRequestMapper.MAPPER.identificationRequestToIdentificationRequestDTO(
-                newIdentificationRequest
-        );
+        }
+        else{
+            Specimen newSpecimen = specimenService.saveSpecimen(
+                    SpecimenMapper.MAPPER.specimenDTOtoToForApprovalSpecimen(specimenDto)
+            );
+
+            IdentificationRequest newIdentificationRequest =
+                    identificationRequestService.createNewIdentificationRequestFromSpecimen(newSpecimen);
+
+
+            return IdentificationRequestMapper.MAPPER.identificationRequestToIdentificationRequestDTO(
+                    newIdentificationRequest
+            );
+        }
     }
 
     public boolean checkRoleRegistered(){

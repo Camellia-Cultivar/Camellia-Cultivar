@@ -3,7 +3,9 @@ package com.camellia.models.cultivars;
 import com.camellia.models.QuizAnswer;
 import com.camellia.models.characteristics.CharacteristicValue;
 import com.camellia.models.specimens.Specimen;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.List;
@@ -54,6 +56,7 @@ public class Cultivar {
             name = "cultivar_characteristic_values",
             joinColumns = @JoinColumn(name = "cultivar_id"),
             inverseJoinColumns = @JoinColumn(name = "characteristic_value_id"))
+    @JsonIgnoreProperties("specimens")
     private List<CharacteristicValue> characteristicValues;
 
     @Column(name = "description", columnDefinition="TEXT")
