@@ -375,10 +375,17 @@ class APIService {
   }
 
   Future<Map<String, dynamic>> getCultivar(int cultivarId) async {
+    var url;
     try {
-      var url =
-          Uri.parse(APIConstants.baseUrl + APIConstants.cultivarEdpoint + "/1");
-      //"/$cultivarId");
+      if (cultivarId == null) {
+        url = Uri.parse(
+            APIConstants.baseUrl + APIConstants.cultivarEdpoint + "/1");
+        //"/$cultivarId");
+      } else {
+        url = Uri.parse(APIConstants.baseUrl +
+            APIConstants.cultivarEdpoint +
+            "/$cultivarId");
+      }
       var response = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Access-Control-Allow-Origin': '*',
@@ -402,7 +409,7 @@ class APIService {
             ]
           }
         ];
-        print(cultivarDetails);
+        // print(cultivarDetails);
         return cultivarDetails;
       }
     } catch (e) {
