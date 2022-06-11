@@ -76,7 +76,7 @@ const Camellia = () => {
                 </div>
                 <div className="mt-8 w-full bg-emerald-900/5 rounded-lg p-4">
                     <p className="font-bold text-3xl text-emerald-900 mb-6">Characteristics</p>
-                    {
+                    {characteristics.length !== 0 ?
                         characteristics.map((characteristic, index) => {
                             return (<CharacteristicDropdown
                                 key={index}
@@ -85,6 +85,8 @@ const Camellia = () => {
                                 details={{ characteristic: characteristic.characteristic.name, value: characteristic.descriptor }}
                             ></CharacteristicDropdown>)
                         })
+                        :
+                        <p className="text-emerald-900 text-justify">There are no characteristics to present</p>
                     }
                 </div>
             </div>
