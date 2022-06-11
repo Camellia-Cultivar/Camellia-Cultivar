@@ -8,6 +8,7 @@ import java.util.Set;
 
 
 import com.camellia.models.characteristics.CharacteristicValue;
+import com.camellia.models.characteristics.CharacteristicValueDTO;
 import com.camellia.models.specimens.Specimen;
 import lombok.Data;
 
@@ -28,7 +29,7 @@ public class CultivarDTO {
 
     private Set<CultivarSynonyms> synonyms;
 
-    private List<CharacteristicValue> characteristicValues;
+    private List<CharacteristicValueDTO> characteristicValues;
 
     private Map<Specimen, Integer> cultivarVotes = new HashMap<>();
 
@@ -89,11 +90,11 @@ public class CultivarDTO {
         this.cultivarVotes = cultivarVotes;
     }
 
-    public List<CharacteristicValue> getCharacteristicValues() {
+    public List<CharacteristicValueDTO> getCharacteristicValues() {
         return characteristicValues;
     }
 
-    public void setCharacteristicValues(List<CharacteristicValue> characteristicValues) {
+    public void setCharacteristicValues(List<CharacteristicValueDTO> characteristicValues) {
         this.characteristicValues = characteristicValues;
     }
 }
