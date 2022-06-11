@@ -23,12 +23,13 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install
+        working-directory: backend/camellia/
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.war'
+          path: '${{ github.workspace }}/backend/camellia/target/*.war'
 
   deploy:
     runs-on: windows-latest
@@ -50,4 +51,4 @@ jobs:
           app-name: 'camellia-cultivar-api'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7676FF7AD16C4008806C3036E5C2E91E }}
-          package: '*.war'
+          package: '*.jar'
