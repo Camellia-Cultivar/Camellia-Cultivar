@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:camellia_cultivar/model/question.dart';
 import 'package:camellia_cultivar/model/user.dart';
 import 'package:camellia_cultivar/providers/user.dart';

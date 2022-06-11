@@ -1,11 +1,11 @@
 class APIConstants {
-  static String baseUrl = "http://localhost:8085/api";
+  static String baseUrl = "https://10.0.2.2:8085/api";
   static String quizEndpoint = "/quizzes";
   static String loginEndpoint = "/users/login";
   static String registerEndpoint = "/users/signup";
   static String profileEndpoint = "/users";
   static String editProfileEndpoint = "/users";
-  static String cultivarEdpoint = "/public/cultivars"; /*doing*/
+  static String cultivarEdpoint = "/p..ublic/cultivars"; /*doing*/
   static String uploadedSpecimensEndpoint = "/uploaded"; //todo
   static String recentlyUploadedSpecimensEndpoint =
       "/public/specimen/recent"; /*doing*/

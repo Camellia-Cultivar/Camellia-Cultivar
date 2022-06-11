@@ -32,6 +32,7 @@ class APIService {
   final storage = FlutterSecureStorage();
 
   Future<List<Object>> login(Map login_user) async {
+    var er;
     try {
       var url = Uri.parse(APIConstants.baseUrl + APIConstants.loginEndpoint);
 
@@ -48,6 +49,7 @@ class APIService {
       return [response.statusCode, response.body];
     } catch (e) {
       log(e.toString());
+      er = e;
     }
     return [-1, "Failed to authenticate. Please try again!"];
   }
@@ -334,6 +336,7 @@ class APIService {
   }
 
   Future<int> postSpecimenRequest(Map<String, dynamic> specimenToUpload) async {
+    print(specimenToUpload);
     try {
       var url =
           Uri.parse(APIConstants.baseUrl + APIConstants.createSpecimenEndpoint);

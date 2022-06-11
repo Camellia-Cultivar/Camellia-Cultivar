@@ -87,7 +87,8 @@ class NewSpecimen extends State<NewSpecimenPage> {
             .placemarkFromCoordinates(position.latitude, position.longitude);
         var first_address = placemarks.first;
         setState(() {
-          userAddress = first_address.toJson();
+          userAddress =
+              "${first_address.street},${first_address.locality},${first_address.country}";
         });
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -112,8 +113,6 @@ class NewSpecimen extends State<NewSpecimenPage> {
           )));
     }
   }
-
-  _getPositionAddress() async {}
 
   Future<Position> _determinePosition() async {
     LocationPermission permission;
