@@ -97,7 +97,6 @@ public class ModeratorController {
         if(checkRole())
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(referenceSpecimenService.demoteToToIdentify(id));
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-
     }
 
     @DeleteMapping("/specimen/{id}")
@@ -127,10 +126,7 @@ public class ModeratorController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User u = userService.getUserByEmail(auth.getName());
 
-        if(u != null && ( u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN") ))
-            return true;
-        
-        return false;
+        return u != null && (u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN"));
 
     }
 }
