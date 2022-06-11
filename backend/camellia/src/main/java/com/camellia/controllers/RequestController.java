@@ -4,9 +4,9 @@ import com.camellia.mappers.IdentificationRequestMapper;
 import com.camellia.mappers.SpecimenMapper;
 import com.camellia.models.requests.IdentificationRequest;
 import com.camellia.models.requests.IdentificationRequestDTO;
+import com.camellia.models.requests.IdentificationRequestView;
 import com.camellia.models.specimens.Specimen;
 import com.camellia.models.specimens.SpecimenDto;
-import com.camellia.models.users.RegisteredUser;
 import com.camellia.models.users.User;
 import com.camellia.services.requests.IdentificationRequestService;
 import com.camellia.services.specimens.SpecimenService;
@@ -16,15 +16,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.camellia.models.requests.CultivarRequestDTO;
 import com.camellia.services.requests.CultivarRequestService;
 import com.camellia.services.requests.ReportRequestService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/requests")
@@ -90,14 +88,20 @@ public class RequestController {
         }
     }
 
+    @GetMapping("/identification")
+    public ResponseEntity<List<IdentificationRequestView>> getIdentificationRequestsOfUser(Authentication authentication){
+        User user = userService.getUserByEmail(authentication.getName());
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(identificationRequestService.getAllIdentificationRequestsForUser(user));
+    }
+
     public boolean checkRoleRegistered(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User u = userService.getUserByEmail(auth.getName());
 
-        if(u != null && ( u.getRolesList().contains("REGISTERED") || u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN") ))
-            return true;
-        
-        return false;
+        return u != null && (u.getRolesList().contains("REGISTERED") || u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN"));
 
     }
 }
