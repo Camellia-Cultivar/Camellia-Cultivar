@@ -26,7 +26,7 @@ import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 
 @RestController
-@RequestMapping("/api/public/cultivars")
+@RequestMapping("/api")
 public class CultivarController {
     
     @Autowired
