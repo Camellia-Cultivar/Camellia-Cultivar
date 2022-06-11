@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
@@ -25,13 +25,14 @@ function App() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const userDetails = useSelector(state => state.user)
+    const userDetails = useSelector(state => state.user);
+    const [isMod, setIsMod] = useState(false);
 
     useEffect(() => {
         const listen = history.listen((location, action) => {
             fetchUser(true);
         })
-        fetchUser(Object.keys(userDetails).length ===0);
+        fetchUser(Object.keys(userDetails).length === 0);
         return listen;
     })
 
@@ -40,18 +41,20 @@ function App() {
         if (loggedInUser && secondFactor) {
             const user = JSON.parse(localStorage.getItem("userToken"));
             if (user.expiry > Date.now()) {
-                axios.get(`/api/users/${user.userId}`, {
+                Object.keys(userDetails).length === 0 && axios.get(`/api/users/${user.userId}`, {
                     headers: {
                         "Authorization": `Bearer ${user.loginToken}`,
                     }
                 })
                     .then(function (response) {
+                        console.log(response);
                         if (!response.data.verified) {
                             if (history.location.pathname !== '/verify')
                                 navigate("/verify");
                         } else {
                             dispatch(signIn());
                             dispatch(signedIn(response.data));
+                            Object.keys(userDetails).length === 0 && checkMod(user.userId, user.loginToken);
                         }
 
                     })
@@ -59,6 +62,8 @@ function App() {
                         console.log(error);
                     });
 
+
+                Object.keys(userDetails).length === 0 && checkMod(user.userId, user.loginToken);
             } else {
                 localStorage.removeItem("userToken");
                 dispatch(signOut());
@@ -68,6 +73,20 @@ function App() {
         }
     }
 
+    const checkMod = (id, token) => {
+        const options = {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }
+        axios.get(`api/moderator/${id}`, options)
+            .then(response => {
+                setIsMod(response.status === 202)
+            }).catch(err => {
+                return;
+            })
+    }
+
 
     return (
         <>
@@ -75,7 +94,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/verify" element={<Verify />} />
-                <Route path="/moderation" element={<Moderation />} />
+                {isMod && <Route path="/moderation" element={<Moderation />} />}
                 <Route path="/login" element={<Login />} />
                 <Route path="/quizzes" element={<Quizzes />} />
                 <Route path="/encyclopedia" element={<Encyclopedia />} >
