@@ -7,14 +7,14 @@ import token from './accessToken'
 
 const ModerationMap = (props) => {
     mapboxgl.accessToken = token;
-    const [lat, setLat] = useState(props.lat)
-    const [lon, setLon] = useState(props.lon)
-    const [zoom, setZoom] = useState(props.zoom)
 
   return (
+    props.lat!==undefined && props.lon !== undefined ?
     <div className={props.className}>
-        <img src={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s-c+064e3b(${lon},${lat})/${lon},${lat},${zoom}/${props.width}x${props.height}?access_token=${token}`} alt="" ></img>
+        <img src={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s-c+064e3b(${props.lon},${props.lat})/${props.lon},${props.lat},${props.zoom}/${props.width}x${props.height}?access_token=${token}`} alt="" ></img>
     </div>
+    :
+    <></>
   )
 }
 
