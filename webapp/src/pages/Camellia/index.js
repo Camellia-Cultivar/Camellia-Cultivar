@@ -108,7 +108,7 @@ const Camellia = () => {
                         moreLoaded &&
                         !otherPhotosExist?
                             <div className="grid gap-y-3 gap-x-2 md:gap-x-1 grid-cols-2 md:grid-cols-3 mt-8">
-                                 otherPhotos
+                                 {otherPhotos}
                             </div>
                             :
                             <p className=" text-center mt-2 ">There are no more photos</p>
