@@ -2,6 +2,7 @@ package com.camellia.services.requests;
 
 import com.camellia.mappers.IdentificationRequestMapper;
 import com.camellia.models.requests.IdentificationRequestDTO;
+import com.camellia.models.requests.IdentificationRequestView;
 import com.camellia.models.specimens.Specimen;
 import com.camellia.models.users.User;
 import com.camellia.repositories.requests.IdentificationRequestRepository;
@@ -36,7 +37,7 @@ public class IdentificationRequestService {
 
         IdentificationRequest newIdentificationRequest = new IdentificationRequest();
         newIdentificationRequest.setSubmissionDate(LocalDateTime.now());
-        newIdentificationRequest.setReg_user(submittedBy);
+        newIdentificationRequest.setRegUser(submittedBy);
         newIdentificationRequest.setToIdentifySpecimen(specimen);
 
         return repository.saveAndFlush(newIdentificationRequest);
@@ -55,6 +56,10 @@ public class IdentificationRequestService {
 
     public Page<IdentificationRequest> getIdentificationRequests(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    public List<IdentificationRequestView> getAllIdentificationRequestsForUser(User user) {
+        return repository.findAllByRegUser(user);
     }
 
     public List<IdentificationRequest> getIdentificationRequests() {

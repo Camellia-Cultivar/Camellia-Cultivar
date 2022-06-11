@@ -46,7 +46,7 @@ public class ReportRequestService {
 
         ReportRequest rq = new ReportRequest();
         rq.setSubmissionDate(LocalDateTime.now());
-        rq.setReg_user(submittedBy);
+        rq.setRegUser(submittedBy);
         rq.setTo_identify_specimen(specimenService.getToIdentifySpecimenById(specimenId));
 
         

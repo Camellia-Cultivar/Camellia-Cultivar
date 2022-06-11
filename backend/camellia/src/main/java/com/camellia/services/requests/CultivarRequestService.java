@@ -44,7 +44,7 @@ public class CultivarRequestService {
 
         CultivarRequest cr = new CultivarRequest();
         cr.setSubmissionDate(LocalDateTime.now());
-        cr.setReg_user(submittedBy);
+        cr.setRegUser(submittedBy);
         cr.setSuggestion(cultivarSuggestion.getSuggestion());
         cr.setIcr_link(cultivarSuggestion.getIcr_link());
         repository.save(cr);

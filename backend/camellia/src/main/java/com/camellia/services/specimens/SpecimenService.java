@@ -50,6 +50,7 @@ public class SpecimenService {
 
     public Specimen saveSpecimen(Specimen specimen){
         try {
+            System.out.println(specimen.getCharacteristicValues());
             Set<CharacteristicValue> values = specimen.getCharacteristicValues().stream()
                     .map(characteristicValueService::getOrSaveCharacteristicValue)
                     .filter(Objects::nonNull)
