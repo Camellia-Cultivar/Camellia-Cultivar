@@ -122,6 +122,16 @@ public class ModeratorController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
+    @PutMapping(value="/users/{id}")
+    public ResponseEntity<String> giveAutoApproval(
+            @PathVariable(value = "id") long userId,
+            @RequestParam(value = "autoApproval") boolean autoApproval
+    ){
+        if(checkRole())
+            return userService.setAutoApproval(userId, autoApproval);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+
     public boolean checkRole(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User u = userService.getUserByEmail(auth.getName());

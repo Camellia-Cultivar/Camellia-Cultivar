@@ -49,16 +49,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
-    @PutMapping(value="/autoapproval/{id}")
-    public ResponseEntity<String> giveAutoApproval(
-            @PathVariable(value = "id") long userId,
-            @RequestParam(value = "autoApproval") boolean autoApproval
-    ){
-        if(checkRole())
-            return userService.setAutoApproval(userId, autoApproval);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-    }
-
     @PutMapping(value="/admin/{id}")
     public ResponseEntity<String> giveAdminRole(@PathVariable(value = "id") long userId){
         if(checkAdminRole())
