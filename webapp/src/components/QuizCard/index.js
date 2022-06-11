@@ -4,7 +4,6 @@ import './index.css';
 class QuizCard extends React.Component {
 
     render() {
-
         if (
             this.props.images.length >= 1) {
             const maxInd = Math.min(this.props.images.length, 4)
@@ -66,22 +65,20 @@ class QuizCard extends React.Component {
             }
 
             return (
-                <div>
                     <div className={'quiz-card bg-emerald-900/10 snap-center pop-in'}
                          style={{animationDelay: `${this.props.delay}ms`}}>
                         {photoGrid}
                         <div className="justify-self-center relative mt-3.5 w-3/4 group">
-                            <input id={"cultivar_input_" + this.props.id}
+                            <input id={"quizcard_input_" + this.props.id}
                                    className="block py-2 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none outline-none ring-0 focus:border-emerald-900 peer"
                                    placeholder=" " type="text"/>
                             <label
-                                htmlFor={"cultivar_input_" + this.props.id}
+                                htmlFor={"quizcard_input_" + this.props.id}
                                 className="cursor-text peer-focus:cursor-auto absolute text-sm text-gray-500 font-medium duration-300 scale-75 -translate-y-5 transform top-2.5 origin-[0] peer-focus:text-emerald-900 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-5"
                             >Name the Cultivar
                             </label>
                         </div>
                     </div>
-                </div>
             );
         }
 
