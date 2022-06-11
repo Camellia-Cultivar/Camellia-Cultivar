@@ -3,7 +3,7 @@ import React from 'react'
 const Card = (props) => {
 
     return (
-        <div className={"rounded-lg " + props.className} onClick={()=>{props.redirect(`${props.camelliaId}`)}}>
+        <div className={"rounded-lg " + props.className} onClick={()=>{props.redirect(`${props.camelliaId}`)}} style={props.style}>
 
             <div className=" bg-emerald-900/20 grid grid-cols-2 rounded-lg">
                 <div className="m-2 lg:m-4 h-[150px] w-[150px]">

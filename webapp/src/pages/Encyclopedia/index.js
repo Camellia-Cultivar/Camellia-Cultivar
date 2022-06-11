@@ -138,12 +138,12 @@ const Encyclopedia = () => {
     return (
         <div className="container-4/5 mt-16 mb-8 flex flex-col">
             <div className="pb-6 ml-4">
-                <p className="text-3xl font-bold text-center md:text-start">Encyclopedia</p>
+                <p className="text-3xl font-bold text-center md:text-start fade-in" style={{ animationDelay: `100ms` }}>Encyclopedia</p>
             </div>
-            <div className="self-center flex flex-col w-full pt-4">
+            <div className="self-center flex flex-col w-full pt-4 fade-in" style={{ animationDelay: `200ms` }}>
                 <div className="flex w-full relative">
 
-                    <div className=" flex w-11/12 mr-2 md:mr-4 relative sm:text-base md:text-xl">
+                    <div className=" flex w-11/12 mr-2 md:mr-4 relative sm:text-base md:text-xl" >
                         {sugestionsOn &&
                             <div className=" w-full top-[50%] pt-8 pb-2 rounded-b-xl absolute bg-white shadow-md">
                                 {autocompletedCamellias.map((ac, index) => (
@@ -177,10 +177,10 @@ const Encyclopedia = () => {
 
                 :
                 <div className="grid sm:grid-cols-2 sm:gap-x-4 md:grid-cols-3 md:grid-rows-3 md:gap-x-8 gap-y-10 mt-10">
-                    <CardList camellias={camellias} redirect={redirect} chosenSugestion={chosenSugestion}></CardList>
+                    <CardList camellias={camellias} baseDelay={200} redirect={redirect} chosenSugestion={chosenSugestion}></CardList>
                 </div>}
             {!chosenSugestion &&
-                <div className="flex justify-center mt-12">
+                <div className="flex justify-center mt-12 fade-in" style={{ animationDelay: `1200ms` }}>
                     <button className="bg-emerald-900/5 rounded-lg py-1.5 px-4 mr-4" onClick={() => changePage(1)}>First</button>
 
                     <button className="bg-emerald-900/5 py-1.5 px-3 rounded-tl-lg rounded-bl-lg" onClick={() => changePage(Number.parseInt(page) - 1)}> {"<"} </button>
