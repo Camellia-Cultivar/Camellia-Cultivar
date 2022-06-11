@@ -25,8 +25,10 @@ public class UserService {
 
     public ResponseEntity<String> getUserProfile(long id){
         User attemptingUser = repository.findById(id);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User requestingUser = repository.findByEmail(auth.getName());
         try{
-            if(!emailVerification(attemptingUser.getEmail()))
+            if(!emailVerification(attemptingUser.getEmail()) && !requestingUser.getRolesList().contains("MOD") && !requestingUser.getRolesList().contains("ADMIN"))
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not retrieve profile");
             else
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.repository.findByEmail(attemptingUser.getEmail()).getProfile());

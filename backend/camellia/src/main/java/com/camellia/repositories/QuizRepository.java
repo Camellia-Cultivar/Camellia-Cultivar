@@ -31,5 +31,8 @@ public interface QuizRepository extends JpaRepository<QuizAnswer, Long>{
     @Query(value = "SELECT COUNT(*) FROM quiz_answer WHERE specimen_type = \'TOIDENTIFY\'", nativeQuery = true )
     Long getTotalVotes();
 
+    @Query(value = "SELECT COUNT(*) FROM quiz_answer WHERE specimen_id= :specimenId", nativeQuery = true)
+    int getTotalVotesForSpecimen(@Param("specimenId") long specimenId);
+
 
 }

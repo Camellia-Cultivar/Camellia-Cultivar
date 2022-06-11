@@ -105,7 +105,7 @@ public class QuizService {
             s = specimenService.getSpecimenById(qa.getSpecimen_id());
 
 
-            Cultivar c = cultivarService.getCultivarByEpithet(qa.getAnswer());
+            Cultivar c = cultivarService.getCultivarById(qa.getAnswer());
 
             if(c == null){
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Cultivar");
@@ -122,7 +122,7 @@ public class QuizService {
 
             if( s.isReference()){
 
-                if(c != null &&referenceSpecimenService.getReferenceSpecimenById(qa.getSpecimen_id()).getCultivar().getEpithet().equals(qa.getAnswer())){
+                if(c != null && referenceSpecimenService.getReferenceSpecimenById(qa.getSpecimen_id()).getCultivar().getId() == qa.getAnswer() ){
                     correct = true;
                 } 
                 else {
@@ -141,15 +141,15 @@ public class QuizService {
                 qaSaved.setCorrect(false);
                 qaSaved.setSpecimenType("TOIDENTIFY");
 
-                s.addCultivarVote(c);
-
                 repository.save(qaSaved);
 
 
-                int totalVotes = s.getCultivarProbabilities().values().stream().reduce(0, Integer::sum);
+                int totalVotes = repository.getTotalVotesForSpecimen(s.getSpecimenId());
 
 
                 int reputationSum;
+
+                s.addCultivarProb(c, 0);
 
                 for(Cultivar tempC : s.getCultivarProbabilities().keySet()){
                     reputationSum = 0;
@@ -157,7 +157,11 @@ public class QuizService {
                         reputationSum += userService.getUserById(id).getReputation();
                     }
 
-                    if( reputationSum / totalVotes * 100 > 80){
+                    double prob = reputationSum / totalVotes * 100 ;
+                    s.addCultivarProb(c, prob);
+                    specimenService.saveSpecimen(s);
+
+                    if( prob > 80){
                         toIdentifySpecimenService.promoteToReferenceFromId(s.getSpecimenId(), tempC);
                         break;
                     }
