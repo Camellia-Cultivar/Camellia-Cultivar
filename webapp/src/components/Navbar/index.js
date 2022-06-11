@@ -6,7 +6,8 @@ const Navbar = () => {
 
     const [navbarOpen, setNavbarOpen] = useState(false)
 
-    const isLogged = useSelector(state => state.isLogged)
+    const isLogged = useSelector(state => state.isLogged);
+    const isMod = useSelector(state => state.isMod)
 
     const user = useSelector(state => state.user)
 
@@ -69,16 +70,16 @@ const Navbar = () => {
                                     Encyclopedia
                                 </NavLink>
                             </li>
-                            <li>
-                                <NavLink to="/about"
+                            {isMod && <li>
+                                <NavLink to="/moderation"
                                     className={({ isActive }) => (
                                         isActive ? activeLink : link
                                     )}
                                     onClick={() => closeMenu()}
                                 >
-                                    About Us
+                                    Moderation
                                 </NavLink>
-                            </li>
+                            </li>}
                         </ul>
                     </div>
 
