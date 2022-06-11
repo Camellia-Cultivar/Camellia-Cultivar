@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy WAR app to Azure Web App - camellia-cultivar-api
+name: Build and deploy JAR app to Azure Web App - camellia-cultivar-api
 
 on:
   push:
@@ -23,13 +23,12 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install
-        working-directory: backend/camellia/
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: java-app
-          path: '${{ github.workspace }}/backend/camellia/target/*.jar'
+          path: '${{ github.workspace }}/target/*.jar'
 
   deploy:
     runs-on: windows-latest
@@ -50,5 +49,5 @@ jobs:
         with:
           app-name: 'camellia-cultivar-api'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7676FF7AD16C4008806C3036E5C2E91E }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_15E46EE08BBA4C54A6EC386560188BCD }}
           package: '*.jar'
