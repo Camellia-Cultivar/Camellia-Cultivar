@@ -92,7 +92,7 @@ public class Specimen {
     )
     @MapKeyJoinColumn(name = "cultivar_id")
     @JsonIgnore
-    private Map<Cultivar, Integer> cultivarProbabilities = new HashMap<>();
+    private Map<Cultivar, Double> cultivarProbabilities = new HashMap<>();
 
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -108,11 +108,11 @@ public class Specimen {
         this.cultivar = cultivar;
     }
 
-    public Map<Cultivar, Integer> getCultivarProbabilities() {
+    public Map<Cultivar, Double> getCultivarProbabilities() {
         return cultivarProbabilities;
     }
 
-    public void setCultivarProbabilities(Map<Cultivar, Integer> cultivarProbabilities) {
+    public void setCultivarProbabilities(Map<Cultivar, Double> cultivarProbabilities) {
         this.cultivarProbabilities = cultivarProbabilities;
     }
 
@@ -213,9 +213,7 @@ public class Specimen {
 
     public void approve() {this.setSpecimenType(SpecimenType.TO_IDENTIFY);}
 
-    public void addCultivarVote(Cultivar c){
-        if(this.cultivarProbabilities.containsKey(c))
-            this.cultivarProbabilities.put(c, this.cultivarProbabilities.get(c) + 1);
-        this.cultivarProbabilities.put(c, 1);
-    }
+    public void addCultivarProb(Cultivar c, double prob){
+       this.cultivarProbabilities.put(c, prob); 
+    }  
 }
