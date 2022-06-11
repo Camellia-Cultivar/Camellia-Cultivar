@@ -4,16 +4,15 @@ import { IoSearch, IoCloseCircleOutline } from "react-icons/io5";
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import axios from 'axios'
 
-import Card from "../../components/Card"
 import Sugestion from "../../components/Sugestion"
-
-// import camellias from "./camellias"
+import CardList from '../../components/CardList';
 
 const Encyclopedia = () => {
 
     const navigate = useNavigate();
-    const [page, setPage] = useState(1);
-    const [camellias, setCamellias] = useState({});
+    const [page, setPage] = useState("1");
+    const [lastPage, setLastPage] = useState(1);
+    const [camellias, setCamellias] = useState([]);
     const [fetched, setFetched] = useState(false);
     const [searchText, setSearchText] = useState("");
     const [sugestionsOn, setSugestionsOn] = useState(false);
@@ -22,25 +21,22 @@ const Encyclopedia = () => {
     const [chosenSugestion, setChosenSugestion] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-
+    let noShadowSearch = `shadow-none border-x-0 border-b-0`;
 
     useEffect(() => {
-        fetchPage();
-    })
-
-
-    const fetchPage = () => {
-        if (!fetched){
-            axios.get('/api/public/cultivars', { params: { page: page } })
+        if (!fetched) {
+            axios.get('/api/public/cultivars', { params: { page: page - 1 } })
                 .then((response) => {
-                    setCamellias(response.data)
+                    console.log(response.data)
+                    setCamellias(response.data.content)
+                    setLastPage(response.data.totalPages)
                     setFetched(true)
                 })
                 .catch((error) => {
                     console.log(error)
                 })
         }
-    }
+    })
 
 
     const getAutocompleteOnChange = (e) => {
@@ -62,26 +58,19 @@ const Encyclopedia = () => {
 
 
 
-    const setSugestionClicked = (sugestion) => {
-        setSearchText(sugestion.denomination);
+    const setSugestionClicked = (sugest) => {
+        setSearchText(sugest.denomination);
         setSugestionsOn(false);
         setChosenSugestion(true);
-        setSugestion(sugestion)
-        axios.get(`/api/public/cultivars/${sugestion.cultivarId}`)
-            .then((response) => {
-                setCamellias([response.data])
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+        setSugestion(sugestion);
     }
 
 
 
     const clearAll = () => {
-        axios.get('/api/public/cultivars', { params: { page: page } })
+        axios.get('/api/public/cultivars', { params: { page: page-1 } })
             .then((response) => {
-                setCamellias(response.data)
+                setCamellias(response.data.content)
                 setFetched(true)
                 setSearchText("")
                 setChosenSugestion(false)
@@ -94,35 +83,27 @@ const Encyclopedia = () => {
     }
 
     const searchCultivar = async () => {
-        let tempCamellias = [];
         if (searchText === "") {
             clearAll();
             return;
-        };
-        await axios.get('/api/public/autocomplete', { params: { substring: searchText } })
+        }
+        const options = {
+            params: {
+                page: page - 1,
+                search: searchText
+            }
+        }
+        await axios.get('/api/public/cultivars', options)
             .then((response) => {
-                response.data.map((data, index) => {
-                    axios.get(`/api/public/cultivars/${data.cultivarId}`)
-                        .then((newResponse) => {
-                            tempCamellias.push(newResponse.data)
-                        })
-                        .catch((error) => {
-                            console.log(error)
-                        })
-                    return null;
-                })
-
-            })
-            .finally(() => {
                 setIsLoading(true);
                 setSugestionsOn(false);
                 setChosenSugestion(true);
                 setTimeout(() => {
-                    setCamellias(tempCamellias);
+                    setCamellias(response.data.content);
                     setIsLoading(false);
                 }, 500)
-                setCamellias(tempCamellias);
             })
+
             .catch((error) => {
                 console.log(error)
             })
@@ -133,41 +114,25 @@ const Encyclopedia = () => {
     }
 
     const changePage = (index) => {
-        setFetched(false); 
-        setPage(index + 1);
-
-        
+        setFetched(false);
+        setPage(index);
     }
 
-
-
-    const pages = 1001;
-
-    let buttons = []
-    let classN = "";
-    for (let index = 0; index < pages; index++) {
-        page === index + 1 ? classN = "bg-white" : classN = "bg-stone-100";
-
-        if (index === 0)
-            classN += " px-4 border-2 rounded-l-lg text-lg"
-        else if (index === pages - 1)
-            classN += " px-4 border-2 rounded-r-lg text-lg"
-        else
-            classN += " px-4 border-2 text-lg"
-
-
-        if (index < 4 || index + 1 === pages) {
-            buttons.push(<button key={index} onClick={() => { changePage(index)}} className={classN + " active:scale-95"}>{index + 1}</button>)
-        } else if (index === 4) {
-            buttons.push(<button key={index} className={classN}>...</button>)
-        }
-
-    }
 
     const redirect = (route) => {
         navigate(route);
     }
 
+
+    const changePageInput = (e) => {
+
+        if (!/[a-zA-Z]/.test(e.target.value)) {
+            setPage(e.target.value);
+            if (Number.parseInt(e.target.value) > 0) {
+                setFetched(false);
+            }
+        }
+    }
 
 
     return (
@@ -190,7 +155,7 @@ const Encyclopedia = () => {
                             value={searchText}
                             onChange={(e) => { getAutocompleteOnChange(e) }}
                             placeholder="Search for a cultivar"
-                            className={`z-[1] rounded-3xl border-2 px-4 py-2 shadow w-full h-full outline-none ${sugestionsOn && `shadow-none border-x-0 border-b-0`}`}
+                            className={`z-[1] rounded-3xl border-2 px-4 py-2 shadow w-full h-full outline-none ${sugestionsOn && noShadowSearch}`}
                         >
                         </input>
                         {searchText !== "" && <IoCloseCircleOutline onClick={() => { clearAll() }} className="absolute z-[2] top-[30%] right-4 text-emerald-900"></IoCloseCircleOutline>}
@@ -212,25 +177,27 @@ const Encyclopedia = () => {
 
                 :
                 <div className="grid sm:grid-cols-2 sm:gap-x-4 md:grid-cols-3 md:grid-rows-3 md:gap-x-8 gap-y-10 mt-10">
-                    {chosenSugestion ?
-                        camellias.map((camellia) => (<Card className="hover:scale-110 hover:shadow transition-transform duration-75 ease-linear" key={camellia.id} image={camellia.photograph} name={camellia.epithet} species={camellia.species} redirect={redirect} camelliaId={camellia.cultivar_id}></Card>))
-
-                        :
-                        Object.entries(camellias).map((camellia) => {
-                            return (
-                                <Card className="hover:scale-110 hover:shadow transition-transform duration-75 ease-linear" key={camellia[1].id} image={camellia[1].photograph} name={camellia[1].epithet} species={camellia[1].species} redirect={redirect} camelliaId={camellia[1].cultivar_id}></Card>
-                            )
-                        })
-                    }
+                    <CardList camellias={camellias} redirect={redirect} chosenSugestion={chosenSugestion}></CardList>
                 </div>}
             {!chosenSugestion &&
-                <div className="mt-8 mb-4 flex justify-center">
-                    {buttons.map((button) => { return (button) })}
+                <div className="flex justify-center mt-12">
+                    <button className="bg-emerald-900/5 rounded-lg py-1.5 px-4 mr-4" onClick={() => changePage(1)}>First</button>
+
+                    <button className="bg-emerald-900/5 py-1.5 px-3 rounded-tl-lg rounded-bl-lg" onClick={() => changePage(Number.parseInt(page) - 1)}> {"<"} </button>
+                    <input className=" text-center bg-emerald-900/5 outline-none py-1.5" value={page} onChange={changePageInput}></input>
+                    <button className="bg-emerald-900/5 py-1.5 px-3 rounded-tr-lg rounded-br-lg" onClick={() => changePage(Number.parseInt(page) + 1)}> {">"} </button>
+
+                    <button className="bg-emerald-900/5 rounded-lg py-1.5 px-4 ml-4" onClick={() => changePage(lastPage)}>Last</button>
                 </div>
+
             }
 
         </div>
     )
 }
+
+
+
+
 
 export default Encyclopedia

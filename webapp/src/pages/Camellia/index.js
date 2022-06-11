@@ -13,6 +13,10 @@ const Camellia = () => {
     const [moreLoaded, setMoreLoaded] = useState(false);
     const [height, setHeight] = useState(0);
     const [fetched, setFetched] = useState(false);
+    const [characteristics, setCharacteristics] = useState([]);
+    const [otherPhotos, setOtherPhotos] = useState([]);
+    const [otherPhotosExist, setOtherPhotosExist] = useState(false);
+
 
 
 
@@ -23,6 +27,7 @@ const Camellia = () => {
         if (!fetched) {
             axios.get(`/api/public/cultivars/${params.id}`)
                 .then((response) => {
+                    setCharacteristics(response.data.characteristicValues)
                     setCamellia(response.data)
                     setFetched(true);
                 })
@@ -34,6 +39,20 @@ const Camellia = () => {
     })
 
     const loadMore = () => {
+        axios.get(`/api/public/cultivars/${camellia.id}/photos`)
+            .then((response) => {
+                let tempPhotos = [];
+                setOtherPhotosExist(response.data.content.length === 0);
+                for (const photo of response.data.content) {
+                    tempPhotos.push(<div className="flex justify-center">
+                    <img className="max-h-40 object-cover rounded-md shadow" alt="" src={photo}></img>
+                </div>)
+                }
+                setOtherPhotos(tempPhotos);
+            })
+            .catch((err) => {
+                console.error(err)
+            })
         height === 'auto' ? setTimeout(() => { setMoreLoaded(!moreLoaded) }, 305) : setMoreLoaded(!moreLoaded);
         setHeight(
             height === 0 ? 'auto' : 0
@@ -57,10 +76,16 @@ const Camellia = () => {
                 </div>
                 <div className="mt-8 w-full bg-emerald-900/5 rounded-lg p-4">
                     <p className="font-bold text-3xl text-emerald-900 mb-6">Characteristics</p>
-                    {/* <CharacteristicDropdown characteristic="Plant" down={false} details={camellia.plant}></CharacteristicDropdown>
-                    <CharacteristicDropdown characteristic="Size" down={false} details={camellia.size}></CharacteristicDropdown>
-                    <CharacteristicDropdown characteristic="Flower" down={false} details={camellia.flower}></CharacteristicDropdown>
-                    <CharacteristicDropdown characteristic="Folliage" down={false} details={camellia.folliage}></CharacteristicDropdown> */}
+                    {
+                        characteristics.map((characteristic, index) => {
+                            return (<CharacteristicDropdown
+                                key={index}
+                                characteristic={characteristic.characteristic.upovCategory.name}
+                                down={false}
+                                details={{ characteristic: characteristic.characteristic.name, value: characteristic.descriptor }}
+                            ></CharacteristicDropdown>)
+                        })
+                    }
                 </div>
             </div>
             <div className="md:w-1/3 mt-8 md:mt-0">
@@ -72,24 +97,24 @@ const Camellia = () => {
                     }
                     <CamelliaCategory description={camellia.species} category="Species / Combination" />
                     <CamelliaCategory description={`${camellia.species} '${camellia.epithet}'`} category="Scientific Name" />
-                    {camellia.otherImages &&
 
-                        <div className="bg-emerald-900/20 mt-8 rounded-full flex items-center justify-center py-4 text-emerald-900 cursor-pointer hover:scale-105" onClick={() => { loadMore() }}>
-                            <BiImages></BiImages>
-                            <p className="ml-2 text-center text-emerald-900">{moreLoaded ? "Less Photos" : "More Photos"}</p>
-                        </div>}
-                    {/* <AnimateHeight duration={500} height={height}>
-                        {moreLoaded &&
+
+                    <div className="bg-emerald-900/20 mt-8 rounded-full flex items-center justify-center py-4 text-emerald-900 cursor-pointer hover:scale-105" onClick={() => { loadMore() }}>
+                        <BiImages></BiImages>
+                        <p className="ml-2 text-center text-emerald-900">{moreLoaded ? "Hide" : "More Photos"}</p>
+                    </div>
+                    <AnimateHeight duration={500} height={height}>
+                        {
+                        moreLoaded &&
+                        !otherPhotosExist?
                             <div className="grid gap-y-3 gap-x-2 md:gap-x-1 grid-cols-2 md:grid-cols-3 mt-8">
-                                {camellia.otherImages.map((image) => {
-                                    return (
-                                        <div className="flex justify-center">
-                                            <img className="max-h-40 object-cover rounded-md shadow" alt="" src={image}></img>
-                                        </div>)
-                                })}
+                                 otherPhotos
                             </div>
-                        }
-                    </AnimateHeight> */}
+                            :
+                            <p className=" text-center mt-2 ">There are no more photos</p>
+                            }
+                        
+                    </AnimateHeight>
 
                 </div>
             </div>
