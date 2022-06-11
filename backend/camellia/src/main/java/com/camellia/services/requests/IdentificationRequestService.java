@@ -46,7 +46,7 @@ public class IdentificationRequestService {
     public IdentificationRequestDTO getOldestUnapprovedRequest() {
         try {
             return IdentificationRequestMapper.MAPPER.identificationRequestToIdentificationRequestDTO(
-                    repository.findAllByOrderBySubmissionDateAsc(Pageable.ofSize(1)).getContent().get(0)
+                    repository.findAllByOrderBySubmissionDateAscAndByPage(Pageable.ofSize(1)).getContent().get(0)
             );
         } catch (IndexOutOfBoundsException e) {
             logger.info("No identification requests were found");
