@@ -30,7 +30,7 @@ const Quizzes = () => {
             let user = JSON.parse(userToken);
             quizArray.length === 0 && axios.get(`/api/quizzes/${user.userId}`, { headers: { Authorization: `Bearer ${user.loginToken}` } })
                 .then((response) => {
-                    console.log(response.data[0].photographs);
+                    console.log(response.data);
                     setQuizArray(response.data);
                 })
                 .catch((error) => {
@@ -54,17 +54,20 @@ const Quizzes = () => {
         let answers = [];
 
         for (const element of quizArray) {
-            let answer = document.getElementById(`quizcard_input_${element.cultivarId}`);
+            let answer = document.getElementById(`quizcard_input_${element.specimenId}`).value;
+            console.log(answer)
             answers.push({
-                specimen_id: element.cultivarId,
+                specimen_id: element.specimenId,
                 answer
             });
         }
+        console.log(answers);
 
         let user = JSON.parse(localStorage.getItem('userToken'));
         axios.post(`/api/quizzes/${user.userId}`, answers, { headers: { Authorization: `Bearer ${user.loginToken}` } })
             .then((response) => {
                 console.log(response.status);
+                setQuizArray([])
             })
             .catch((error) => {
                 console.log(error)
@@ -130,13 +133,14 @@ const Quizzes = () => {
                     </div>
                     <div className="grid items-center pt-5 pb-10 static">
                         <button type="submit" className="mx-auto bg-emerald-900 text-white hover:ring-2 ring-offset-1 ring-teal-500 rounded-lg px-7 py-2 font-semibold fade-in z-0" style={{ animationDelay: `1400ms` }}
-                            onClick={() => { }}
+                            onClick={() => { submitQuiz() }}
                         >Submit</button>
                     </div>
                 </>
                 :
-                <>
-                </>
+                <div className="flex justify-center mt-16 fade-in" style={{ animationDelay: `1400ms` }}>
+                    <p className="text-xl lg:text-3xl font-bold"><span className="text-emerald-900 font-extrabold">Login</span> first to start answering quizzes</p>
+                </div>
             }
         </div>
     );
