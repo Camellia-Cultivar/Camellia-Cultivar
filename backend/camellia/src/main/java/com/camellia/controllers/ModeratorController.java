@@ -54,6 +54,13 @@ public class ModeratorController {
     @Autowired
     IdentificationRequestService identificationRequestService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<String> getModerator(@PathVariable(value = "id") long modId) {
+        if (checkRole())
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("User Accepted");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+
     @DeleteMapping("/report/{id}")
     public ResponseEntity<String> deleteReportRequest(@PathVariable(value = "id") long requestId) {
         if (checkRole())
@@ -117,7 +124,7 @@ public class ModeratorController {
     }
 
     @PutMapping("/identification/{id}/approve")
-    public ResponseEntity<IdentificationRequestDTO> approveRequest(@PathVariable Long id) {
+    public ResponseEntity<IdentificationRequestDTO> approveRequest(@PathVariable(value="id") Long id) {
         if(checkRole())
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(identificationRequestService.approveIdentificationRequest(id));
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
