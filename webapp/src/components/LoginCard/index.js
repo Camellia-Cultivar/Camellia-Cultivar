@@ -1,27 +1,40 @@
 import React, {useState} from 'react'
+import axios from 'axios'
 
 import { tokenTtl } from '../../utilities/ttl';
 
 const LoginCard = (props) => {
 
     const [wrongCredentials, setWrongCredentials] = useState(false);
+    const [userNotAuthenticated, setUserNotAuthenticated] = useState(false);
 
     const loginUser = () => {
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
-        console.log({ "email": email, "password": password })
-        const axios = require('axios').default;
         axios.post('/api/users/login', { email: email, password: password })
             .then(function (response) {
-                console.log(response);
                 if((response.status === 200) && window.localStorage){
                     if(response.data === ''){
                         setWrongCredentials(true);
                     } else {
                         const token ={userId:response.data.split(' ')[0],loginToken:response.data.split(' ')[1], expiry:Date.now()+tokenTtl}
-                        localStorage.setItem("userToken", JSON.stringify(token));
-                        setWrongCredentials(false);
-                        props.navigate("/")
+                        const options = {
+                            headers: {'Authorization': `Bearer ${token.loginToken}`}
+                        }
+                        axios.get(`/api/users/${token.userId}`, options)
+                        .then(res => {
+                            localStorage.setItem("userToken", JSON.stringify(token));
+                            setWrongCredentials(false);
+                            props.navigate("/")
+
+                        })
+                        .catch(err => {
+                            if(err.message === 'Request failed with status code 401') {
+                            setWrongCredentials(false);
+                            setUserNotAuthenticated(true);
+                            }
+
+                        })
 
                     }
                 }
@@ -49,6 +62,9 @@ const LoginCard = (props) => {
                     </div>
                     {wrongCredentials &&
                         <span className="text-red-700 text-sm font-medium text-center mx-4 mt-4 md:mt-1" type="checkbox" id="wrongCredentials">Your email or password are wrong, please try again!</span>
+                    }
+                    {userNotAuthenticated &&
+                        <span className="text-red-700 text-sm font-medium text-center mx-4 mt-4 md:mt-1" type="checkbox" id="wrongCredentials">Please verify your account and then login again!</span>
                     }
                 </div>
                 <button onClick={() => loginUser()} className="bg-emerald-900 rounded-3xl w-3/4 self-center mt-10 md:mt-6 mb-4 md:mb-2 py-2 max-w-sm active:scale-95"><span className="text-lg text-white">LOGIN</span></button>
