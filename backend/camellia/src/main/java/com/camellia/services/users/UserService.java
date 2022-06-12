@@ -147,4 +147,24 @@ public class UserService {
         user.addRole(roleService.getRoleByName("REGISTERED"));
         repository.save(user);
     }
+
+    public Optional<User> getUserFromRequestIfRegistered() {
+        String requesterEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User foundUser = getUserByEmail(requesterEmail);
+
+        if (foundUser == null || !foundUser.isRegistered())
+            throw new UsernameNotFoundException("User not found");
+
+        return Optional.of(foundUser);
+    }
+
+    public boolean isRegistered(User user) {
+        return (user != null &&
+                (
+                        user.getRolesList().contains("REGISTERED") ||
+                        user.getRolesList().contains("MOD") ||
+                        user.getRolesList().contains("ADMIN"))
+        );
+    }
 }
