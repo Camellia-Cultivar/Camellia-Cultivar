@@ -67,6 +67,14 @@ public class QuizAnswer {
         return this.specimenType;
     }
 
+    public boolean isReference() {
+        return specimenType.equals(SpecimenType.REFERENCE);
+    }
+
+    public boolean isToIdentify() {
+        return specimenType.equals(SpecimenType.TO_IDENTIFY);
+    }
+
     public void setSpecimen(Specimen specimen) {
         this.specimen = specimen;
     }
@@ -77,5 +85,9 @@ public class QuizAnswer {
 
     public void setCultivar(Cultivar cultivar) {
         this.cultivar = cultivar;
+    }
+
+    public Cultivar getCultivar() {
+        return cultivar;
     }
 }
