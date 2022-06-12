@@ -18,9 +18,11 @@ const slide = (direction = 1) => {
 
 const Quizzes = () => {
     const [modalVisible, setModalVisible] = useState(false);
+    const [fetched, setFetched] = useState(false);
     const [modalImagesArray, setModalImagesArray] = useState([]);
     const [modalImageIndex, setModalImageIndex] = useState(0);
     const [quizArray, setQuizArray] = useState([]);
+    const [answers, setAnswers] = useState(Array.apply(null, Array(9)));
     const isLogged = useSelector(state => state.isLogged)
 
 
@@ -28,10 +30,11 @@ const Quizzes = () => {
         let userToken = localStorage.getItem('userToken');
         if (userToken) {
             let user = JSON.parse(userToken);
-            quizArray.length === 0 && axios.get(`/api/quizzes/${user.userId}`, { headers: { Authorization: `Bearer ${user.loginToken}` } })
+            !fetched && axios.get(`/api/quizzes/${user.userId}`, { headers: { Authorization: `Bearer ${user.loginToken}` } })
                 .then((response) => {
                     console.log(response.data);
                     setQuizArray(response.data);
+                    setFetched(true);
                 })
                 .catch((error) => {
                     console.log(error)
@@ -51,23 +54,19 @@ const Quizzes = () => {
     }
 
     const submitQuiz = () => {
-        let answers = [];
-
-        for (const element of quizArray) {
-            let answer = document.getElementById(`quizcard_input_${element.specimenId}`).value;
-            console.log(answer)
-            answers.push({
-                specimen_id: element.specimenId,
-                answer
-            });
-        }
+        let answersToQuiz = [];
         console.log(answers);
-
+        for (let i = 0; i < answers.length; i++) {
+            answers[i] !== undefined && answersToQuiz.push({
+                specimen_id: quizArray[i].specimenId,
+                answer: answers[i]
+            })
+        }
         let user = JSON.parse(localStorage.getItem('userToken'));
-        axios.post(`/api/quizzes/${user.userId}`, answers, { headers: { Authorization: `Bearer ${user.loginToken}` } })
+        axios.post(`/api/quizzes/${user.userId}`, answersToQuiz, { headers: { Authorization: `Bearer ${user.loginToken}` } })
             .then((response) => {
                 console.log(response.status);
-                setQuizArray([])
+                setFetched(false)
             })
             .catch((error) => {
                 console.log(error)
@@ -99,7 +98,9 @@ const Quizzes = () => {
                 </div>
                 <div className="col-span-2 justify-self-stretch self-stretch bg-stone-100 rounded-l-full"></div>
             </div>
-
+            {quizArray.length === 0 && <div className="flex justify-center mt-16 fade-in" style={{ animationDelay: `1400ms` }}>
+                <p className="text-xl lg:text-3xl font-bold">There are no more quizzes for you!</p>
+            </div>}
             {isLogged ?
                 <>
                     <div ref={scrl}
@@ -119,7 +120,11 @@ const Quizzes = () => {
                                 delay={1400 + index * 100}
                                 id={quiz.specimenId}
                                 images={quiz.photographs}
-                                showModal={showModalWithContent} />
+                                index={index}
+                                showModal={showModalWithContent}
+                                setAnswers={setAnswers}
+                                answers={answers}
+                            />
                         )}
 
                         <div className="lg:hidden flex items-center sticky right-0 bg-gradient-to-l from-neutral-900/5 md:px-4">
@@ -131,11 +136,12 @@ const Quizzes = () => {
                             </div>
                         </div>
                     </div>
+                    { quizArray.length!==0 &&
                     <div className="grid items-center pt-5 pb-10 static">
                         <button type="submit" className="mx-auto bg-emerald-900 text-white hover:ring-2 ring-offset-1 ring-teal-500 rounded-lg px-7 py-2 font-semibold fade-in z-0" style={{ animationDelay: `1400ms` }}
                             onClick={() => { submitQuiz() }}
                         >Submit</button>
-                    </div>
+                    </div>}
                 </>
                 :
                 <div className="flex justify-center mt-16 fade-in" style={{ animationDelay: `1400ms` }}>
