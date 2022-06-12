@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.mapping.Collection;
 
 
 @Entity
@@ -29,7 +31,7 @@ import org.hibernate.annotations.Parameter;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="user_type", discriminatorType = DiscriminatorType.STRING)
 public class User implements Serializable{
-    
+
     @Id
     @GeneratedValue(generator = "user-sequence-generator")
     @GenericGenerator(
@@ -50,7 +52,7 @@ public class User implements Serializable{
     @JsonProperty("last_name")
     @Column(name = "last_name", nullable = false)
     private String lastName;
-    
+
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
@@ -141,13 +143,13 @@ public class User implements Serializable{
     private Set<QuizParameters> quizParameters;
 
 
-    @ManyToMany 
-    @JoinTable( 
-        name = "users_roles", 
+    @ManyToMany
+    @JoinTable(
+        name = "users_roles",
         joinColumns = @JoinColumn(
-          name = "user_id", referencedColumnName = "userId"), 
+          name = "user_id", referencedColumnName = "userId"),
         inverseJoinColumns = @JoinColumn(
-          name = "role_id", referencedColumnName = "id")) 
+          name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles;
 
     @Column(name = "auto_approval", nullable = false)
@@ -277,13 +279,7 @@ public class User implements Serializable{
     }
 
     public List<String> getRolesList(){
-        Set<Role> rolesSet = getRoles();
-        List<String> authorities = new ArrayList<>();
-         
-        for (Role role : rolesSet) {
-            authorities.add(role.getName());
-        }
-        return authorities;
+        return roles.stream().map(Role::getName).collect(Collectors.toList());
     }
 
     public void addRole(Role role){
@@ -292,13 +288,19 @@ public class User implements Serializable{
         this.roles.add(role);
     }
 
+    public boolean isRegistered() {
+        return getRolesList().contains("REGISTERED")
+                || getRolesList().contains("MOD")
+                || getRolesList().contains("ADMIN");
+    }
+
     public String getProfile(){
         return "{" + "\"profile_image\":\"" + getProfilePhoto() +
-            "\", " + "\"first_name\":\""  +  getFirstName() + 
-            "\", " + "\"last_name\":\"" + getLastName() + 
-            "\", " + "\"email\":\"" + getEmail() + 
+            "\", " + "\"first_name\":\""  +  getFirstName() +
+            "\", " + "\"last_name\":\"" + getLastName() +
+            "\", " + "\"email\":\"" + getEmail() +
             "\", " + "\"reputation\":" + getReputation()+
-            ", " + "\"verified\":" + getVerified() + 
+            ", " + "\"verified\":" + getVerified() +
             ", " + "\"auto_approval\":" + getAutoApproval()  +
             "}";
         }
