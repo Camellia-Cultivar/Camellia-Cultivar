@@ -2,6 +2,7 @@ package com.camellia.controllers;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -47,9 +48,17 @@ public class QuizController {
 
     @PostMapping(value="/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> quizSubmission(@RequestBody List<QuizAnswerDTO> answersList, @PathVariable(value="id") long uId) throws MailException, UnsupportedEncodingException, MessagingException{
-        if(checkRoleRegistered())
-            return quizService.saveQuizAnswers(uId, answersList);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        if(!checkRoleRegistered())
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+
+        List<QuizAnswerDTO> validAnswers =
+                answersList.stream()
+                        .filter(QuizAnswerDTO::isValid)
+                        .collect(Collectors.toList());
+
+        return validAnswers.isEmpty() ?
+                ResponseEntity.ok("No responses given")
+                : quizService.saveQuizAnswers(uId, answersList);
     }
 
 
