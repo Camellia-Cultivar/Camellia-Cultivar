@@ -67,13 +67,12 @@ public class QuizService {
         return repository.findById(id);
     }
 
-    public List<SpecimenQuizDTO> generateQuiz(long userId){
+    public List<SpecimenQuizDTO> generateQuiz(User user){
         int noToIdentifySpecimens = quizParametersService.getToIdentifyNo();
         int noReferenceSpecimens = quizParametersService.getReferenceNo();
 
         List<SpecimenQuizDTO> quiz;
 
-        User user = userService.getUserById(userId);
         Set<QuizAnswer> answers = repository.findByUser(user);
         Iterator<QuizAnswer> iterator = answers.iterator();
 
