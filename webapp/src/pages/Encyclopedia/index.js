@@ -147,7 +147,7 @@ const Encyclopedia = () => {
                         {sugestionsOn &&
                             <div className=" w-full top-[50%] pt-8 pb-2 rounded-b-xl absolute bg-white shadow-md">
                                 {autocompletedCamellias.map((ac, index) => (
-                                    <Sugestion onClick={(search) => setSugestionClicked(search)} key={index} cultivar={ac} />
+                                    <Sugestion className="flex md:text-xl text-base py-2 cursor-pointer px-4 hover:bg-slate-50" setSugestionClicked={(search) => setSugestionClicked(search)} key={index} cultivar={ac} />
                                 ))}
                             </div>
                         }
