@@ -14,8 +14,10 @@
 	<name>camellia cultivar</name>
 	<description>camellia cultivar identification system</description>
 	<properties>
+		<docker.image.prefix>camelliacultivar.azurecr.io</docker.image.prefix>
 		<java.version>11</java.version>
 		<testcontainers.version>1.16.2</testcontainers.version>
+		<jib-maven-plugin.version>3.2.1</jib-maven-plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -160,6 +162,19 @@
 							<version>1.4.2.Final</version>
 						</path>
 					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>jib-maven-plugin</artifactId>
+				<groupId>com.google.cloud.tools</groupId>
+				<version>${jib-maven-plugin.version}</version>
+				<configuration>
+					<from>
+						<image>mcr.microsoft.com/java/jdk:11-zulu-alpine</image>
+					</from>
+					<to>
+						<image>${docker.image.prefix}/${project.artifactId}</image>
+					</to>
 				</configuration>
 			</plugin>
 		</plugins>
