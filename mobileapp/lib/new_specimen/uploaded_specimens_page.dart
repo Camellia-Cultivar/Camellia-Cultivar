@@ -8,7 +8,8 @@ import '../navbar/botnavbar.dart';
 import 'new_specimen_page.dart';
 
 class UploadedSpecimensPage extends StatefulWidget {
-  const UploadedSpecimensPage({Key? key}) : super(key: key);
+  List<UploadedSpecimen> uploadedSpecimens;
+  UploadedSpecimensPage(this.uploadedSpecimens, {Key? key}) : super(key: key);
 
   @override
   State<UploadedSpecimensPage> createState() => _UploadedSpecimensPage();
@@ -232,40 +233,41 @@ class _UploadedSpecimensPage extends State<UploadedSpecimensPage> {
                     child: const Divider(
                       thickness: 2,
                     )),
-                FutureBuilder(
-                  future: requestsFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Column(
-                        children: [
-                          Text(
-                            snapshot.error.toString(),
-                          ),
-                        ],
-                      );
-                    }
+                _buildRequestsList(context, widget.uploadedSpecimens),
+                // FutureBuilder(
+                //   future: requestsFuture,
+                //   builder: (context, snapshot) {
+                //     if (snapshot.hasError) {
+                //       return Column(
+                //         children: [
+                //           Text(
+                //             snapshot.error.toString(),
+                //           ),
+                //         ],
+                //       );
+                //     }
 
-                    if (snapshot.hasData) {
-                      var uploadedSpecimens =
-                          snapshot.data! as List<UploadedSpecimen>;
-                      if (uploadedSpecimens.isEmpty) {
-                        return const Center(
-                          child: Flexible(
-                              child: Text(
-                            "No identification Requests posted.",
-                            style: TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.bold),
-                          )),
-                        );
-                      }
-                      return _buildRequestsList(context, uploadedSpecimens);
-                    }
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [Text('Something went wrong!')],
-                    );
-                  },
-                ),
+                //     if (snapshot.hasData) {
+                //       var uploadedSpecimens =
+                //           snapshot.data! as List<UploadedSpecimen>;
+                //       if (uploadedSpecimens.isEmpty) {
+                //         return const Center(
+                //           child: Flexible(
+                //               child: Text(
+                //             "No identification Requests posted.",
+                //             style: TextStyle(
+                //                 fontSize: 22, fontWeight: FontWeight.bold),
+                //           )),
+                //         );
+                //       }
+                //       return _buildRequestsList(context, uploadedSpecimens);
+                //     }
+                //     return Row(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: const [Text('Something went wrong!')],
+                //     );
+                //   },
+                // ),
               ]))),
       bottomNavigationBar: const BotNavbar(pageIndex: 0),
     );
@@ -275,6 +277,15 @@ class _UploadedSpecimensPage extends State<UploadedSpecimensPage> {
       BuildContext context, List<UploadedSpecimen> uploadedSpecimens) {
     Color primaryColor = Theme.of(context).primaryColor;
     var screenSize = MediaQuery.of(context).size;
+    if (uploadedSpecimens.isEmpty) {
+      return const Center(
+        child: Flexible(
+            child: Text(
+          "No identification Requests posted.",
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        )),
+      );
+    }
     return Column(children: _uploadedRequests(context, uploadedSpecimens));
   }
 }
