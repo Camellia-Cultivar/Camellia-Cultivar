@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:camellia_cultivar/model/List_of_categories.dart';
 import 'package:camellia_cultivar/model/coordinates.dart';
 import 'package:camellia_cultivar/model/question.dart';
 import 'package:camellia_cultivar/model/uploaded_specimen.dart';
@@ -64,9 +63,10 @@ class APIService {
         "Access-Control-Allow-Origin": "*",
         'Authorization': 'Bearer ${await storage.read(key: 'token')}',
       });
+      print(response.body);
+      print(await storage.read(key: 'token'));
       if (response.statusCode == 202) {
         User api_user = userFromJson(response.body, uid);
-        print("user from api" + api_user.toString());
         // api_user.profileImage = "\x00";
         return api_user;
       }
@@ -79,7 +79,6 @@ class APIService {
   Future<List<Object>> createUser(Map signup_user) async {
     try {
       var url = Uri.parse(APIConstants.baseUrl + APIConstants.registerEndpoint);
-      // print(url);
       var body = jsonEncode(signup_user);
       var response = await http.post(url,
           headers: <String, String>{
@@ -102,7 +101,6 @@ class APIService {
       var url = Uri.parse(APIConstants.baseUrl +
           APIConstants.editProfileEndpoint +
           "/${user.id}");
-      print(user);
       Map<String, String> request = {
         "first_name": user.firstName,
         "last_name": user.lastName,
@@ -121,7 +119,6 @@ class APIService {
             'Authorization': 'Bearer ${await storage.read(key: 'token')}'
           },
           body: body);
-      print(response.body);
 
       if (response.statusCode != 200) {
         throw Exception("Update of profile did not suceed!");
@@ -167,57 +164,62 @@ class APIService {
     // }
   }
 
-  Future<Map<String, dynamic>?> getCultivarInformation(int cultivarId) async {
-    try {
-      var url = Uri.parse(
-          APIConstants.baseUrl + APIConstants.cultivarEdpoint + "/$cultivarId");
-      var response = await http.get(url);
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      }
-    } catch (e) {
-      log(e.toString());
-    }
-    return null;
-  }
+  // Future<Map<String, dynamic>?> getCultivarInformation(int cultivarId) async {
+  //   try {
+  //     var url = Uri.parse(
+  //         APIConstants.baseUrl + APIConstants.cultivarEdpoint + "/$cultivarId");
+  //     var response = await http.get(url);
+  //     if (response.statusCode == 200) {
+  //       return json.decode(response.body);
+  //     }
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  //   return null;
+  // }
 
-  Future<List<UploadedSpecimen>?> getUploadedSpecimens(int uid) async {
+  Future<List<UploadedSpecimen>> getUploadedSpecimens() async {
     List<UploadedSpecimen> lst = [];
     try {
-      var url = Uri.parse(APIConstants.baseUrl +
-          APIConstants.uploadedSpecimensEndpoint +
-          "/$uid");
-      var response = await http.get(url);
-      if (response.statusCode == 200) {
-        for (dynamic o in json.decode(response.body)) {
-          lst.add(UploadedSpecimen.fromJson(json.decode(o)));
-        }
-        return lst;
-      }
-    } catch (e) {
-      log(e.toString());
-    }
-    return null;
-  }
-
-  Future<List<Question>?> getQuiz(User user) async {
-    List<Question> lst = [];
-
-    try {
       var url = Uri.parse(
-          APIConstants.baseUrl + APIConstants.quizEndpoint + "/${user.id}");
+          APIConstants.baseUrl + APIConstants.uploadedSpecimensEndpoint);
       var response = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Access-Control-Allow-Origin': '*',
         'Authorization': 'Bearer ${await storage.read(key: 'token')}'
       });
+      // print(await storage.read(key: 'token'));
+      // print(response.statusCode);
+      print(response.body);
       if (response.statusCode == 200) {
-        List questionJsonList = json.decode(response.body) as List;
-        for (dynamic questionJson in questionJsonList) {
-          print(questionJson);
-          lst.add(Question.fromJson(questionJson));
+        List specimensJsonList = json.decode(response.body) as List;
+        for (dynamic uploadedSpecimenJson in specimensJsonList) {
+          lst.add(UploadedSpecimen.fromJson(uploadedSpecimenJson));
         }
         print(lst);
+        return lst;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return [];
+  }
+
+  Future<List<Question>?> getQuiz() async {
+    List<Question> lst = [];
+
+    try {
+      var url = Uri.parse(APIConstants.baseUrl + APIConstants.quizEndpoint);
+      var response = await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': 'Bearer ${await storage.read(key: 'token')}'
+      });
+      if (response.statusCode == 202) {
+        List questionJsonList = json.decode(response.body) as List;
+        for (dynamic questionJson in questionJsonList) {
+          lst.add(Question.fromJson(questionJson));
+        }
         return lst;
       }
     } catch (e) {
@@ -230,7 +232,7 @@ class APIService {
   //   return null;
   // }
 
-  Future<void> setQuizAnswers(int uid, List<FormItem> answers) async {
+  Future<void> setQuizAnswers(List<FormItem> answers) async {
     List<Map<String, dynamic>> lst = [];
 
     for (FormItem i in answers) {
@@ -242,11 +244,9 @@ class APIService {
     }
 
     try {
-      var url =
-          Uri.parse(APIConstants.baseUrl + APIConstants.quizEndpoint + "/$uid");
+      var url = Uri.parse(APIConstants.baseUrl + APIConstants.quizEndpoint);
       // var obj = {"answers": lst};
       var body = jsonEncode(lst);
-      print(lst);
       var response = await http.post(url,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
@@ -254,8 +254,6 @@ class APIService {
             'Authorization': 'Bearer ${await storage.read(key: 'token')}'
           },
           body: body);
-      print(response.statusCode);
-      print(response.body);
       if (response.statusCode != 200) {
         throw Exception("Submission of quiz answers did not suceed!");
       }
@@ -264,18 +262,33 @@ class APIService {
     }
   }
 
-  Future<List<Map<String, dynamic>?>?> getRecentlyUploadedSpecimens() async {
+  Future<List<Map<String, dynamic>>> getRecentlyUploadedSpecimens() async {
     try {
       var url = Uri.parse(APIConstants.baseUrl +
           APIConstants.recentlyUploadedSpecimensEndpoint);
-      var response = await http.get(url);
+      var response = await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      });
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        List<Map> specimensMaps = (json.decode(response.body) as List)
+            .map((specimen) => (specimen as Map))
+            .toList();
+        List<Map<String, dynamic>> specimens = [];
+
+        for (Map map in specimensMaps) {
+          Map<String, dynamic> newMap = {};
+          for (dynamic key in map.keys) {
+            newMap[key.toString()] = map[key];
+          }
+          specimens.add(newMap);
+        }
+
+        return specimens;
       }
-      return null;
     } catch (e) {
       log(e.toString());
     }
+    return [];
   }
 
   Future<List<Map<String, Object>?>?> getMapSpecimens() async {
@@ -303,7 +316,6 @@ class APIService {
           };
           lst.add(new_obj);
         }
-        print(lst.toString() + "\t im on the api service");
         return lst;
       }
     } catch (e) {
@@ -332,16 +344,20 @@ class APIService {
   }
 
   Future<int> postSpecimenRequest(Map<String, dynamic> specimenToUpload) async {
+    print(specimenToUpload);
     try {
       var url =
           Uri.parse(APIConstants.baseUrl + APIConstants.createSpecimenEndpoint);
       var body = jsonEncode(specimenToUpload);
-      print(body);
       var response = await http.post(url,
           headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8'
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Access-Control-Allow-Origin': '*',
+            'Authorization': 'Bearer ${await storage.read(key: 'token')}'
           },
           body: body);
+      print(await storage.read(key: 'token'));
+      print("specimen resquest after post\n" + response.body);
       return response.statusCode;
     } catch (e) {
       log(e.toString());
@@ -352,23 +368,17 @@ class APIService {
   Future<Map<String, int>> getAutocomplete(String substring) async {
     try {
       var url = Uri.parse(APIConstants.baseUrl +
-          APIConstants.autocomplete +
+          APIConstants.autocompleteEndpoint +
           "?substring=$substring");
       var response = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Access-Control-Allow-Origin': '*',
         'Authorization': 'Bearer ${await storage.read(key: 'token')}'
       });
-      // print(response.statusCode.toString() + response.body);
+      print(response.body);
       if (response.statusCode == 200) {
         List<dynamic> optionsJson = json.decode(response.body) as List;
-//{"cultivarId":21976,"denomination":"Camelia Oleifera Abel 31"}
-        Map<String, int> options =
-            {}; /*optionsJson
-            .map((optionJson) => {
-                  optionJson["denomination"] as String:
-                      optionJson["cultivarId"] as int
-                }).to;*/
+        Map<String, int> options = {};
         for (dynamic specimen in optionsJson) {
           var map = specimen as Map;
           options[map["denomination"] as String] = map["cultivarId"] as int;
@@ -379,5 +389,79 @@ class APIService {
       log(e.toString());
     }
     return {};
+  }
+
+  Future<Map<String, dynamic>> getCultivar(int cultivarId) async {
+    var url;
+    try {
+      if (cultivarId == null) {
+        url = Uri.parse(
+            APIConstants.baseUrl + APIConstants.cultivarEdpoint + "/1");
+        //"/$cultivarId");
+      } else {
+        url = Uri.parse(APIConstants.baseUrl +
+            APIConstants.cultivarEdpoint +
+            "/$cultivarId");
+      }
+      var response = await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': 'Bearer ${await storage.read(key: 'token')}'
+      });
+
+      // {"id":1,"species":"C. japonica",
+      // "epithet":"A. Markley Lee",
+      // "description":"Fruitland Nursery Catalogue, 1943-1944, p.20: Imbricated pink similar to 'Pink Perfection' (Otome). Raised in USA.",
+      // "photograph":null,"synonyms":[],"characteristicValues":[],"cultivarVotes":{}}
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> cultivarDetails = json.decode(response.body);
+        cultivarDetails["characteristicValues"] = [
+          {
+            "category": "Leaf",
+            "subcategories": [
+              {"subcat": "name", "option": "option"}
+            ]
+          }
+        ];
+        return cultivarDetails;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return {};
+  }
+
+  Future<List<String>> getCultivarPhotos(int cultivarId) async {
+    var url;
+    try {
+      if (cultivarId == null) {
+        url = Uri.parse(
+            APIConstants.baseUrl + APIConstants.cultivarEdpoint + "/1/photos");
+        //"/$cultivarId");
+      } else {
+        url = Uri.parse(APIConstants.baseUrl +
+            APIConstants.cultivarEdpoint +
+            "/$cultivarId/photos");
+      }
+      var response = await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      });
+
+      // {"id":1,"species":"C. japonica",
+      // "epithet":"A. Markley Lee",
+      // "description":"Fruitland Nursery Catalogue, 1943-1944, p.20: Imbricated pink similar to 'Pink Perfection' (Otome). Raised in USA.",
+      // "photograph":null,"synonyms":[],"characteristicValues":[],"cultivarVotes":{}}
+
+      if (response.statusCode == 200) {
+        List<String> cultivarPhotos = (json.decode(response.body) as List)
+            .map((e) => e as String)
+            .toList();
+        return cultivarPhotos;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return [];
   }
 }

@@ -41,31 +41,6 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePage extends State<ProfilePage> {
   final api = APIService();
 
-  // void handleDelete(BuildContext context, User user) async {
-  //   final dbHelper = DatabaseHelper.instance;
-
-  //   try {
-  //     await dbHelper.delete("users", user.id);
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //           content: Text('Failed delete account!'),
-  //           backgroundColor: Colors.red),
-  //     );
-  //     return;
-  //   }
-
-  //   await logout(
-  //     context,
-  //     user,
-  //   );
-
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     const SnackBar(
-  //         content: Text('Sucessfully deletet account!'),
-  //         backgroundColor: Colors.green),
-  //   );
-  // }
   bool one_call = false;
 
   Future<void> getUser(BuildContext context, User? user) async {
@@ -82,32 +57,7 @@ class _ProfilePage extends State<ProfilePage> {
     one_call = false;
   }
 
-  void handleDelete(BuildContext context, User user) async {
-    try {
-      await api.deleteUser(user.id);
-    } on Exception catch (_, e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Failed delete account!'),
-            backgroundColor: Colors.red),
-      );
-      return;
-    }
-
-    await logout(
-      context,
-      user,
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content: Text('Sucessfully deletet account!'),
-          backgroundColor: Colors.green),
-    );
-  }
-
-  void handleLogout(BuildContext context, User user) async {
-    print(one_call.toString() + "heres 2nd onecall");
+  Future<void> handleLogout(BuildContext context, User user) async {
     await logout(context, user);
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -116,6 +66,10 @@ class _ProfilePage extends State<ProfilePage> {
           backgroundColor: Colors.green),
     );
   }
+
+  // void handleLogout(BuildContext context, User user) async {
+  //   await _logout(context, user);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -261,8 +215,8 @@ class _ProfilePage extends State<ProfilePage> {
                                   height: screenSize.height / 12.5,
                                   width: screenSize.width / 1.8,
                                   child: TextButton(
-                                      onPressed: () =>
-                                          handleLogout(context, user as User),
+                                      onPressed: () async => await handleLogout(
+                                          context, user as User),
                                       style: ButtonStyle(
                                         backgroundColor:
                                             MaterialStateProperty.all(
@@ -281,33 +235,33 @@ class _ProfilePage extends State<ProfilePage> {
                                               color: Colors.white,
                                               fontWeight: FontWeight.w300))),
                                 )),
-                            Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                child: SizedBox(
-                                  height: screenSize.height / 12.5,
-                                  width: screenSize.width / 1.8,
-                                  child: TextButton(
-                                      onPressed: () =>
-                                          handleDelete(context, user as User),
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Colors.red),
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        150.0),
-                                                side: const BorderSide(
-                                                    color: Colors.red))),
-                                      ),
-                                      child: Text(
-                                          "Delete account".toUpperCase(),
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w300))),
-                                )),
+                            // Padding(
+                            //     padding: const EdgeInsets.only(bottom: 20),
+                            //     child: SizedBox(
+                            //       height: screenSize.height / 12.5,
+                            //       width: screenSize.width / 1.8,
+                            //       child: TextButton(
+                            //           onPressed: () =>
+                            //               handleDelete(context, user as User),
+                            //           style: ButtonStyle(
+                            //             backgroundColor:
+                            //                 MaterialStateProperty.all(
+                            //                     Colors.red),
+                            //             shape: MaterialStateProperty.all<
+                            //                     RoundedRectangleBorder>(
+                            //                 RoundedRectangleBorder(
+                            //                     borderRadius:
+                            //                         BorderRadius.circular(
+                            //                             150.0),
+                            //                     side: const BorderSide(
+                            //                         color: Colors.red))),
+                            //           ),
+                            //           child: Text(
+                            //               "Delete account".toUpperCase(),
+                            //               style: const TextStyle(
+                            //                   color: Colors.white,
+                            //                   fontWeight: FontWeight.w300))),
+                            //     )),
                           ],
                         ))
                   ]))),

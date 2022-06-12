@@ -88,7 +88,6 @@ class _ShowFullMapState extends State<ShowFullMap> {
     Color primaryColor = Theme.of(context).primaryColor;
     double _zoom = 12;
     MapController _mapController = MapController();
-    print(_openPopUp);
 
     setState(() {
       _markers = _latLngList
@@ -200,7 +199,6 @@ class _ShowFullMapState extends State<ShowFullMap> {
   var infoWindowVisible = false;
 
   Opacity popup(LatLng point, Map<String, dynamic>? specimen) {
-    print(_openPopUp[point]);
     return Opacity(
       opacity: _openPopUp[point]! ? 1.0 : 0.0,
       child: Container(
