@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import axios from 'axios'
 import { IoAddCircle } from 'react-icons/io5'
+import axios from 'axios'
+import sha256 from 'crypto-js/sha256';
+import Base64 from 'crypto-js/enc-base64'
 
-
+import { tokenTtl } from '../../utilities/ttl';
 import { signedIn, signOut } from '../../redux/actions'
 
 
@@ -24,11 +26,11 @@ const ProfileEditCard = (props) => {
 
 
 
-    const saveProfile = () => {
+    const saveProfile = async () => {
+        let tempUser = { ...props.person }
         setPasswordNeeded(false);
-        if (password !== '') {
+        if (password !== '' && await verifyLogin(tempUser.email, password)) {
             if (changePassword && (newPassword === confirmNewPassword) && (newPassword !== "")) {
-                let tempUser = { ...props.person }
                 tempUser['first_name'] = newFirstName
                 tempUser['last_name'] = newLastName
                 dispatch(signedIn(tempUser))
@@ -36,14 +38,14 @@ const ProfileEditCard = (props) => {
                     first_name: newFirstName,
                     last_name: newLastName,
                     email: tempUser.email,
-                    password: newPassword,
+                    password: Base64.stringify((sha256(newPassword))),
                     profile_photo: user.profile_image
                 }
                 const loggedInUser = localStorage.getItem("userToken");
                 if (loggedInUser) {
                     const userToken = JSON.parse(localStorage.getItem("userToken"));
                     if (userToken.expiry > Date.now()) {
-                        axios.put(`/api/users`, editedUser, {
+                        axios.put(`/api/users/${userToken.userId}`, editedUser, {
                             headers: {
                                 "Authorization": `Bearer ${userToken.loginToken}`,
                             }
@@ -59,7 +61,6 @@ const ProfileEditCard = (props) => {
                 }
             }
             else {
-                let tempUser = { ...props.person }
                 tempUser['first_name'] = newFirstName
                 tempUser['last_name'] = newLastName
                 dispatch(signedIn(tempUser))
@@ -67,14 +68,14 @@ const ProfileEditCard = (props) => {
                     first_name: newFirstName,
                     last_name: newLastName,
                     email: tempUser.email,
-                    password: password,
+                    password: Base64.stringify((sha256(password))),
                     profile_photo: user.profile_image
                 }
                 const loggedInUser = localStorage.getItem("userToken");
                 if (loggedInUser) {
                     const _user = JSON.parse(localStorage.getItem("userToken"));
                     if (_user.expiry > Date.now()) {
-                        axios.put(`/api/users`, editedUser, {
+                        axios.put(`/api/users/${_user.userId}`, editedUser, {
                             headers: {
                                 "Authorization": `Bearer ${_user.loginToken}`,
                             }
@@ -100,12 +101,41 @@ const ProfileEditCard = (props) => {
 
     }
 
+    const verifyLogin = (email, _password) => {
+        let body = { email: email, password: Base64.stringify((sha256(_password))) };
+        return axios.post('/api/users/login', body)
+            .then(function (response) {
+                if ((response.status === 200) && window.localStorage) {
+                    if (response.data === '') {
+                        setPasswordNeeded(true);
+                        return false;
+                    } else {
+                        const token = { userId: response.data.split(' ')[0], loginToken: response.data.split(' ')[1], expiry: Date.now() + tokenTtl }
+                        localStorage.setItem("userToken", JSON.stringify(token));
+                        setPasswordNeeded(false);
+                        return true;
+                    }
+                    
+                }
+            })
+            .catch(function (_error) {
+                return false;
+            });
+    }
+
+
+
+
+
+
+
+
     const addPhoto = () => {
         document.getElementById("editProfilePicture").click();
     }
 
     const setPhoto = (e) => {
-        let imgUrl = URL.createObjectURL(e.target.files[0])
+        let imgUrl = URL(e.target.files[0])
         let tempUser = { ...props.person }
         tempUser['profile_image'] = imgUrl
         dispatch(signedIn(tempUser));
