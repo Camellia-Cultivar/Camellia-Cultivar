@@ -9,16 +9,18 @@ import ProfileCard from '../../components/ProfileCard'
 import ProfileEditCard from '../../components/ProfileEditCard'
 
 import details from "./details"
-import requests from "./requests"
+import axios from 'axios'
 
 const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
+    const [fetched, setFetched] = useState(false);
+    const [requests, setRequests] = useState([])
     const [person, setPerson] = useState(details);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const user = useSelector(state => state.user)
+    const user = useSelector(state => state.user);
 
 
     useEffect(() => {
@@ -29,6 +31,17 @@ const Profile = () => {
                 localStorage.removeItem("userToken");
                 dispatch(signOut());
                 navigate("/");
+            } else {
+                const options = {
+                    headers:{
+                        'Authorization': 'Bearer ' + JSON.parse(loggedInUser).loginToken
+                    }
+                }
+                !fetched && axios.get('/api/requests/identification', options)
+                .then(response => {
+                    setRequests(response.data);
+                    setFetched(true);
+                })
             }
         }
 
@@ -46,31 +59,27 @@ const Profile = () => {
                             requests.map((request, index) => {
                                 return (
                                     <div key={index} className=" grid grid-flow-row md:grid-cols-8 lg:grid-cols-none gap-2 border-2 rounded-lg border-emerald-900/10 bg-emerald-900/5 p-4">
-                                        <img alt="" src={request.image} className=" h-[100px] w-[100px] object-scale-down mx-auto rounded-lg"></img>
+                                        <img alt="" src={request.photo} className=" h-[100px] w-[100px] object-scale-down mx-auto rounded-lg"></img>
                                         <div className="flex flex-col justify-around  md:col-span-2 font-medium mt-4">
                                             <div className="flex items-center ">
                                                 <IoCalendarNumberOutline></IoCalendarNumberOutline>
-                                                <p className="ml-2">{request.date}</p>
+                                                <p className="ml-2">{request.submission.split('T')[0]}</p>
                                             </div>
                                             <div className="flex items-center mt-1 md:mt-0">
                                                 <IoLocationOutline></IoLocationOutline>
-                                                <p className="ml-2">{request.location}</p>
+                                                <p className="ml-2">{request.address}</p>
                                             </div>
                                         </div>
-                                        <div className=" flex items-center mt-2 md:mt-0 md:col-span-2">
-                                            <p className="md:text-lg font-medium md:mx-2">Status: </p>
-                                            <p className="mx-2 text-sm md:text-base">{request.status}</p>
-                                        </div>
                                         <div className=" md:ml-4 mt-2 md:col-span-3">
-                                            {request.identifications.length === 0 ?
+                                            {Object.keys(request.cultivarProbabilities).length === 0 ?
                                                 <div className="flex items-center justify-center h-full"><p className="md:text-lg font-medium text-center ">No Results</p></div>
                                                 :
                                                 <p className="md:text-lg font-medium">Results: </p>}
                                             <div className="flex flex-col justify-center">
-                                                {request.identifications.map((result, ind) => {
+                                                {Object.keys(request.cultivarProbabilities).map((key, ind) => {
                                                     return (
-                                                        <p className="text-sm mt-2" key={ind}>
-                                                            {result.name} :  {result.percentage}%
+                                                        <p className="text-sm mt-2" key={`user-identification-prob-${ind}`}>
+                                                            {key} :  {request.probabilities[key]}%
                                                         </p>
                                                     )
                                                 })}
