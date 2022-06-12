@@ -66,8 +66,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (!uid.isNaN) {
         User? user = await api.getUser(uid);
-
-        if (user != null && user.verified) {
+        if (user != null) {
           await login(context, user);
 
           emailController.clear();

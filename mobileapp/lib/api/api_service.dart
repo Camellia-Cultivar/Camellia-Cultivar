@@ -179,16 +179,14 @@ class APIService {
   Future<List<UploadedSpecimen>?> getUploadedSpecimens(int uid) async {
     List<UploadedSpecimen> lst = [];
     try {
-      var url = Uri.parse(APIConstants.baseUrl +
-          APIConstants.uploadedSpecimensEndpoint +
-          "/$uid");
-      var response = await http.get(url);
-      if (response.statusCode == 200) {
-        for (dynamic o in json.decode(response.body)) {
-          lst.add(UploadedSpecimen.fromJson(json.decode(o)));
-        }
-        return lst;
-      }
+      var url = Uri.parse(
+          APIConstants.baseUrl + APIConstants.uploadedSpecimensEndpoint);
+      var response = await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': 'Bearer ${await storage.read(key: 'token')}'
+      });
+      print(response.body);
     } catch (e) {
       log(e.toString());
     }

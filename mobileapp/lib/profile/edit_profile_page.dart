@@ -48,7 +48,7 @@ class _EditProfilePage extends State<EditProfilePage> {
     var baseUrl = 'https://camelliacultivarstorage2.blob.core.windows.net';
 
     var azureImgUrl =
-        '/imagestorage/${user.id}/${basename(profileImage!.path)}';
+        '/imagestorage/${user.id}/profile/${basename(profileImage!.path)}';
     var content = await profileImage!.readAsBytes();
     String? contentType = lookupMimeType(basename(profileImage!.path));
 

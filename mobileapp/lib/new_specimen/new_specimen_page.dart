@@ -761,31 +761,30 @@ class NewSpecimen extends State<NewSpecimenPage> {
                                 : null),
                         modalType: S2ModalType.popupDialog,
                       )
-                    : _buildColorTextInput(context, subCategory)
+                    : _buildColorTextInput(subCategory)
             ])
     ]);
   }
 
-  Widget _buildColorTextInput(
-      BuildContext context, UpovSubcategory subcategory) {
-    Color primaryColor = Theme.of(context).primaryColor;
+  Widget _buildColorTextInput(UpovSubcategory subcategory) {
+    Color black = Colors.black;
     FocusNode myFocusNode = FocusNode();
     return (Padding(
         padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
         child: TextFormField(
           focusNode: myFocusNode,
-          cursorColor: primaryColor,
+          cursorColor: black,
           decoration: InputDecoration(
-            //primaryColor
-            labelStyle: TextStyle(color: primaryColor),
+            //black
+            labelStyle: TextStyle(color: black),
             enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: primaryColor),
+              borderSide: BorderSide(color: black),
             ),
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: primaryColor),
+              borderSide: BorderSide(color: black),
             ),
             border: UnderlineInputBorder(
-              borderSide: BorderSide(color: primaryColor),
+              borderSide: BorderSide(color: black),
             ),
             labelText: subcategory.name,
           ),
