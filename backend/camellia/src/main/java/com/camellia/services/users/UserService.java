@@ -12,6 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     @Autowired
@@ -25,8 +27,10 @@ public class UserService {
 
     public ResponseEntity<String> getUserProfile(long id){
         User attemptingUser = repository.findById(id);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User requestingUser = repository.findByEmail(auth.getName());
         try{
-            if(!emailVerification(attemptingUser.getEmail()))
+            if(!emailVerification(attemptingUser.getEmail()) && !requestingUser.getRolesList().contains("MOD") && !requestingUser.getRolesList().contains("ADMIN"))
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not retrieve profile");
             else
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.repository.findByEmail(attemptingUser.getEmail()).getProfile());
@@ -94,11 +98,15 @@ public class UserService {
     }
 
 
-    public ResponseEntity<String> giveAutoApproval(long userId) {
-        User user = repository.getById(userId);
-        user.setAutoApproval(true);
+    public ResponseEntity<String> setAutoApproval(Long userId, boolean autoApproval) {
+        Optional<User> optionalUser = repository.findById(userId);
+        if (optionalUser.isEmpty())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
+        User user = optionalUser.get();
+        user.setAutoApproval(autoApproval);
         repository.save(user);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Operation completed");
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(String.format("User autoapproval %s", user.getAutoApproval() ? "given" : "revoked"));
     }
 
 

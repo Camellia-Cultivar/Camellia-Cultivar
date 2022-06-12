@@ -4,7 +4,7 @@ public class QuizAnswerDTO {
     
     private long specimen_id;
 
-    private String answer;
+    private long answer;
 
     public QuizAnswerDTO(){
 
@@ -19,11 +19,11 @@ public class QuizAnswerDTO {
         this.specimen_id = specimenId;
     }
 
-    public String getAnswer() {
+    public Long getAnswer() {
         return this.answer;
     }
 
-    public void setAnswer(String answer) {
+    public void setAnswer(Long answer) {
         this.answer = answer;
     }
 

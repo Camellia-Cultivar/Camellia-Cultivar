@@ -51,7 +51,7 @@ public abstract class Request {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn( referencedColumnName = "userId", name="reg_user_id", nullable=false)
     @JsonIncludeProperties("reg_user_id")
-    private User reg_user;
+    private User regUser;
 
 
 
@@ -71,12 +71,12 @@ public abstract class Request {
         this.submissionDate = submissionDate;
     }
 
-    public User getReg_user() {
-        return this.reg_user;
+    public User getRegUser() {
+        return this.regUser;
     }
 
-    public void setReg_user(User reg_user) {
-        this.reg_user = reg_user;
+    public void setRegUser(User reg_user) {
+        this.regUser = reg_user;
     }
 
     public long getModId(){
@@ -84,7 +84,7 @@ public abstract class Request {
     }
 
     public long getRegId(){
-        return reg_user.getUserId();
+        return regUser.getUserId();
     }
 
 }

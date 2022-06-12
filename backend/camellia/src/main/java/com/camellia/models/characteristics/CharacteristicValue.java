@@ -70,4 +70,32 @@ public class CharacteristicValue {
     public Set<Specimen> getSpecimens() {
         return specimens;
     }
+
+    public void setCharacteristicValueId(Long characteristicValueId) {
+        this.characteristicValueId = characteristicValueId;
+    }
+
+    public void setValue(Short value) {
+        this.value = value;
+    }
+
+    public void setDescriptor(String descriptor) {
+        this.descriptor = descriptor;
+    }
+
+    public void setCharacteristic(Characteristic characteristic) {
+        this.characteristic = characteristic;
+    }
+
+    public void setSpecimens(Set<Specimen> specimens) {
+        this.specimens = specimens;
+    }
+
+    public List<Cultivar> getCultivars() {
+        return cultivars;
+    }
+
+    public void setCultivars(List<Cultivar> cultivars) {
+        this.cultivars = cultivars;
+    }
 }
