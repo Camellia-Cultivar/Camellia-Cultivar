@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react'
-import axios from 'axios'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import sha256 from 'crypto-js/sha256';
 import Base64 from 'crypto-js/enc-base64'
 
@@ -7,16 +7,16 @@ import { tokenTtl } from '../../utilities/ttl';
 
 const LoginCard = (props) => {
 
-    useEffect(() =>{
-        const onEnterPress = event =>{
-            if(event.key === 'Enter'){
+    useEffect(() => {
+        const onEnterPress = event => {
+            if (event.key === 'Enter') {
                 event.preventDefault();
                 loginUser();
             }
         }
         document.addEventListener('keydown', onEnterPress);
 
-        return () =>{
+        return () => {
             document.removeEventListener('keydown', onEnterPress);
         }
     }, []);
@@ -28,34 +28,34 @@ const LoginCard = (props) => {
         const password = document.getElementById('login-password').value;
         axios.post('/api/users/login', { email: email, password: Base64.stringify((sha256(password))) })
             .then(function (response) {
-                if((response.status === 200) && window.localStorage){
-                    if(response.data === ''){
+                if ((response.status === 200) && window.localStorage) {
+                    if (response.data === '') {
                         setWrongCredentials(true);
                     } else {
-                        const token ={userId:response.data.split(' ')[0],loginToken:response.data.split(' ')[1], expiry:Date.now()+tokenTtl}
+                        const token = { userId: response.data.split(' ')[0], loginToken: response.data.split(' ')[1], expiry: Date.now() + tokenTtl }
                         const options = {
-                            headers: {'Authorization': `Bearer ${token.loginToken}`}
+                            headers: { 'Authorization': `Bearer ${token.loginToken}` }
                         }
                         axios.get(`/api/users/${token.userId}`, options)
-                        .then(() => {
-                            localStorage.setItem("userToken", JSON.stringify(token));
-                            setWrongCredentials(false);
-                            props.navigate("/")
+                            .then(() => {
+                                localStorage.setItem("userToken", JSON.stringify(token));
+                                setWrongCredentials(false);
+                                props.navigate("/")
 
-                        })
-                        .catch(err => {
-                            if(err.message === 'Request failed with status code 401') {
-                            setWrongCredentials(false);
-                            setUserNotAuthenticated(true);
-                            }
+                            })
+                            .catch(err => {
+                                if (err.message === 'Request failed with status code 401') {
+                                    setWrongCredentials(false);
+                                    setUserNotAuthenticated(true);
+                                }
 
-                        })
+                            })
 
                     }
                 }
             })
-            .catch(function (error) {
-                console.log(error);
+            .catch(function (_error) {
+                return;
             });
 
     }
@@ -69,23 +69,23 @@ const LoginCard = (props) => {
                 <div className="lg:mx-auto flex flex-col my-2 lg:min-w-[30rem]">
                     <div className='relative mt-5 md:mt-2 mb-8 md:mb-4 mx-4'>
                         <input
-                        
-                        id="login-email" 
-                        className="border-b-2 focus:outline-none focus:border-b-2 focus:border-b-emerald-600 w-full peer " 
-                        type="email" 
-                        placeholder=" "></input>
-                        <label 
-                        className="absolute left-0 cursor-text text-black/50 transform -translate-y-5 -translate-x-1 peer-focus:scale-90 scale-90 peer-focus:text-emerald-900 peer-focus:font-semibold duration-300 peer-placeholder-shown:scale-100" 
-                        htmlFor="login-email">Email</label>
+
+                            id="login-email"
+                            className="border-b-2 focus:outline-none focus:border-b-2 focus:border-b-emerald-600 w-full peer "
+                            type="email"
+                            placeholder=" "></input>
+                        <label
+                            className="absolute left-0 cursor-text text-black/50 transform -translate-y-5 -translate-x-1 peer-focus:scale-90 scale-90 peer-focus:text-emerald-900 peer-focus:font-semibold duration-300 peer-placeholder-shown:scale-100"
+                            htmlFor="login-email">Email</label>
                     </div>
                     <div className='relative mt-5 mb-8 md:mb-4 mx-4'>
-                        <input 
-                        id="login-password" 
-                        className=" border-b-2 focus:outline-none focus:border-b-2 focus:border-b-emerald-600 w-full peer" 
-                        type="password" 
-                        placeholder=" "></input>
-                        <label 
-                        className="absolute left-0 cursor-text text-black/50 transform peer-focus:-translate-y-5 peer-focus:-translate-x-1 -translate-y-5 -translate-x-1 peer-focus:scale-90 peer-focus:text-emerald-900 scale-90 peer-focus:font-semibold peer-placeholder-shown:scale-100 duration-300" htmlFor="login-password">Password</label>
+                        <input
+                            id="login-password"
+                            className=" border-b-2 focus:outline-none focus:border-b-2 focus:border-b-emerald-600 w-full peer"
+                            type="password"
+                            placeholder=" "></input>
+                        <label
+                            className="absolute left-0 cursor-text text-black/50 transform peer-focus:-translate-y-5 peer-focus:-translate-x-1 -translate-y-5 -translate-x-1 peer-focus:scale-90 peer-focus:text-emerald-900 scale-90 peer-focus:font-semibold peer-placeholder-shown:scale-100 duration-300" htmlFor="login-password">Password</label>
                     </div>
                     {wrongCredentials &&
                         <span className="text-red-700 text-sm font-medium text-center mx-4 mt-4 md:mt-1" type="checkbox" id="wrongCredentials">Your email or password are wrong, please try again!</span>

@@ -10,7 +10,6 @@ import { signedIn, signOut } from '../../redux/actions'
 
 const ProfileEditCard = (props) => {
 
-    const [profilePicture, setProfilePicture] = useState("null");
     const [changePassword, setChangePassword] = useState(false);
     const [passwordNeeded, setPasswordNeeded] = useState(false);
     const [newPassword, setNewPassword] = useState("");
@@ -33,7 +32,6 @@ const ProfileEditCard = (props) => {
                 tempUser['first_name'] = newFirstName
                 tempUser['last_name'] = newLastName
                 dispatch(signedIn(tempUser))
-                console.log(user);
                 let editedUser = {
                     first_name: newFirstName,
                     last_name: newLastName,
@@ -50,11 +48,8 @@ const ProfileEditCard = (props) => {
                                 "Authorization": `Bearer ${userToken.loginToken}`,
                             }
                         })
-                            .then(function (response) {
-                                console.log(response);
-                            })
-                            .catch(function (error) {
-                                console.log(error);
+                            .catch(function (_error) {
+                                return;
                             });
                     } else {
                         localStorage.removeItem("userToken");
@@ -77,20 +72,15 @@ const ProfileEditCard = (props) => {
                 }
                 const loggedInUser = localStorage.getItem("userToken");
                 if (loggedInUser) {
-                    const user = JSON.parse(localStorage.getItem("userToken"));
-                    if (user.expiry > Date.now()) {
-                        console.log(editedUser);
-
+                    const _user = JSON.parse(localStorage.getItem("userToken"));
+                    if (_user.expiry > Date.now()) {
                         axios.put(`/api/users`, editedUser, {
                             headers: {
-                                "Authorization": `Bearer ${user.loginToken}`,
+                                "Authorization": `Bearer ${_user.loginToken}`,
                             }
                         })
-                            .then(function (response) {
-                                console.log(response);
-                            })
-                            .catch(function (error) {
-                                console.log(error);
+                            .catch(function (_error) {
+                                return;
                             });
                     } else {
                         localStorage.removeItem("userToken");
@@ -101,16 +91,12 @@ const ProfileEditCard = (props) => {
                 }
             }
 
-
             setPasswordNeeded(false);
             props.setIsEditing(false);
+
         } else {
             setPasswordNeeded(true);
         }
-
-    }
-
-    const setDetails = (detail, value) => {
 
     }
 
@@ -122,7 +108,6 @@ const ProfileEditCard = (props) => {
         let imgUrl = URL.createObjectURL(e.target.files[0])
         let tempUser = { ...props.person }
         tempUser['profile_image'] = imgUrl
-        setProfilePicture(imgUrl)
         dispatch(signedIn(tempUser));
 
     }

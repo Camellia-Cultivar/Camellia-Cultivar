@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { flushSync } from "react-dom";
 import Sugestion from "../Sugestion";
 import './index.css';
 
@@ -128,7 +127,7 @@ const QuizCard = (props) => {
                     {
                         sugestionsOn && 
                         <div className="w-full bg-primary-transparent absolute z-[1] rounded-b-lg rounded">
-                            {sugestions.map(sug => <Sugestion className="flex text-base py-2 cursor-pointer px-4 last-of-type:rounded-b-lg hover:bg-emerald-900/30 hover:text-white" setSugestionClicked={sugestionClicked} cultivar={sug}></Sugestion>)}
+                            {sugestions.map((sug, index) => <Sugestion className="flex text-base py-2 cursor-pointer px-4 last-of-type:rounded-b-lg hover:bg-emerald-900/30 hover:text-white" setSugestionClicked={sugestionClicked} cultivar={sug} key={`sugestion-${index}`}></Sugestion>)}
                         </div>
                     }
                 </div>
