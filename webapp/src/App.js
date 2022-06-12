@@ -29,13 +29,13 @@ function App() {
     useEffect(() => {
         getTokenAvailability();
         const listen = history.listen((_location, _action) => {
-            fetchUser(true);
+            fetchUser();
         })
         fetchUser(Object.keys(userDetails).length === 0);
         return listen;
     })
 
-    const fetchUser = (secondFactor) => {
+    const fetchUser = (secondFactor=true) => {
         const loggedInUser = localStorage.getItem("userToken");
         if (loggedInUser && secondFactor) {
             const user = JSON.parse(localStorage.getItem("userToken"));
@@ -50,10 +50,15 @@ function App() {
 
                 })
                 .catch(function (_error) {
-                    return;
+                    if(_error.response.status === 403) {
+                        localStorage.removeItem("userToken");
+                        dispatch(signOut());
+                        window.location.href = "/";
+                    }
                 });
             Object.keys(userDetails).length === 0 && checkMod(user.userId, user.loginToken);
         }
+        
     }
 
     const getTokenAvailability = () => {
