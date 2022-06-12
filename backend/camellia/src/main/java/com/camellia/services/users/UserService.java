@@ -9,8 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -25,8 +28,10 @@ public class UserService {
 
     public ResponseEntity<String> getUserProfile(long id){
         User attemptingUser = repository.findById(id);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User requestingUser = repository.findByEmail(auth.getName());
         try{
-            if(!emailVerification(attemptingUser.getEmail()))
+            if(!emailVerification(attemptingUser.getEmail()) && !requestingUser.getRolesList().contains("MOD") && !requestingUser.getRolesList().contains("ADMIN"))
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not retrieve profile");
             else
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.repository.findByEmail(attemptingUser.getEmail()).getProfile());
@@ -57,6 +62,17 @@ public class UserService {
             
         this.repository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(user.getProfile());
+    }
+
+    public boolean requesterHasAutoApproval() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = this.getUserByEmail(email);
+
+        if (user == null)
+            throw new UsernameNotFoundException("User not found");
+
+        return user.getAutoApproval() || user.getRolesList().contains("MOD") || user.getRolesList().contains("ADMIN");
     }
 
     public boolean emailVerification(String email){
@@ -94,11 +110,15 @@ public class UserService {
     }
 
 
-    public ResponseEntity<String> giveAutoApproval(long userId) {
-        User user = repository.getById(userId);
-        user.setAutoApproval(true);
+    public ResponseEntity<String> setAutoApproval(Long userId, boolean autoApproval) {
+        Optional<User> optionalUser = repository.findById(userId);
+        if (optionalUser.isEmpty())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
+        User user = optionalUser.get();
+        user.setAutoApproval(autoApproval);
         repository.save(user);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Operation completed");
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(String.format("User autoapproval %s", user.getAutoApproval() ? "given" : "revoked"));
     }
 
 
@@ -126,5 +146,25 @@ public class UserService {
         User user = repository.getById(userId);
         user.addRole(roleService.getRoleByName("REGISTERED"));
         repository.save(user);
+    }
+
+    public Optional<User> getUserFromRequestIfRegistered() {
+        String requesterEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User foundUser = getUserByEmail(requesterEmail);
+
+        if (foundUser == null || !foundUser.isRegistered())
+            throw new UsernameNotFoundException("User not found");
+
+        return Optional.of(foundUser);
+    }
+
+    public boolean isRegistered(User user) {
+        return (user != null &&
+                (
+                        user.getRolesList().contains("REGISTERED") ||
+                        user.getRolesList().contains("MOD") ||
+                        user.getRolesList().contains("ADMIN"))
+        );
     }
 }

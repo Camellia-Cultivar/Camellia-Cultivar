@@ -4,7 +4,9 @@ import { configureStore } from '@reduxjs/toolkit'
 
 import './index.css';
 import App from './App';
+import CustomRouter from './components/CustomRouter';
 import reportWebVitals from './reportWebVitals';
+import history from './utilities/history'
 import rootReducer from './redux/reducers'
 import { Provider } from 'react-redux';
 
@@ -18,7 +20,9 @@ const store = configureStore({
 
 root.render(
     <Provider store={store}>
-        <App />
+        <CustomRouter history={history}>
+            <App />
+        </CustomRouter>
     </Provider>
 );
 

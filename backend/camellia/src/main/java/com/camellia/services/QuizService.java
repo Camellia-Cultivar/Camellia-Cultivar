@@ -1,5 +1,6 @@
 package com.camellia.services;
 
+import com.camellia.models.specimens.SpecimenType;
 import com.camellia.repositories.QuizRepository;
 import com.camellia.services.cultivars.CultivarService;
 import com.camellia.services.specimens.ReferenceSpecimenService;
@@ -64,16 +65,15 @@ public class QuizService {
     }
 
     public QuizAnswer getQuizById(long id) {
-        return repository.findById((long) id);
+        return repository.findById(id);
     }
 
-    public List<SpecimenQuizDTO> generateQuiz(long userId){
+    public List<SpecimenQuizDTO> generateQuiz(User user){
         int noToIdentifySpecimens = quizParametersService.getToIdentifyNo();
         int noReferenceSpecimens = quizParametersService.getReferenceNo();
 
         List<SpecimenQuizDTO> quiz;
 
-        User user = userService.getUserById(userId);
         Set<QuizAnswer> answers = repository.findByUser(user);
         Iterator<QuizAnswer> iterator = answers.iterator();
 
@@ -90,9 +90,8 @@ public class QuizService {
     }
 
 
-    public ResponseEntity<String> saveQuizAnswers(long userId, List<QuizAnswerDTO> quizAnswers) throws MailException, UnsupportedEncodingException, MessagingException{
+    public ResponseEntity<String> saveQuizAnswers(User user, List<QuizAnswerDTO> quizAnswers) throws MailException, UnsupportedEncodingException, MessagingException{
         Specimen s;
-        User user = userService.getUserById(userId);
 
         if(user == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user");
@@ -102,10 +101,10 @@ public class QuizService {
         boolean correct;
 
         for(QuizAnswerDTO qa: quizAnswers){
-            s = specimenService.getSpecimenById(qa.getSpecimen_id());
+            s = specimenService.getSpecimenById(qa.getSpecimenId());
 
 
-            Cultivar c = cultivarService.getCultivarByEpithet(qa.getAnswer());
+            Cultivar c = cultivarService.getCultivarById(qa.getAnswer());
 
             if(c == null){
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Cultivar");
@@ -122,15 +121,10 @@ public class QuizService {
 
             if( s.isReference()){
 
-                if(c != null &&referenceSpecimenService.getReferenceSpecimenById(qa.getSpecimen_id()).getCultivar().getEpithet().equals(qa.getAnswer())){
-                    correct = true;
-                } 
-                else {
-                    correct = false;
-                }
+                correct = c != null && referenceSpecimenService.getReferenceSpecimenById(qa.getSpecimenId()).getCultivar().getId().equals(qa.getAnswer());
 
                 qaSaved.setCorrect(correct);
-                qaSaved.setSpecimenType("REFERENCE");
+                qaSaved.setSpecimenType(SpecimenType.REFERENCE);
 
                 repository.save(qaSaved);
             }
@@ -139,17 +133,17 @@ public class QuizService {
 
 
                 qaSaved.setCorrect(false);
-                qaSaved.setSpecimenType("TOIDENTIFY");
-
-                s.addCultivarVote(c);
+                qaSaved.setSpecimenType(SpecimenType.TO_IDENTIFY);
 
                 repository.save(qaSaved);
 
 
-                int totalVotes = s.getCultivarProbabilities().values().stream().reduce(0, Integer::sum);
+                int totalVotes = repository.getTotalVotesForSpecimen(s.getSpecimenId());
 
 
                 int reputationSum;
+
+                s.addCultivarProb(c, 0);
 
                 for(Cultivar tempC : s.getCultivarProbabilities().keySet()){
                     reputationSum = 0;
@@ -157,7 +151,11 @@ public class QuizService {
                         reputationSum += userService.getUserById(id).getReputation();
                     }
 
-                    if( reputationSum / totalVotes * 100 > 80){
+                    double prob = reputationSum / totalVotes * 100 ;
+                    s.addCultivarProb(c, prob);
+                    specimenService.saveSpecimen(s);
+
+                    if( prob > 80){
                         toIdentifySpecimenService.promoteToReferenceFromId(s.getSpecimenId(), tempC);
                         break;
                     }
@@ -167,10 +165,10 @@ public class QuizService {
             }
         }
 
-        Long correctAnsweredQuizzes = repository.getUserCorrectAnswersCount(userId);
-        Long totalAnsweredQuizzes = repository.getUserAnswersCount(userId);
+        Long correctAnsweredQuizzes = repository.getUserCorrectAnswersCount(user);
+        Long totalAnsweredQuizzes = repository.getUserAnswersCount(user);
 
-        Long userTotalVotes = repository.getUserTotalVotes(userId);
+        Long userTotalVotes = repository.getUserTotalVotes(user);
         Long totalVotes = repository.getTotalVotes();
 
 

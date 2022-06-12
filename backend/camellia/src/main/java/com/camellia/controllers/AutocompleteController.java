@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/autocomplete")
+@RequestMapping("/api/public/autocomplete")
 public class AutocompleteController {
 
     @Autowired

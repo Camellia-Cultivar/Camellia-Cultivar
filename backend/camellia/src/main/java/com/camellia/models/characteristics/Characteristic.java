@@ -16,7 +16,7 @@ public class Characteristic {
     @GeneratedValue(strategy =  GenerationType.AUTO)
     @Column(name = "characteristic_id")
     @JsonProperty("id")
-    private long characteristicId;
+    private Long characteristicId;
 
     @Column(name = "name")
     private String name;
@@ -41,7 +41,7 @@ public class Characteristic {
         return characteristicValues;
     }
 
-    public long getCharacteristicId() {
+    public Long getCharacteristicId() {
         return characteristicId;
     }
 
@@ -51,5 +51,21 @@ public class Characteristic {
 
     public UPOVCategory getUpovCategory() {
         return upovCategory;
+    }
+
+    public void setCharacteristicId(Long characteristicId) {
+        this.characteristicId = characteristicId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUpovCategory(UPOVCategory upovCategory) {
+        this.upovCategory = upovCategory;
+    }
+
+    public void setCharacteristicValues(Set<CharacteristicValue> characteristicValues) {
+        this.characteristicValues = characteristicValues;
     }
 }

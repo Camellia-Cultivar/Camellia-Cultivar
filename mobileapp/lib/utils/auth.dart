@@ -23,8 +23,6 @@ Future<void> logout(BuildContext context, User user) async {
   Navigator.pushReplacement(
       context, MaterialPageRoute(builder: (context) => const LoginPage()));
 
-  context.read<UserProvider>().setUser(null);
-
   final storage = new FlutterSecureStorage();
   await storage.delete(key: "expiresIn");
 }

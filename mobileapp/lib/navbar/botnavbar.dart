@@ -1,7 +1,9 @@
+import 'package:camellia_cultivar/model/uploaded_specimen.dart';
 import 'package:camellia_cultivar/new_specimen/uploaded_specimens_page.dart';
 import 'package:camellia_cultivar/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 
+import '../api/api_service.dart';
 import 'new_specimen_icon.dart';
 import '../home/homepage.dart';
 import '../quizzes/quiz_options_page.dart';
@@ -18,6 +20,17 @@ class BotNavbar extends StatefulWidget {
 }
 
 class _BotNavBar extends State<BotNavbar> {
+  List<UploadedSpecimen> uploadedSpecimens = [];
+  final api = APIService();
+
+  _handleGetUploadedSpecimensPage() async {
+    uploadedSpecimens = await api.getUploadedSpecimens();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => UploadedSpecimensPage(uploadedSpecimens)));
+  }
+
   @override
   Widget build(BuildContext context) {
     int _selectedIndex = widget.pageIndex;
@@ -76,11 +89,7 @@ class _BotNavBar extends State<BotNavbar> {
                           _selectedIndex = index;
                           switch (index) {
                             case 0:
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const UploadedSpecimensPage()));
+                              _handleGetUploadedSpecimensPage();
                               break;
                             case 1:
                               Navigator.push(

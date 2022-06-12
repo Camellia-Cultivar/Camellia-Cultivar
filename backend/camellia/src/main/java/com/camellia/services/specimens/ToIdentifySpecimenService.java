@@ -48,7 +48,7 @@ public class ToIdentifySpecimenService {
         return specimenRepository.findToIdentifyById(id);
     }
 
-    public void updateVotes(Specimen specimen, Map<Cultivar, Integer> votes){
+    public void updateVotes(Specimen specimen, Map<Cultivar, Double> votes){
         specimen.setCultivarProbabilities(votes);
     }
 
@@ -65,9 +65,6 @@ public class ToIdentifySpecimenService {
 
         promotingSpecimen.promoteToReference();
         promotingSpecimen.setCultivar(c);
-
-        //if(promotingSpecimen.getPhotos().iterator().hasNext())
-        //    c.setPhotograph(promotingSpecimen.getPhotos().iterator().next());
 
         if(c.getCharacteristicValues().isEmpty()){
             Iterator<CharacteristicValue> it =  promotingSpecimen.getCharacteristicValues().iterator();

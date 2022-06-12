@@ -2,14 +2,15 @@ package com.camellia.services.requests;
 
 import com.camellia.mappers.IdentificationRequestMapper;
 import com.camellia.models.requests.IdentificationRequestDTO;
+import com.camellia.models.requests.IdentificationRequestView;
 import com.camellia.models.specimens.Specimen;
 import com.camellia.models.users.User;
 import com.camellia.repositories.requests.IdentificationRequestRepository;
 import com.camellia.models.requests.IdentificationRequest;
 
 import com.camellia.services.users.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,7 +29,7 @@ public class IdentificationRequestService {
     @Autowired
     private UserService userService;
 
-    Logger logger = LoggerFactory.getLogger(IdentificationRequestService.class);
+    Logger logger = LogManager.getLogger(IdentificationRequestService.class);
 
     public IdentificationRequest createNewIdentificationRequestFromSpecimen(Specimen specimen) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -36,14 +37,31 @@ public class IdentificationRequestService {
 
         IdentificationRequest newIdentificationRequest = new IdentificationRequest();
         newIdentificationRequest.setSubmissionDate(LocalDateTime.now());
-        newIdentificationRequest.setReg_user(submittedBy);
+        newIdentificationRequest.setRegUser(submittedBy);
         newIdentificationRequest.setToIdentifySpecimen(specimen);
 
         return repository.saveAndFlush(newIdentificationRequest);
     }
 
+    public IdentificationRequestDTO getOldestUnapprovedRequest() {
+        try {
+            return IdentificationRequestMapper.MAPPER.identificationRequestToIdentificationRequestDTO(
+                    repository.findAllByOrderBySubmissionDateAscAndByPage(Pageable.ofSize(1)).getContent().get(0)
+            );
+        } catch (IndexOutOfBoundsException e) {
+            logger.info("No identification requests were found");
+            return null;
+        }
+    }
+
     public Page<IdentificationRequest> getIdentificationRequests(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    public List<IdentificationRequestView> getAllIdentificationRequestsForUser(User user) {
+        List<IdentificationRequestView> identificationRequests = repository.findAllByRegUser(user);
+        logger.debug("Found {} identification requests for User[{}]", identificationRequests.size(), user.getUserId());
+        return identificationRequests;
     }
 
     public List<IdentificationRequest> getIdentificationRequests() {

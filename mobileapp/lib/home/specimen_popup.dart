@@ -1,6 +1,7 @@
 import 'package:camellia_cultivar/cultivar_page.dart';
 import 'package:flutter/material.dart';
 
+import '../api/api_service.dart';
 import 'image_full_slider_map.dart';
 
 class SpecimenPopup extends StatefulWidget {
@@ -27,8 +28,17 @@ class SpecimenPopupState extends State<SpecimenPopup> {
   @override
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
-    print("costum popup");
     return _buildDialogContent();
+  }
+
+  final api = APIService();
+  Map<String, dynamic> cultivarDetails = {};
+
+  getCultivarDetails(int cultivarId) async {
+    var cultivar = await api.getCultivar(cultivarId);
+    setState(() {
+      cultivarDetails = cultivar;
+    });
   }
 
   Container _buildDialogContent() {
@@ -90,12 +100,25 @@ class SpecimenPopupState extends State<SpecimenPopup> {
       color: const Color(0xFF064E3B),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(15.0))),
-      onPressed: () => {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    CultivarPage(specimenId: widget.specimen!["cultivar_id"])))
+      onPressed: () async => {
+        await getCultivarDetails(widget.specimen!["cultivar_id"]),
+        if (cultivarDetails.isEmpty)
+          {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text(
+                      "Couldn't access the specimen, please try again later."),
+                  backgroundColor: Colors.red),
+            ),
+          }
+        else
+          {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        CultivarPage(cultivarDetails: cultivarDetails)))
+          }
       },
       child: const Text(
         "Cultivar Details",

@@ -1,7 +1,5 @@
 import 'package:camellia_cultivar/api/api_service.dart';
 import 'package:camellia_cultivar/model/question.dart';
-import 'package:camellia_cultivar/model/user.dart';
-import 'package:camellia_cultivar/providers/user.dart';
 import 'package:camellia_cultivar/quizzes/quiz_options_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -63,7 +61,7 @@ class _QuizPageState extends State<QuizPage> {
   //   'C. Japonica Debutante',
   //   'C. Sasanqua Mine No Uki',
   // ];
-  List<String> lst = [];
+  List<String> optionsList = [];
 
   Map<String, int> autocompleteOptions = {};
 
@@ -117,11 +115,7 @@ class _QuizPageState extends State<QuizPage> {
     _focusInput?.unfocus();
   }
 
-  void handleSubmit(User? user) async {
-    if (user == null) {
-      return;
-    }
-
+  void handleSubmit() async {
     List<FormItem> answers = form.values.toList();
     answers.removeWhere((item) =>
         item.answer == null ||
@@ -130,15 +124,7 @@ class _QuizPageState extends State<QuizPage> {
 
     // autocompleteOptions.map((map) => null)
 
-    await api.setQuizAnswers(user.id, answers);
-
-    //int? reputation = await api.setQuizAnswers(user.id, answers);
-
-    // if(reputation != null) {
-    //   user.reputation = reputation;
-    // }
-
-    //context.read<UserProvider>().setUser(user);
+    await api.setQuizAnswers(answers);
 
     Navigator.pop(context);
 
@@ -154,8 +140,6 @@ class _QuizPageState extends State<QuizPage> {
     Color primaryColor = Theme.of(context).primaryColor;
 
     var screenSize = MediaQuery.of(context).size;
-
-    User? user = context.read<UserProvider>().user;
 
     // _cultivarNameController?.text = form[_currentIndex]?.answer ?? "";
 
@@ -270,7 +254,7 @@ class _QuizPageState extends State<QuizPage> {
                             }
 
                             await getAutocomplete(textEditingValue.text);
-                            return lst;
+                            return optionsList;
                           },
                         )),
                     Row(
@@ -323,7 +307,7 @@ class _QuizPageState extends State<QuizPage> {
                         height: screenSize.height / 12.5,
                         width: screenSize.width / 1.8,
                         child: TextButton(
-                            onPressed: () => handleSubmit(user),
+                            onPressed: () => handleSubmit(),
                             style: ButtonStyle(
                               backgroundColor:
                                   MaterialStateProperty.all(primaryColor),
@@ -348,25 +332,11 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 
-  // void getAutocomplete(String input) async {
-  //   List<String> lista = await getAutocompleteFuture(input);
-  //   setState(() {
-  //     lst = lista;
-  //   });
-  // }
-
   Future<void> getAutocomplete(String input) async {
-    // if (input.length < 3) {
-    //   return;
-    // }
     var options = await api.getAutocomplete(input);
-    print(options);
-    // if (options == null) {
-    //   return;
-    // }
     setState(() {
       autocompleteOptions = options;
-      lst =
+      optionsList =
           autocompleteOptions.keys.map((denomination) => denomination).toList();
     });
   }

@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 
 const Navbar = () => {
 
     const [navbarOpen, setNavbarOpen] = useState(false)
 
-    const isLogged = useSelector(state => state.isLogged)
+    const isLogged = useSelector(state => state.isLogged);
+    const isMod = useSelector(state => state.isMod)
 
     const user = useSelector(state => state.user)
 
@@ -33,7 +33,7 @@ const Navbar = () => {
             <nav className="flex bg-emerald-900 lg:px-2 py-2 md:py-4 lg:py-5 text-stone-200 select-none">
                 <div className="container flex flex-wrap justify-between items-center mx-auto">
                     <Link to={"/"} className="flex items-center" onClick={() => closeMenu()}>
-                        <img src="logo.svg" className="ml-2 lg:ml-0 md:mr-3 h-10 md:h-9 w-9" alt="Logo" />
+                        <img src="/logo.svg" className="ml-2 lg:ml-0 md:mr-3 h-10 md:h-9 w-9" alt="Logo" />
                         <span
                             className="hidden md:flex whitespace-nowrap self-center text-2xl font-bold dark:text-white">Camellia Cultivar</span>
                     </Link>
@@ -70,22 +70,24 @@ const Navbar = () => {
                                     Encyclopedia
                                 </NavLink>
                             </li>
-                            <li>
-                                <NavLink to="/about"
+                            {isMod && <li>
+                                <NavLink to="/moderation"
                                     className={({ isActive }) => (
                                         isActive ? activeLink : link
                                     )}
                                     onClick={() => closeMenu()}
                                 >
-                                    About Us
+                                    Moderation
                                 </NavLink>
-                            </li>
+                            </li>}
                         </ul>
                     </div>
 
                     <div className="lg:order-2 flex mr-1.5 lg:mr-0">
                         {/*LOGIN BUTTON*/}
-                        {isLogged ? <button
+                        {isLogged ? 
+                        <div className="flex">
+                            <button
                             onClick={() => { navigate("/profile"); closeMenu() }}
                             className="flex justify-center align-middle font-medium rounded-full md:rounded-md md:px-2 md:py-1 hover:bg-white/10 hover:ring-teal-400/50 hover:ring-2 m-auto mr-3 lg:mr-0 focus:outline-none"
                         >
@@ -94,6 +96,13 @@ const Navbar = () => {
                                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
                             </svg>
                         </button>
+                        <button
+                            onClick={() => { localStorage.removeItem("userToken"); closeMenu(); window.location.href = "/" }}
+                            className="flex md:ml-4 justify-center font-medium rounded-full md:rounded-md md:px-2 md:py-1 hover:bg-white/10 hover:ring-teal-400/50 hover:ring-2 m-auto mr-3 lg:mr-0 focus:outline-none"
+                        >
+                            <span className="px-1 self-center hidden md:flex">Logout</span>
+                        </button>
+                        </div>
                             :
                             <button
                                 onClick={() => { navigate("/login"); closeMenu() }}

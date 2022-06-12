@@ -12,11 +12,11 @@ public interface IdentificationRequestMapper {
     IdentificationRequestMapper MAPPER = Mappers.getMapper(IdentificationRequestMapper.class);
 
     @Mapping(target = "request_id", source = "requestId")
-    @Mapping(target = "reg_user", source = "submitter")
+    @Mapping(target = "regUser", source = "submitter")
     IdentificationRequest identificationRequestDTOToIdentificationRequest(IdentificationRequestDTO dto);
 
 
     @Mapping(target = "requestId", source = "request_id")
-    @Mapping(target = "submitter", source = "reg_user")
+    @Mapping(target = "submitter", source = "regUser")
     IdentificationRequestDTO identificationRequestToIdentificationRequestDTO(IdentificationRequest request);
 }

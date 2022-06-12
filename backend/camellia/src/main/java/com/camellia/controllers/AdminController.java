@@ -1,6 +1,8 @@
 package com.camellia.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,20 +29,27 @@ public class AdminController {
     private UserService userService;
 
     @PostMapping("/reputation")
-    public void changeReputationParameters(
+    public ResponseEntity<String> changeReputationParameters(
             @RequestParam(value="quiz") double weightStandardSpecimenAnswers,
             @RequestParam(value="votes") double weightUserTotalValues
     ){
         if(checkAdminRole()){
             reputationParametersService.changeParameters(weightStandardSpecimenAnswers, weightUserTotalValues);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
         }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
     @PostMapping("/quiz")
-    public void changeQuizParameters(@RequestParam(value="reference") int noReferenceSpecimens, @RequestParam(value="identify") int noToIdentifySpecimens){
+    public ResponseEntity<String> changeQuizParameters(
+            @RequestParam(value="reference") int noReferenceSpecimens, 
+            @RequestParam(value="identify") int noToIdentifySpecimens
+    ){
         if(checkAdminRole()){
             quizParametersService.changeParameters(noReferenceSpecimens, noToIdentifySpecimens);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
         }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
 
