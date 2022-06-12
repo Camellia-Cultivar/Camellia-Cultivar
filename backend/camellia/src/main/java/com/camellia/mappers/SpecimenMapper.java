@@ -20,5 +20,5 @@ public interface SpecimenMapper {
     Specimen specimenDTOtoToIdentifySpecimen(SpecimenDto specimenDto);
 
     @Mapping(target = "specimenType", constant = "FOR_APPROVAL")
-    Specimen specimenDTOtoToForApprovalSpecimen(SpecimenDto specimenDto);
+    Specimen specimenDTOToForApprovalSpecimen(SpecimenDto specimenDto);
 }

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +62,17 @@ public class UserService {
             
         this.repository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(user.getProfile());
+    }
+
+    public boolean requesterHasAutoApproval() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = this.getUserByEmail(email);
+
+        if (user == null)
+            throw new UsernameNotFoundException("User not found");
+
+        return user.getAutoApproval() || user.getRolesList().contains("MOD") || user.getRolesList().contains("ADMIN");
     }
 
     public boolean emailVerification(String email){
