@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 import com.camellia.models.cultivars.Cultivar;
 import com.camellia.models.specimens.Specimen;
+import com.camellia.models.specimens.SpecimenType;
 import com.camellia.models.users.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -24,7 +25,7 @@ public class QuizAnswer {
     private boolean correct;
 
     @Column(name = "specimen_type")
-    private String specimenType;
+    private SpecimenType specimenType;
 
     @ManyToOne
     @JoinColumn( name="userId", nullable=false)
@@ -58,11 +59,11 @@ public class QuizAnswer {
         return this.correct;
     }
 
-    public void setSpecimenType(String specimenType){
+    public void setSpecimenType(SpecimenType specimenType){
         this.specimenType = specimenType;
     }
 
-    public String getSpecimenType(){
+    public SpecimenType getSpecimenType(){
         return this.specimenType;
     }
 

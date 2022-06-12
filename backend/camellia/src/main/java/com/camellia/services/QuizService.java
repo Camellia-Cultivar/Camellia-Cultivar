@@ -1,5 +1,6 @@
 package com.camellia.services;
 
+import com.camellia.models.specimens.SpecimenType;
 import com.camellia.repositories.QuizRepository;
 import com.camellia.services.cultivars.CultivarService;
 import com.camellia.services.specimens.ReferenceSpecimenService;
@@ -123,7 +124,7 @@ public class QuizService {
                 correct = c != null && referenceSpecimenService.getReferenceSpecimenById(qa.getSpecimenId()).getCultivar().getId().equals(qa.getAnswer());
 
                 qaSaved.setCorrect(correct);
-                qaSaved.setSpecimenType("REFERENCE");
+                qaSaved.setSpecimenType(SpecimenType.REFERENCE);
 
                 repository.save(qaSaved);
             }
@@ -132,7 +133,7 @@ public class QuizService {
 
 
                 qaSaved.setCorrect(false);
-                qaSaved.setSpecimenType("TOIDENTIFY");
+                qaSaved.setSpecimenType(SpecimenType.TO_IDENTIFY);
 
                 repository.save(qaSaved);
 
