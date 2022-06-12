@@ -1,6 +1,5 @@
 package com.camellia.models.requests;
 
-import com.camellia.models.cultivars.CultivarCardView;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
@@ -12,7 +11,7 @@ public interface IdentificationRequestView {
     public LocalDateTime getSubmission();
 
     @Value(value = "#{target.toIdentifySpecimen.cultivarProbabilities}")
-    public Map<CultivarCardView, Integer> getCultivarProbabilities();
+    public Map<String, Double> getCultivarProbabilities();
 
     @Value(value = "#{target.toIdentifySpecimen.address}")
     public String getAddress();

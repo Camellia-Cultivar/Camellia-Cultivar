@@ -9,8 +9,8 @@ import com.camellia.repositories.requests.IdentificationRequestRepository;
 import com.camellia.models.requests.IdentificationRequest;
 
 import com.camellia.services.users.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,7 +29,7 @@ public class IdentificationRequestService {
     @Autowired
     private UserService userService;
 
-    Logger logger = LoggerFactory.getLogger(IdentificationRequestService.class);
+    Logger logger = LogManager.getLogger(IdentificationRequestService.class);
 
     public IdentificationRequest createNewIdentificationRequestFromSpecimen(Specimen specimen) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -59,7 +59,9 @@ public class IdentificationRequestService {
     }
 
     public List<IdentificationRequestView> getAllIdentificationRequestsForUser(User user) {
-        return repository.findAllByRegUser(user);
+        List<IdentificationRequestView> identificationRequests = repository.findAllByRegUser(user);
+        logger.debug("Found {} identification requests for User[{}]", identificationRequests.size(), user.getUserId());
+        return identificationRequests;
     }
 
     public List<IdentificationRequest> getIdentificationRequests() {

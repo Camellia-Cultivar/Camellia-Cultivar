@@ -3,9 +3,7 @@ package com.camellia.models.cultivars;
 import com.camellia.models.QuizAnswer;
 import com.camellia.models.characteristics.CharacteristicValue;
 import com.camellia.models.specimens.Specimen;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.List;
@@ -134,5 +132,8 @@ public class Cultivar {
         this.description = description;
     }
 
+    public String toString() {
+        return String.format("%s \"%s\"", species, epithet);
+    }
 
 }
