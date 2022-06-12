@@ -18,7 +18,7 @@ public class QuizAnswer {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @Column(name = "correct")
     private boolean correct;
@@ -42,7 +42,7 @@ public class QuizAnswer {
     private Cultivar cultivar;
     
 
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
 
