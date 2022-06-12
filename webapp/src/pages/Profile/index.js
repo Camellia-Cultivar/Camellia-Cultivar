@@ -8,14 +8,12 @@ import { signOut } from '../../redux/actions'
 import ProfileCard from '../../components/ProfileCard'
 import ProfileEditCard from '../../components/ProfileEditCard'
 
-import details from "./details"
 import axios from 'axios'
 
 const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [fetched, setFetched] = useState(false);
     const [requests, setRequests] = useState([])
-    const [person, setPerson] = useState(details);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -51,7 +49,7 @@ const Profile = () => {
         <div className='mt-16 container-4/5'>
             <p className=" text-xl md:text-2xl lg:text-4xl font-bold text-emerald-900">Welcome {user.first_name}!</p>
             <div className="flex flex-col lg:flex-row mt-8 md:mt-10">
-                {isEditing ? <ProfileEditCard person={user} setPerson={(p) => { setPerson(p) }} setIsEditing={(editing) => { setIsEditing(editing) }}></ProfileEditCard> : <ProfileCard person={user} setIsEditing={(editing) => { setIsEditing(editing) }}></ProfileCard>}
+                {isEditing ? <ProfileEditCard person={user} setIsEditing={(editing) => { setIsEditing(editing) }}></ProfileEditCard> : <ProfileCard person={user} setIsEditing={(editing) => { setIsEditing(editing) }}></ProfileCard>}
                 <div className="mt-16 lg:mt-0 lg:ml-16 xl:mx-auto xl:px-4">
                     <p className="text-xl lg:text-2xl font-bold text-emerald-900">Your Requests</p>
                     <div className="my-4 grid gap-8 xl:grid-cols-2">
