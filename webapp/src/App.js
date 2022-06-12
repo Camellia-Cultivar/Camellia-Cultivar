@@ -61,7 +61,7 @@ function App() {
         const loggedInUser = localStorage.getItem("userToken");
         if (loggedInUser) {
             const user = JSON.parse(loggedInUser);
-            if (user.expiry > Date.now()) {
+            if (user.expiry < Date.now()) {
                 localStorage.removeItem("userToken");
                 dispatch(signOut());
                 window.location.href = "/";

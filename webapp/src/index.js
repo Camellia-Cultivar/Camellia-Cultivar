@@ -9,7 +9,6 @@ import reportWebVitals from './reportWebVitals';
 import history from './utilities/history'
 import rootReducer from './redux/reducers'
 import { Provider } from 'react-redux';
-// import { BrowserRouter } from 'react-router-dom';
 
 const container = document.getElementById('app');
 const root = createRoot(container);
