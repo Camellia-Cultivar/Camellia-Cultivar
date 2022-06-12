@@ -23,3 +23,14 @@ export const signedIn = (user) =>{
     }
 }
 
+export const setMod = () =>{
+    return {
+        type: 'IS_MOD'
+    }
+}
+
+export const setNotMod = () =>{
+    return {
+        type: 'IS_NOT_MOD'
+    }
+}

@@ -39,7 +39,7 @@ public class UserController {
     public ResponseEntity<String> getProfile(@PathVariable(value = "id") long id){
         if(checkRoleRegistered())
             return userService.getUserProfile(id);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
 
     @PutMapping(value="/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})

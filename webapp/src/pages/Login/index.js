@@ -1,14 +1,10 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {useNavigate} from 'react-router-dom';
 
 import LoginCard from '../../components/LoginCard'
 
 
 const Login = () => {
-
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
 
     const navigate = useNavigate();
     return (

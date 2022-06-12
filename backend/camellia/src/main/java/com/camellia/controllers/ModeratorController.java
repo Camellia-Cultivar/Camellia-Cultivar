@@ -1,6 +1,5 @@
 package com.camellia.controllers;
 
-
 import com.camellia.models.requests.CultivarRequestDTO;
 import com.camellia.models.requests.IdentificationRequestDTO;
 import com.camellia.models.requests.ReportRequestDTO;
@@ -55,31 +54,38 @@ public class ModeratorController {
     @Autowired
     IdentificationRequestService identificationRequestService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<String> getModerator(@PathVariable(value = "id") long modId) {
+        if (checkRole())
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("User Accepted");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+
     @DeleteMapping("/report/{id}")
-    public ResponseEntity<String> deleteReportRequest(@PathVariable(value="id") long requestId){
-        if(checkRole())
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body( reportRequestService.deleteReportRequest(requestId) );
+    public ResponseEntity<String> deleteReportRequest(@PathVariable(value = "id") long requestId) {
+        if (checkRole())
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(reportRequestService.deleteReportRequest(requestId));
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
     @GetMapping("/report")
-    public ResponseEntity<ReportRequestDTO> getReportRequest(){
-        if(checkRole())
+    public ResponseEntity<ReportRequestDTO> getReportRequest() {
+        if (checkRole())
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(reportRequestService.getOneRequest());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
     @GetMapping("/cultivar")
-    public ResponseEntity<CultivarRequestDTO> getCultivarRequest(){
-        if(checkRole())
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body( cultivarRequestService.getOneRequest() );
+    public ResponseEntity<CultivarRequestDTO> getCultivarRequest() {
+        if (checkRole())
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(cultivarRequestService.getOneRequest());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 
     }
 
     @DeleteMapping("/cultivar/{id}")
-    public ResponseEntity<String> deleteCultivarRequest(@PathVariable(value="id") long requestId){
-        if(checkRole())
+    public ResponseEntity<String> deleteCultivarRequest(@PathVariable(value = "id") long requestId) {
+        if (checkRole())
             return cultivarRequestService.deleteCultivarRequest(requestId);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
@@ -100,10 +106,11 @@ public class ModeratorController {
     }
 
     @DeleteMapping("/specimen/{id}")
-    public ResponseEntity<String> deleteSpecimen(@PathVariable(value="id") long requestId, @RequestParam(value="specimen") long specimenId){
-        if(checkRole()){
+    public ResponseEntity<String> deleteSpecimen(@PathVariable(value = "id") long requestId,
+            @RequestParam(value = "specimen") long specimenId) {
+        if (checkRole()) {
             reportRequestService.deleteReportRequest(requestId);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body( specimenService.deleteSpecimen(specimenId) );
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(specimenService.deleteSpecimen(specimenId));
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
@@ -116,7 +123,7 @@ public class ModeratorController {
     }
 
     @PutMapping("/identification/{id}/approve")
-    public ResponseEntity<IdentificationRequestDTO> approveRequest(@PathVariable Long id) {
+    public ResponseEntity<IdentificationRequestDTO> approveRequest(@PathVariable(value="id") Long id) {
         if(checkRole())
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(identificationRequestService.approveIdentificationRequest(id));
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
