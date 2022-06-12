@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import com.camellia.models.requests.CultivarRequestDTO;
@@ -60,32 +61,27 @@ public class RequestController {
     }
 
     @PostMapping("/identification")
-    public IdentificationRequestDTO createSpecimen(@RequestBody SpecimenDto specimenDto, Authentication authentication) {
-        User user = userService.getUserByEmail(authentication.getName());
-        if (user == null)
-            return null;
-
-
-        if(user.getAutoApproval() || user.getRolesList().contains("MOD") || user.getRolesList().contains("ADMIN")){
-            specimenService.saveSpecimen(
-                SpecimenMapper.MAPPER.specimenDTOtoToIdentifySpecimen(specimenDto)
-            );
-            return null;
-
+    public ResponseEntity<IdentificationRequestDTO> createSpecimen(
+            @RequestBody SpecimenDto specimenDto
+    ) {
+        boolean requesterHasAutoApproval;
+        try {
+            requesterHasAutoApproval = userService.requesterHasAutoApproval();
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        else{
-            Specimen newSpecimen = specimenService.saveSpecimen(
-                    SpecimenMapper.MAPPER.specimenDTOtoToForApprovalSpecimen(specimenDto)
-            );
+        Specimen newSpecimen = specimenService.saveSpecimen(
+                requesterHasAutoApproval ?
+                        SpecimenMapper.MAPPER.specimenDTOtoToIdentifySpecimen(specimenDto)
+                        : SpecimenMapper.MAPPER.specimenDTOToForApprovalSpecimen(specimenDto)
+        );
 
-            IdentificationRequest newIdentificationRequest =
-                    identificationRequestService.createNewIdentificationRequestFromSpecimen(newSpecimen);
+        IdentificationRequest newIdentificationRequest =
+                identificationRequestService.createNewIdentificationRequestFromSpecimen(newSpecimen);
 
-
-            return IdentificationRequestMapper.MAPPER.identificationRequestToIdentificationRequestDTO(
-                    newIdentificationRequest
-            );
-        }
+        return ResponseEntity.ok(IdentificationRequestMapper.MAPPER.identificationRequestToIdentificationRequestDTO(
+                newIdentificationRequest
+        ));
     }
 
     @GetMapping("/identification")
@@ -102,6 +98,5 @@ public class RequestController {
         User u = userService.getUserByEmail(auth.getName());
 
         return u != null && (u.getRolesList().contains("REGISTERED") || u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN"));
-
     }
 }
