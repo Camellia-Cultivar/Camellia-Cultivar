@@ -184,6 +184,10 @@ public class Specimen {
         return photos;
     }
 
+    public String getFirstPhoto() {
+        return photos.iterator().next();
+    }
+
     public void setPhotos(Set<String> photos) {
         this.photos = photos;
     }
