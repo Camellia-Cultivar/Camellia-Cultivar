@@ -43,7 +43,6 @@ const Moderation = () => {
             }
             !fetched && axios.get(`/api/moderator/identification`, options)
                 .then(response => {
-                    console.log(response.data);
                     if (response.data === "") {
                         setNoRequests(true);
                         return;
@@ -68,7 +67,7 @@ const Moderation = () => {
                     'Authorization': 'Bearer ' + user.loginToken
                 }
             }
-            console.log(request);
+
             axios.put(`/api/moderator/identification/${request.requestId}/approve`, {}, options)
                 .then(response => {
                     if (response.status === 202) {
@@ -90,13 +89,13 @@ const Moderation = () => {
                 }
             }
             axios.get(`/api/users/${submitter.userId}`, options)
+
                 .then(response => {
-                    console.log(response.data);
                     setPerson(response.data);
                     setModalOn(true);
                 })
-                .catch(err => {
-                    console.log(err);
+                .catch(_err => {
+                    return;
                 })
         }
     }
@@ -111,12 +110,11 @@ const Moderation = () => {
                 }
             }
             axios.put(`/api/users/autoapproval/${submitter.userId}`, {}, options)
-                .then(response => {
-                    console.log(response.data);
+                .then(_response => {
                     getUserProfile();
                 })
-                .catch(err => {
-                    console.log(err);
+                .catch(_err => {
+                    return;
                 })
         }
     }
@@ -139,8 +137,8 @@ const Moderation = () => {
                     setFetched(false);
                     setTimeout(() => setIsLoading(false), 500);
                 })
-                .catch(err => {
-                    console.log(err);
+                .catch(_err => {
+                    return;
                 })
         }
     }

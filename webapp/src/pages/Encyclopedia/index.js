@@ -27,13 +27,12 @@ const Encyclopedia = () => {
         if (!fetched) {
             axios.get('/api/public/cultivars', { params: { page: page - 1 } })
                 .then((response) => {
-                    console.log(response.data)
                     setCamellias(response.data.content)
                     setLastPage(response.data.totalPages)
                     setFetched(true)
                 })
-                .catch((error) => {
-                    console.log(error)
+                .catch((_error) => {
+                    return;
                 })
         }
     })
@@ -47,8 +46,8 @@ const Encyclopedia = () => {
                 .then((response) => {
                     setAutocompletedCamellias(response.data)
                 })
-                .catch((error) => {
-                    console.log(error)
+                .catch((_error) => {
+                    return;
                 })
         }
         else {
@@ -76,8 +75,8 @@ const Encyclopedia = () => {
                 setChosenSugestion(false)
                 setSugestionsOn(false)
             })
-            .catch((error) => {
-                console.log(error)
+            .catch((_error) => {
+                return;
             })
 
     }
@@ -104,8 +103,8 @@ const Encyclopedia = () => {
                 }, 500)
             })
 
-            .catch((error) => {
-                console.log(error)
+            .catch((_error) => {
+                return;
             })
 
 

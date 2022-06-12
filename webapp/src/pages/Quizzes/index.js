@@ -32,12 +32,11 @@ const Quizzes = () => {
             let user = JSON.parse(userToken);
             !fetched && axios.get(`/api/quizzes/${user.userId}`, { headers: { Authorization: `Bearer ${user.loginToken}` } })
                 .then((response) => {
-                    console.log(response.data);
                     setQuizArray(response.data);
                     setFetched(true);
                 })
-                .catch((error) => {
-                    console.log(error)
+                .catch((_error) => {
+                    return;
                 })
         }
     })
@@ -55,7 +54,6 @@ const Quizzes = () => {
 
     const submitQuiz = () => {
         let answersToQuiz = [];
-        console.log(answers);
         for (let i = 0; i < answers.length; i++) {
             answers[i] !== undefined && answersToQuiz.push({
                 specimen_id: quizArray[i].specimenId,
@@ -64,12 +62,11 @@ const Quizzes = () => {
         }
         let user = JSON.parse(localStorage.getItem('userToken'));
         axios.post(`/api/quizzes/${user.userId}`, answersToQuiz, { headers: { Authorization: `Bearer ${user.loginToken}` } })
-            .then((response) => {
-                console.log(response.status);
+            .then((_response) => {
                 setFetched(false)
             })
-            .catch((error) => {
-                console.log(error)
+            .catch((_error) => {
+                return
             })
 
     }

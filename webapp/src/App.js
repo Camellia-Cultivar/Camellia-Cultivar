@@ -16,7 +16,6 @@ import Encyclopedia from './pages/Encyclopedia';
 import Camellia from './pages/Camellia';
 import Moderation from './pages/Moderation';
 import Profile from './pages/Profile';
-import Verify from './pages/Verify';
 import history from './utilities/history'
 import { signIn, signOut, signedIn, setMod } from './redux/actions'
 
@@ -40,7 +39,7 @@ function App() {
         const loggedInUser = localStorage.getItem("userToken");
         if (loggedInUser && secondFactor) {
             const user = JSON.parse(localStorage.getItem("userToken"));
-            Object.keys(userDetails).length === 0 && axios.get(`/api/users/${user.userId}`, {
+            axios.get(`/api/users/${user.userId}`, {
                 headers: {
                     "Authorization": `Bearer ${user.loginToken}`,
                 }
@@ -50,8 +49,8 @@ function App() {
                     dispatch(signedIn(response.data));
 
                 })
-                .catch(function (error) {
-                    console.log(error);
+                .catch(function (_error) {
+                    return;
                 });
             Object.keys(userDetails).length === 0 && checkMod(user.userId, user.loginToken);
         }
@@ -91,7 +90,6 @@ function App() {
             <Navbar />
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/verify" element={<Verify />} />
                 {isMod && <Route path="/moderation" element={<Moderation />} />}
                 <Route path="/login" element={<Login />} />
                 <Route path="/quizzes" element={<Quizzes />} />
