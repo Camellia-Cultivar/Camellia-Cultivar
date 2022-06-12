@@ -1,5 +1,6 @@
 package com.camellia.services;
 
+import com.camellia.mappers.QuizAnswerMapper;
 import com.camellia.models.specimens.SpecimenType;
 import com.camellia.repositories.QuizRepository;
 import com.camellia.services.cultivars.CultivarService;
@@ -23,10 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.mail.MessagingException;
 
@@ -55,6 +53,9 @@ public class QuizService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private QuizAnswerMapper mapper;
 
     public Page<QuizAnswer> getQuizzes(Pageable pageable) {
         return repository.findAll(pageable);
@@ -97,73 +98,39 @@ public class QuizService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user");
         }
 
-        QuizAnswer qaSaved;
-        boolean correct;
 
-        for(QuizAnswerDTO qa: quizAnswers){
-            s = specimenService.getSpecimenById(qa.getSpecimenId());
+        List<QuizAnswer> answers = repository.saveAll(mapper.quizAnswerDTOsToQuizAnswers(quizAnswers, user));
 
+        answers.stream().filter(QuizAnswer::isToIdentify).forEach(quizAnswer -> {
+            Specimen specimen = quizAnswer.getSpecimen();
+            Cultivar cultivar = quizAnswer.getCultivar();
 
-            Cultivar c = cultivarService.getCultivarById(qa.getAnswer());
+            int totalVotes = repository.getTotalVotesForSpecimen(specimen.getSpecimenId());
 
-            if(c == null){
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Cultivar");
-            }
+            int reputationSum;
 
-            qaSaved = new QuizAnswer();
-            qaSaved.setCultivar(c);
-            qaSaved.setSpecimen(s);
+            specimen.addCultivarProb(cultivar, 0);
 
-
-            qaSaved.setUser(user);
-
-
-
-            if( s.isReference()){
-
-                correct = c != null && referenceSpecimenService.getReferenceSpecimenById(qa.getSpecimenId()).getCultivar().getId().equals(qa.getAnswer());
-
-                qaSaved.setCorrect(correct);
-                qaSaved.setSpecimenType(SpecimenType.REFERENCE);
-
-                repository.save(qaSaved);
-            }
-            else if( s.isToIdentify()){
-
-
-
-                qaSaved.setCorrect(false);
-                qaSaved.setSpecimenType(SpecimenType.TO_IDENTIFY);
-
-                repository.save(qaSaved);
-
-
-                int totalVotes = repository.getTotalVotesForSpecimen(s.getSpecimenId());
-
-
-                int reputationSum;
-
-                s.addCultivarProb(c, 0);
-
-                for(Cultivar tempC : s.getCultivarProbabilities().keySet()){
-                    reputationSum = 0;
-                    for(Long id : repository.getUsersFromCultivar(s.getSpecimenId(), tempC.getId())){
-                        reputationSum += userService.getUserById(id).getReputation();
-                    }
-
-                    double prob = reputationSum / totalVotes * 100 ;
-                    s.addCultivarProb(c, prob);
-                    specimenService.saveSpecimen(s);
-
-                    if( prob > 80){
-                        toIdentifySpecimenService.promoteToReferenceFromId(s.getSpecimenId(), tempC);
-                        break;
-                    }
+            for(Cultivar tempC : specimen.getCultivarProbabilities().keySet()){
+                reputationSum = 0;
+                for(Long id : repository.getUsersFromCultivar(specimen.getSpecimenId(), tempC.getId())){
+                    reputationSum += userService.getUserById(id).getReputation();
                 }
 
-                
+                double prob = reputationSum / totalVotes * 100 ;
+                specimen.addCultivarProb(cultivar, prob);
+                specimenService.saveSpecimen(specimen);
+
+                if( prob > 80){
+                    try {
+                        toIdentifySpecimenService.promoteToReferenceFromId(specimen.getSpecimenId(), tempC);
+                    } catch (UnsupportedEncodingException | MessagingException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+                }
             }
-        }
+        });
 
         Long correctAnsweredQuizzes = repository.getUserCorrectAnswersCount(user);
         Long totalAnsweredQuizzes = repository.getUserAnswersCount(user);
