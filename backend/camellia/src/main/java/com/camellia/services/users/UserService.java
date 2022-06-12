@@ -159,12 +159,4 @@ public class UserService {
         return Optional.of(foundUser);
     }
 
-    public boolean isRegistered(User user) {
-        return (user != null &&
-                (
-                        user.getRolesList().contains("REGISTERED") ||
-                        user.getRolesList().contains("MOD") ||
-                        user.getRolesList().contains("ADMIN"))
-        );
-    }
 }
