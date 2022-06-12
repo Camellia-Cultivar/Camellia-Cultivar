@@ -63,6 +63,8 @@ class APIService {
         "Access-Control-Allow-Origin": "*",
         'Authorization': 'Bearer ${await storage.read(key: 'token')}',
       });
+      print(response.body);
+      print(await storage.read(key: 'token'));
       if (response.statusCode == 202) {
         User api_user = userFromJson(response.body, uid);
         // api_user.profileImage = "\x00";
@@ -176,7 +178,7 @@ class APIService {
   //   return null;
   // }
 
-  Future<List<UploadedSpecimen>?> getUploadedSpecimens(int uid) async {
+  Future<List<UploadedSpecimen>> getUploadedSpecimens() async {
     List<UploadedSpecimen> lst = [];
     try {
       var url = Uri.parse(
@@ -186,11 +188,21 @@ class APIService {
         'Access-Control-Allow-Origin': '*',
         'Authorization': 'Bearer ${await storage.read(key: 'token')}'
       });
+      // print(await storage.read(key: 'token'));
+      // print(response.statusCode);
       print(response.body);
+      if (response.statusCode == 200) {
+        List specimensJsonList = json.decode(response.body) as List;
+        for (dynamic uploadedSpecimenJson in specimensJsonList) {
+          lst.add(UploadedSpecimen.fromJson(uploadedSpecimenJson));
+        }
+        print(lst);
+        return lst;
+      }
     } catch (e) {
       log(e.toString());
     }
-    return null;
+    return [];
   }
 
   Future<List<Question>?> getQuiz(User user) async {
@@ -204,7 +216,7 @@ class APIService {
         'Access-Control-Allow-Origin': '*',
         'Authorization': 'Bearer ${await storage.read(key: 'token')}'
       });
-      if (response.statusCode == 200) {
+      if (response.statusCode == 202) {
         List questionJsonList = json.decode(response.body) as List;
         for (dynamic questionJson in questionJsonList) {
           lst.add(Question.fromJson(questionJson));
@@ -341,9 +353,13 @@ class APIService {
       var body = jsonEncode(specimenToUpload);
       var response = await http.post(url,
           headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8'
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Access-Control-Allow-Origin': '*',
+            'Authorization': 'Bearer ${await storage.read(key: 'token')}'
           },
           body: body);
+      print(await storage.read(key: 'token'));
+      print("specimen resquest after post\n" + response.body);
       return response.statusCode;
     } catch (e) {
       log(e.toString());

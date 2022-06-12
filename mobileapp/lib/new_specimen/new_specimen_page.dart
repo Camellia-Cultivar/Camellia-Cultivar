@@ -88,7 +88,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
         var first_address = placemarks.first;
         setState(() {
           userAddress =
-              "${first_address.street},${first_address.locality},${first_address.country}";
+              "${first_address.street}, ${first_address.locality}, ${first_address.country}";
         });
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -151,9 +151,11 @@ class NewSpecimen extends State<NewSpecimenPage> {
           contentType: contentType,
           type: BlobType.BlockBlob);
     }
-    setState(() {
-      specimen_images_urls = urls;
-    });
+    if (specimen_images_urls.isEmpty) {
+      setState(() {
+        specimen_images_urls = urls;
+      });
+    }
   }
 
   final _formKey = GlobalKey<FormState>();
