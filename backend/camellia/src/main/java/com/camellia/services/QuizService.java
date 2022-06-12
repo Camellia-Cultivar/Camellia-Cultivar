@@ -64,7 +64,7 @@ public class QuizService {
     }
 
     public QuizAnswer getQuizById(long id) {
-        return repository.findById((long) id);
+        return repository.findById(id);
     }
 
     public List<SpecimenQuizDTO> generateQuiz(long userId){
@@ -102,7 +102,7 @@ public class QuizService {
         boolean correct;
 
         for(QuizAnswerDTO qa: quizAnswers){
-            s = specimenService.getSpecimenById(qa.getSpecimen_id());
+            s = specimenService.getSpecimenById(qa.getSpecimenId());
 
 
             Cultivar c = cultivarService.getCultivarById(qa.getAnswer());
@@ -122,12 +122,7 @@ public class QuizService {
 
             if( s.isReference()){
 
-                if(c != null && referenceSpecimenService.getReferenceSpecimenById(qa.getSpecimen_id()).getCultivar().getId() == qa.getAnswer() ){
-                    correct = true;
-                } 
-                else {
-                    correct = false;
-                }
+                correct = c != null && referenceSpecimenService.getReferenceSpecimenById(qa.getSpecimenId()).getCultivar().getId().equals(qa.getAnswer());
 
                 qaSaved.setCorrect(correct);
                 qaSaved.setSpecimenType("REFERENCE");

@@ -2,21 +2,21 @@ package com.camellia.models;
 
 public class QuizAnswerDTO {
     
-    private long specimen_id;
+    private Long specimenId;
 
-    private long answer;
+    private Long answer;
 
     public QuizAnswerDTO(){
 
     }
 
 
-    public long getSpecimen_id() {
-        return this.specimen_id;
+    public Long getSpecimenId() {
+        return this.specimenId;
     }
 
-    public void setSpecimen_id(long specimenId) {
-        this.specimen_id = specimenId;
+    public void setSpecimenId(Long specimenId) {
+        this.specimenId = specimenId;
     }
 
     public Long getAnswer() {
@@ -25,6 +25,10 @@ public class QuizAnswerDTO {
 
     public void setAnswer(Long answer) {
         this.answer = answer;
+    }
+
+    public boolean isValid() {
+        return specimenId != null && answer != null;
     }
 
 }
