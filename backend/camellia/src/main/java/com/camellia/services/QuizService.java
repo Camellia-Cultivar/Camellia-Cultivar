@@ -89,9 +89,8 @@ public class QuizService {
     }
 
 
-    public ResponseEntity<String> saveQuizAnswers(long userId, List<QuizAnswerDTO> quizAnswers) throws MailException, UnsupportedEncodingException, MessagingException{
+    public ResponseEntity<String> saveQuizAnswers(User user, List<QuizAnswerDTO> quizAnswers) throws MailException, UnsupportedEncodingException, MessagingException{
         Specimen s;
-        User user = userService.getUserById(userId);
 
         if(user == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user");
@@ -165,10 +164,10 @@ public class QuizService {
             }
         }
 
-        Long correctAnsweredQuizzes = repository.getUserCorrectAnswersCount(userId);
-        Long totalAnsweredQuizzes = repository.getUserAnswersCount(userId);
+        Long correctAnsweredQuizzes = repository.getUserCorrectAnswersCount(user);
+        Long totalAnsweredQuizzes = repository.getUserAnswersCount(user);
 
-        Long userTotalVotes = repository.getUserTotalVotes(userId);
+        Long userTotalVotes = repository.getUserTotalVotes(user);
         Long totalVotes = repository.getTotalVotes();
 
 

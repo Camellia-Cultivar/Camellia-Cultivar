@@ -46,9 +46,10 @@ public class QuizController {
     }
 
 
-    @PostMapping(value="/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<String> quizSubmission(@RequestBody List<QuizAnswerDTO> answersList, @PathVariable(value="id") long uId) throws MailException, UnsupportedEncodingException, MessagingException{
-        if(userService.getUserFromRequestIfRegistered().isEmpty())
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<String> quizSubmission(@RequestBody List<QuizAnswerDTO> answersList) throws MailException, UnsupportedEncodingException, MessagingException{
+        Optional<User> optionalRequester = userService.getUserFromRequestIfRegistered();
+        if(optionalRequester.isEmpty())
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 
         List<QuizAnswerDTO> validAnswers =
@@ -58,6 +59,6 @@ public class QuizController {
 
         return validAnswers.isEmpty() ?
                 ResponseEntity.ok("No responses given")
-                : quizService.saveQuizAnswers(uId, answersList);
+                : quizService.saveQuizAnswers(optionalRequester.get(), answersList);
     }
 }
