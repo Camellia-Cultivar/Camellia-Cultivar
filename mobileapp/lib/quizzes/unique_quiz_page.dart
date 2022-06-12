@@ -1,7 +1,5 @@
 import 'package:camellia_cultivar/api/api_service.dart';
 import 'package:camellia_cultivar/home/homepage.dart';
-import 'package:camellia_cultivar/model/user.dart';
-import 'package:camellia_cultivar/providers/user.dart';
 import 'package:camellia_cultivar/quizzes/quiz_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -59,23 +57,11 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
     _focusInput?.unfocus();
   }
 
-  void handleSubmit(User? user) async {
-    if (user == null) {
-      return;
-    }
-
+  void handleSubmit() async {
     List<FormItem> answers = form.values.toList();
     answers.removeWhere((item) => item.answer == null || item.answer!.isEmpty);
 
-    await api.setQuizAnswers(user.id, answers);
-
-    //int? reputation = await api.setQuizAnswers(user.id, answers);
-
-    // if(reputation != null) {
-    //   user.reputation = reputation;
-    // }
-
-    //context.read<UserProvider>().setUser(user);
+    await api.setQuizAnswers(answers);
 
     Navigator.pop(context);
 
@@ -91,8 +77,6 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
     Color primaryColor = Theme.of(context).primaryColor;
 
     var screenSize = MediaQuery.of(context).size;
-
-    User? user = context.read<UserProvider>().user;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6F7),
@@ -183,7 +167,7 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
                         height: screenSize.height / 12.5,
                         width: screenSize.width / 1.8,
                         child: TextButton(
-                            onPressed: () => handleSubmit(user),
+                            onPressed: () => handleSubmit(),
                             style: ButtonStyle(
                               backgroundColor:
                                   MaterialStateProperty.all(primaryColor),

@@ -7,15 +7,6 @@ import '../model/uploaded_specimen.dart';
 import '../navbar/botnavbar.dart';
 import 'new_specimen_page.dart';
 
-// List<UploadedSpecimen> data = [
-//   UploadedSpecimen(
-//       date: DateTime.parse('2020-01-02'), location: "Aveiro", results: {}),
-//   UploadedSpecimen(
-//       date: DateTime.parse('2020-01-03'),
-//       location: "Coimbra",
-//       results: {8: "camellia sasanqua", 70: "camellia japonica"})
-// ];
-
 class UploadedSpecimensPage extends StatefulWidget {
   const UploadedSpecimensPage({Key? key}) : super(key: key);
 
@@ -187,11 +178,12 @@ class _UploadedSpecimensPage extends State<UploadedSpecimensPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Uploaded Specimens",
-                        style: TextStyle(
-                            color: primaryColor,
-                            fontSize: screenSize.height / 35,
-                            fontWeight: FontWeight.w500))
+                    Flexible(
+                        child: Text("Uploaded Specimens",
+                            style: TextStyle(
+                                color: primaryColor,
+                                fontSize: screenSize.height / 35,
+                                fontWeight: FontWeight.w500)))
                   ],
                 ),
                 Padding(
@@ -223,13 +215,14 @@ class _UploadedSpecimensPage extends State<UploadedSpecimensPage> {
                             Padding(
                               padding: EdgeInsets.only(left: 10),
                             ),
-                            Text(
+                            Flexible(
+                                child: Text(
                               'New Identification Request',
                               style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
-                            )
+                            ))
                           ],
                         ))),
                 Padding(
@@ -255,12 +248,16 @@ class _UploadedSpecimensPage extends State<UploadedSpecimensPage> {
                     if (snapshot.hasData) {
                       var uploadedSpecimens =
                           snapshot.data! as List<UploadedSpecimen>;
-                      print("hello");
-                      for (UploadedSpecimen up in uploadedSpecimens) {
-                        print(up);
+                      if (uploadedSpecimens.isEmpty) {
+                        return const Center(
+                          child: Flexible(
+                              child: Text(
+                            "No identification Requests posted.",
+                            style: TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.bold),
+                          )),
+                        );
                       }
-                      print("bye");
-                      print(uploadedSpecimens);
                       return _buildRequestsList(context, uploadedSpecimens);
                     }
                     return Row(

@@ -4,7 +4,6 @@ import 'package:camellia_cultivar/navbar/new_specimen_icon.dart';
 import 'package:camellia_cultivar/main.dart';
 import 'package:camellia_cultivar/navbar/botnavbar.dart';
 import 'package:camellia_cultivar/navbar/button.dart';
-import 'package:camellia_cultivar/new_specimen/upov_characteristics.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';

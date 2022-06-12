@@ -205,12 +205,11 @@ class APIService {
     return [];
   }
 
-  Future<List<Question>?> getQuiz(User user) async {
+  Future<List<Question>?> getQuiz() async {
     List<Question> lst = [];
 
     try {
-      var url = Uri.parse(
-          APIConstants.baseUrl + APIConstants.quizEndpoint + "/${user.id}");
+      var url = Uri.parse(APIConstants.baseUrl + APIConstants.quizEndpoint);
       var response = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Access-Control-Allow-Origin': '*',
@@ -233,7 +232,7 @@ class APIService {
   //   return null;
   // }
 
-  Future<void> setQuizAnswers(int uid, List<FormItem> answers) async {
+  Future<void> setQuizAnswers(List<FormItem> answers) async {
     List<Map<String, dynamic>> lst = [];
 
     for (FormItem i in answers) {
@@ -245,8 +244,7 @@ class APIService {
     }
 
     try {
-      var url =
-          Uri.parse(APIConstants.baseUrl + APIConstants.quizEndpoint + "/$uid");
+      var url = Uri.parse(APIConstants.baseUrl + APIConstants.quizEndpoint);
       // var obj = {"answers": lst};
       var body = jsonEncode(lst);
       var response = await http.post(url,
@@ -370,13 +368,14 @@ class APIService {
   Future<Map<String, int>> getAutocomplete(String substring) async {
     try {
       var url = Uri.parse(APIConstants.baseUrl +
-          APIConstants.autocomplete +
+          APIConstants.autocompleteEndpoint +
           "?substring=$substring");
       var response = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Access-Control-Allow-Origin': '*',
         'Authorization': 'Bearer ${await storage.read(key: 'token')}'
       });
+      print(response.body);
       if (response.statusCode == 200) {
         List<dynamic> optionsJson = json.decode(response.body) as List;
         Map<String, int> options = {};
