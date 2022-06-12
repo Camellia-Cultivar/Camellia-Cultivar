@@ -10,8 +10,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
  <application
-        android:label="camellia_cultivar"
-        android:name="${applicationName}"
+        android:label="Camellia Cultivar"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
