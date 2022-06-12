@@ -103,7 +103,6 @@ public class ModeratorController {
         if(checkRole())
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(referenceSpecimenService.demoteToToIdentify(id));
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-
     }
 
     @DeleteMapping("/specimen/{id}")
@@ -130,14 +129,21 @@ public class ModeratorController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
+    @PutMapping(value="/users/{id}")
+    public ResponseEntity<String> giveAutoApproval(
+            @PathVariable(value = "id") long userId,
+            @RequestParam(value = "autoApproval") boolean autoApproval
+    ){
+        if(checkRole())
+            return userService.setAutoApproval(userId, autoApproval);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+
     public boolean checkRole(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User u = userService.getUserByEmail(auth.getName());
 
-        if (u != null && (u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN")))
-            return true;
-
-        return false;
+        return u != null && (u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN"));
 
     }
 }

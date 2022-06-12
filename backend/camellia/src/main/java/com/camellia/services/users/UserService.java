@@ -12,6 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     @Autowired
@@ -96,11 +98,15 @@ public class UserService {
     }
 
 
-    public ResponseEntity<String> giveAutoApproval(long userId) {
-        User user = repository.getById(userId);
-        user.setAutoApproval(true);
+    public ResponseEntity<String> setAutoApproval(Long userId, boolean autoApproval) {
+        Optional<User> optionalUser = repository.findById(userId);
+        if (optionalUser.isEmpty())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
+        User user = optionalUser.get();
+        user.setAutoApproval(autoApproval);
         repository.save(user);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Operation completed");
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(String.format("User autoapproval %s", user.getAutoApproval() ? "given" : "revoked"));
     }
 
 

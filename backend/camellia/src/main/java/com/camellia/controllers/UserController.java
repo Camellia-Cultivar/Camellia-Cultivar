@@ -8,12 +8,9 @@ import javax.validation.Valid;
 
 import com.camellia.models.users.RegisteredUser;
 import com.camellia.models.users.User;
-import com.camellia.services.users.AdministratorUserService;
-import com.camellia.services.users.ModeratorUserService;
 import com.camellia.services.users.RegisteredUserService;
 import com.camellia.services.users.UserService;
 
-import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
@@ -23,28 +20,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
     @Autowired
     private UserService userService;
-
     @Autowired
     private RegisteredUserService registeredUserService;
-
-    @Autowired
-    private ModeratorUserService moderatorUserService;
-
-    @Autowired
-    private AdministratorUserService administratorUserService;
 
     @PostMapping(value="/signup", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> createUser(@Valid @RequestBody RegisteredUser user, HttpServletRequest request) throws MailException, UnsupportedEncodingException, MessagingException{
@@ -62,13 +46,6 @@ public class UserController {
     public ResponseEntity<String> editProfile(@Valid @RequestBody User tempUser, @PathVariable(value = "id") long id){
         if(checkRoleRegistered())
             return this.userService.editProfile( tempUser, id );
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-    }
-
-    @PutMapping(value="/autoapproval/{id}")
-    public ResponseEntity<String> giveAutoApproval(@PathVariable(value = "id") long userId){
-        if(checkRole())
-            return userService.giveAutoApproval(userId);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
@@ -98,7 +75,6 @@ public class UserController {
         }
     }
 
-
     private String getSiteURL(HttpServletRequest request) {
         String siteURL = request.getRequestURL().toString();
         return siteURL.replace(request.getServletPath(), "");
@@ -112,11 +88,8 @@ public class UserController {
     public boolean checkRoleRegistered(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User u = userService.getUserByEmail(auth.getName());
-        Logger.getLogger(this.getClass().getName()).info(u.getRolesList());
-        if(u != null && ( u.getRolesList().contains("REGISTERED") || u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN") ))
-            return true;
-        
-        return false;
+
+        return u != null && (u.getRolesList().contains("REGISTERED") || u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN"));
 
     }
 
@@ -124,19 +97,13 @@ public class UserController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User u = userService.getUserByEmail(auth.getName());
 
-        if(u != null && ( u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN") ))
-            return true;
-        
-        return false;
+        return u != null && (u.getRolesList().contains("MOD") || u.getRolesList().contains("ADMIN"));
     }
 
     public boolean checkAdminRole(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User u = userService.getUserByEmail(auth.getName());
 
-        if(u != null && u.getRolesList().contains("ADMIN") )
-            return true;
-        
-        return false;
+        return u != null && u.getRolesList().contains("ADMIN");
     }
 }
