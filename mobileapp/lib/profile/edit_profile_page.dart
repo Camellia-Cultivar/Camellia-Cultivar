@@ -84,6 +84,7 @@ class _EditProfilePage extends State<EditProfilePage> {
           reputation: user.reputation,
           verified: user.verified);
       if (_formKey.currentState!.validate()) {
+        await uploadInAzure(user);
         new_user.firstName = firstNameController.text;
         new_user.lastName = lastNameController.text;
         if (profileImageUrl != null) {
@@ -153,17 +154,9 @@ class _EditProfilePage extends State<EditProfilePage> {
                                   width: screenSize.width / 4,
                                   child: CircleAvatar(
                                     backgroundColor: Colors.grey[100],
-                                    child: ClipRRect(
-                                      borderRadius:
-                                          BorderRadius.circular(100.0),
-                                      child: profileImage == null
-                                          ? Image.network(
-                                              user.profileImage,
-                                            )
-                                          : Image.file(
-                                              profileImage!,
-                                            ),
-                                    ),
+                                    backgroundImage: profileImage == null
+                                        ? NetworkImage(user.profileImage)
+                                        : Image.file(profileImage!).image,
                                   ),
                                 ),
                                 onTap: _getFromGallery,

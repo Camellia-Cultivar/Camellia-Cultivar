@@ -50,14 +50,16 @@ class SpecimenPopupState extends State<SpecimenPopup> {
       height: 250,
       child: Column(
         children: <Widget>[
-          _buildImagesContainer(),
-          Column(
-            children: <Widget>[
-              _buildCultivarName(),
-              _buildSpeciesName(),
-              _buildViewCultivarDetailsBtn()
-            ],
-          ),
+          Expanded(child: _buildImagesContainer()),
+          Expanded(
+            child: Column(
+              children: <Widget>[
+                _buildCultivarName(),
+                _buildSpeciesName(),
+                _buildViewCultivarDetailsBtn()
+              ],
+            ),
+          )
         ],
       ),
     );

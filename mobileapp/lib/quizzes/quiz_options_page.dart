@@ -26,12 +26,12 @@ class QuizOptionsPage extends StatelessWidget {
     _handleStartNewQuiz(BuildContext context) async {
       questions = await api.getQuiz();
       print(questions);
-      if (questions == null) {
+      if (questions == null || questions!.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               backgroundColor: Colors.white,
               content: Text(
-                "No quizzes are available, come back later!",
+                "No quizzes available, come back later!",
                 style: TextStyle(color: Colors.blue),
               )),
         );
@@ -133,10 +133,7 @@ class QuizOptionsPage extends StatelessWidget {
                 ),
               )),
           Padding(padding: EdgeInsets.all(10)),
-
           Flexible(child: Text(rule)),
-          // const Text(
-          //     "You will be asked to identify the cultivar of the different specimens that will be shown."))
         ]),
         Padding(padding: EdgeInsets.all(5))
       ],

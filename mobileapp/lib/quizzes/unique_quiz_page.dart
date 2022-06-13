@@ -35,6 +35,8 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
   TextEditingController? _cultivarNameController;
   FocusNode? _focusInput;
 
+  late String textInput;
+
   @override
   void dispose() {
     //_cultivarNameController?.dispose();
@@ -48,18 +50,26 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
         form[widget.question.specimenId]?.answer ?? "";
   }
 
-  void handleEditingComplete() {
-    String answer = _cultivarNameController!.text;
-    setState(() {
-      form[widget.question.specimenId] = FormItem(widget.question.specimenId,
-          answer, autocompleteOptions[answer.trim()]);
-    });
-    _focusInput?.unfocus();
-  }
+  // void handleEditingComplete() {
+  //   String answer = _cultivarNameController!.text;
+  //   setState(() {
+  //     form[widget.question.specimenId] = FormItem(widget.question.specimenId,
+  //         answer, autocompleteOptions[answer.trim()]);
+  //   });
+  //   _focusInput?.unfocus();
+  // }
 
   void handleSubmit() async {
+    form[widget.question.specimenId] = FormItem(
+        widget.question.specimenId,
+        _cultivarNameController?.text,
+        autocompleteOptions[_cultivarNameController?.text.trim()]);
+    print(_cultivarNameController?.text);
     List<FormItem> answers = form.values.toList();
-    answers.removeWhere((item) => item.answer == null || item.answer!.isEmpty);
+    answers.removeWhere((item) =>
+        item.answer == null ||
+        item.answer!.isEmpty ||
+        item.cultivar_id == null);
 
     await api.setQuizAnswers(answers);
 
@@ -147,7 +157,10 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
                             return TextField(
                               controller: fieldTextEditingController,
                               focusNode: fieldFocusNode,
-                              onEditingComplete: handleEditingComplete,
+                              // onEditingComplete: handleEditingComplete,
+                              onChanged: (input) => setState(() {
+                                textInput = input;
+                              }),
                               style:
                                   const TextStyle(fontWeight: FontWeight.bold),
                             );

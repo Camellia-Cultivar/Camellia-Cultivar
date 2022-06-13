@@ -46,11 +46,13 @@ class APIService {
       if (response.statusCode == 200 && response.body == "") {
         return [-2, "Credentials are wrong!"];
       }
+      print(response.body);
       return [response.statusCode, response.body];
     } catch (e) {
       log(e.toString());
       er = e;
     }
+    print(er);
     return [-1, "Failed to authenticate. Please try again!"];
   }
 
@@ -64,10 +66,10 @@ class APIService {
         'Authorization': 'Bearer ${await storage.read(key: 'token')}',
       });
       print(response.body);
-      print(await storage.read(key: 'token'));
+      print(response.statusCode);
       if (response.statusCode == 202) {
         User api_user = userFromJson(response.body, uid);
-        // api_user.profileImage = "\x00";
+        print(api_user);
         return api_user;
       }
     } catch (e) {
@@ -247,6 +249,8 @@ class APIService {
       var url = Uri.parse(APIConstants.baseUrl + APIConstants.quizEndpoint);
       // var obj = {"answers": lst};
       var body = jsonEncode(lst);
+      print("body api service");
+      print(body);
       var response = await http.post(url,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
@@ -291,7 +295,7 @@ class APIService {
     return [];
   }
 
-  Future<List<Map<String, Object>?>?> getMapSpecimens() async {
+  Future<List<Map<String, Object>>> getMapSpecimens() async {
     List<Map<String, Object>> lst = [];
 
     try {
@@ -321,14 +325,17 @@ class APIService {
     } catch (e) {
       log(e.toString());
     }
-    return null;
+    return lst;
   }
 
   Future<List<UpovCategory>> getUpovCharacteristics() async {
     try {
+      print("try catch");
       var url = Uri.parse(
           APIConstants.baseUrl + APIConstants.upovCharacteristicsEndpoint);
+      print(url);
       var response = await http.get(url);
+      print(response.body);
       if (response.statusCode == 200) {
         List specimensList = json.decode(response.body) as List;
 
@@ -338,6 +345,8 @@ class APIService {
         return categories;
       }
     } catch (e) {
+      print("wuut?");
+      print(e);
       log(e.toString());
     }
     return [];

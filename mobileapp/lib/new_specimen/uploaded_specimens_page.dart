@@ -40,82 +40,73 @@ class _UploadedSpecimensPage extends State<UploadedSpecimensPage> {
                 border: Border.all(color: primaryColor),
               ),
               child: Row(children: [
-                Column(children: [
-                  SizedBox(
-                      height: screensize.height / 4.59,
-                      width: screensize.width / 2.18,
-                      child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(25),
-                              bottomLeft: Radius.circular(25)),
-                          child: Image.network(uploadedSpecimens[index].photo,
-                              fit: BoxFit.fill))),
-                  // width: screensize.width / 2.18,
-                  // height: screensize.height / 4.6)),
-                ]),
-                Column(children: [
-                  Column(children: [
-                    SizedBox(
-                        width: screensize.width / 2.035,
-                        child: Container(
-                          // width: screensize.width / 2.035,
-                          decoration: const BoxDecoration(
-                              color: Color(0x1F004D40),
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(25))),
-                          child: Column(
-                            children: [
-                              Padding(
-                                  padding: const EdgeInsets.only(top: 10),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 20, right: 10),
-                                          child: Icon(
-                                            Icons.calendar_today_outlined,
-                                            size: 20,
-                                            color: primaryColor,
-                                          ),
-                                        ),
-                                        Flexible(
-                                            child: Text(
-                                          DateFormat('yyyy-MM-dd').format(
-                                              uploadedSpecimens[index]
-                                                  .sumbissionDate),
-                                          style: const TextStyle(fontSize: 12),
-                                        ))
-                                      ])),
-                              Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 5, bottom: 10),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 20, right: 10),
-                                          child: Icon(
-                                            Icons.location_on,
-                                            size: 20,
-                                            color: primaryColor,
-                                          ),
-                                        ),
-                                        Flexible(
-                                            child: Text(
-                                          uploadedSpecimens[index].location,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12,
-                                          ),
-                                        ))
-                                      ])),
-                            ],
-                          ),
-                        )),
+                SizedBox(
+                    height: screensize.height / 4.54,
+                    width: screensize.width / 2.18,
+                    child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(25),
+                            bottomLeft: Radius.circular(25)),
+                        child: Image.network(uploadedSpecimens[index].photo,
+                            fit: BoxFit.fill))),
+                Expanded(
+                  child: Column(children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                          color: Color(0x1F004D40),
+                          borderRadius:
+                              BorderRadius.only(topRight: Radius.circular(25))),
+                      child: Column(
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20, right: 10),
+                                      child: Icon(
+                                        Icons.calendar_today_outlined,
+                                        size: 20,
+                                        color: primaryColor,
+                                      ),
+                                    ),
+                                    Flexible(
+                                        child: Text(
+                                      DateFormat('yyyy-MM-dd').format(
+                                          uploadedSpecimens[index]
+                                              .sumbissionDate),
+                                      style: const TextStyle(fontSize: 12),
+                                    ))
+                                  ])),
+                          Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 5, bottom: 10),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20, right: 10),
+                                      child: Icon(
+                                        Icons.location_on,
+                                        size: 20,
+                                        color: primaryColor,
+                                      ),
+                                    ),
+                                    Flexible(
+                                        child: Text(
+                                      uploadedSpecimens[index].location,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                    ))
+                                  ])),
+                        ],
+                      ),
+                    ),
                     if (uploadedSpecimens[index].results.isEmpty)
                       const Padding(
                           padding: EdgeInsets.only(top: 10),
@@ -131,8 +122,8 @@ class _UploadedSpecimensPage extends State<UploadedSpecimensPage> {
                             children:
                                 _getResults(uploadedSpecimens[index].results))
                       ])
-                  ])
-                ]),
+                  ]),
+                )
               ]),
             )));
   }
@@ -233,41 +224,9 @@ class _UploadedSpecimensPage extends State<UploadedSpecimensPage> {
                     child: const Divider(
                       thickness: 2,
                     )),
-                _buildRequestsList(context, widget.uploadedSpecimens),
-                // FutureBuilder(
-                //   future: requestsFuture,
-                //   builder: (context, snapshot) {
-                //     if (snapshot.hasError) {
-                //       return Column(
-                //         children: [
-                //           Text(
-                //             snapshot.error.toString(),
-                //           ),
-                //         ],
-                //       );
-                //     }
-
-                //     if (snapshot.hasData) {
-                //       var uploadedSpecimens =
-                //           snapshot.data! as List<UploadedSpecimen>;
-                //       if (uploadedSpecimens.isEmpty) {
-                //         return const Center(
-                //           child: Flexible(
-                //               child: Text(
-                //             "No identification Requests posted.",
-                //             style: TextStyle(
-                //                 fontSize: 22, fontWeight: FontWeight.bold),
-                //           )),
-                //         );
-                //       }
-                //       return _buildRequestsList(context, uploadedSpecimens);
-                //     }
-                //     return Row(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: const [Text('Something went wrong!')],
-                //     );
-                //   },
-                // ),
+                widget.uploadedSpecimens.isEmpty
+                    ? Container()
+                    : _buildRequestsList(context, widget.uploadedSpecimens),
               ]))),
       bottomNavigationBar: const BotNavbar(pageIndex: 0),
     );
@@ -277,15 +236,14 @@ class _UploadedSpecimensPage extends State<UploadedSpecimensPage> {
       BuildContext context, List<UploadedSpecimen> uploadedSpecimens) {
     Color primaryColor = Theme.of(context).primaryColor;
     var screenSize = MediaQuery.of(context).size;
-    if (uploadedSpecimens.isEmpty) {
-      return const Center(
-        child: Flexible(
-            child: Text(
-          "No identification Requests posted.",
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-        )),
-      );
-    }
     return Column(children: _uploadedRequests(context, uploadedSpecimens));
+  }
+
+  Widget _buildNoRequestsList() {
+    return const Flexible(
+        child: Text(
+      "No identification requests posted.",
+      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+    ));
   }
 }
