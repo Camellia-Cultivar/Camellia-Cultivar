@@ -29,7 +29,7 @@ const Register = () => {
         return () => {
             document.removeEventListener('keydown', onEnterPress);
         }
-    }, []);
+    });
 
 
     const submitUser = () => {
