@@ -1,96 +1,61 @@
-import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import axios from 'axios'
-import { IoAddCircle } from 'react-icons/io5'
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { IoAddCircle } from 'react-icons/io5';
+import axios from 'axios';
+import sha256 from 'crypto-js/sha256';
+import Base64 from 'crypto-js/enc-base64';
+import { BlobServiceClient } from "@azure/storage-blob";
 
 
+import { tokenTtl } from '../../utilities/ttl';
 import { signedIn, signOut } from '../../redux/actions'
 
 
 
 const ProfileEditCard = (props) => {
 
+    const account = "camelliacultivar";
+    const sasKey = "?sv=2021-06-08&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-06-14T00:10:33Z&st=2022-06-13T16:10:33Z&sip=0.0.0.0-255.255.255.255&spr=https,http&sig=3WV16o6czdJD8Sw9wCwonIv8rYnvqtDQHsbqyIDW45s%3D";
+
+    const blobServiceClient = new BlobServiceClient(
+        `https://${account}.blob.core.windows.net${sasKey}`,
+    );
+
+    const containerName = `camelliacultivar`
+
     const [changePassword, setChangePassword] = useState(false);
     const [passwordNeeded, setPasswordNeeded] = useState(false);
+    const [wrongFileType, setWrongFileType] = useState(false);
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
     const [password, setPassword] = useState("");
     const [newFirstName, setNewFirstName] = useState(props.person.first_name);
     const [newLastName, setNewLastName] = useState(props.person.last_name);
+    const user = useSelector(state => state.user);
+    const [profilePicture, setProfilePicture] = useState(user.profile_photo);
+
 
     const dispatch = useDispatch();
-    const user = useSelector(state => state.user)
 
 
-
-
-    const saveProfile = () => {
+    const saveProfile = async () => {
+        let tempUser = { ...props.person }
         setPasswordNeeded(false);
-        if (password !== '') {
+        if (password !== '' && await verifyLogin(tempUser.email, password)) {
+            tempUser['first_name'] = newFirstName
+            tempUser['last_name'] = newLastName
+            dispatch(signedIn(tempUser))
+            let editedUser = {
+                first_name: newFirstName,
+                last_name: newLastName,
+                email: tempUser.email,
+                password: password,
+                profile_photo: profilePicture
+            }
             if (changePassword && (newPassword === confirmNewPassword) && (newPassword !== "")) {
-                let tempUser = { ...props.person }
-                tempUser['first_name'] = newFirstName
-                tempUser['last_name'] = newLastName
-                dispatch(signedIn(tempUser))
-                let editedUser = {
-                    first_name: newFirstName,
-                    last_name: newLastName,
-                    email: tempUser.email,
-                    password: newPassword,
-                    profile_photo: user.profile_image
-                }
-                const loggedInUser = localStorage.getItem("userToken");
-                if (loggedInUser) {
-                    const userToken = JSON.parse(localStorage.getItem("userToken"));
-                    if (userToken.expiry > Date.now()) {
-                        axios.put(`/api/users`, editedUser, {
-                            headers: {
-                                "Authorization": `Bearer ${userToken.loginToken}`,
-                            }
-                        })
-                            .catch(function (_error) {
-                                return;
-                            });
-                    } else {
-                        localStorage.removeItem("userToken");
-                        dispatch(signOut());
-                    }
-
-                }
+                editedUser['password'] = Base64.stringify((sha256(newPassword)));
             }
-            else {
-                let tempUser = { ...props.person }
-                tempUser['first_name'] = newFirstName
-                tempUser['last_name'] = newLastName
-                dispatch(signedIn(tempUser))
-                let editedUser = {
-                    first_name: newFirstName,
-                    last_name: newLastName,
-                    email: tempUser.email,
-                    password: password,
-                    profile_photo: user.profile_image
-                }
-                const loggedInUser = localStorage.getItem("userToken");
-                if (loggedInUser) {
-                    const _user = JSON.parse(localStorage.getItem("userToken"));
-                    if (_user.expiry > Date.now()) {
-                        axios.put(`/api/users`, editedUser, {
-                            headers: {
-                                "Authorization": `Bearer ${_user.loginToken}`,
-                            }
-                        })
-                            .catch(function (_error) {
-                                return;
-                            });
-                    } else {
-                        localStorage.removeItem("userToken");
-                        dispatch(signOut());
-
-                    }
-
-                }
-            }
-
+            await sendEditedUser(editedUser);
             setPasswordNeeded(false);
             props.setIsEditing(false);
 
@@ -100,20 +65,80 @@ const ProfileEditCard = (props) => {
 
     }
 
+    const uploadToServer = async (file) => {
+        const containerClient = blobServiceClient.getContainerClient(containerName);
+        try {
+            const blockBlobClient = containerClient.getBlockBlobClient(file.name);
+            await blockBlobClient.uploadData(file);
+        }
+        catch (error) {
+            console.error(error.message);
+        }
+    }
+
+    const sendEditedUser = (editedUser) => {
+        const loggedInUser = localStorage.getItem("userToken");
+        const file = 0;
+        if (loggedInUser) {
+            const userToken = JSON.parse(localStorage.getItem("userToken"));
+            if (userToken.expiry > Date.now()) {
+                axios.put(`/api/users/${userToken.userId}`, editedUser, {
+                    headers: {
+                        "Authorization": `Bearer ${userToken.loginToken}`,
+                    }
+                })
+                    .catch(function (_error) {
+                        return;
+                    });
+                uploadToServer(file);
+            } else {
+                localStorage.removeItem("userToken");
+                dispatch(signOut());
+            }
+        }
+    }
+
+    const verifyLogin = (email, _password) => {
+        let body = { email: email, password: _password };
+        return axios.post('/api/users/login', body)
+            .then(function (response) {
+                if ((response.status === 200) && window.localStorage) {
+                    if (response.data === '') {
+                        setPasswordNeeded(true);
+                        return false;
+                    } else {
+                        const token = { userId: response.data.split(' ')[0], loginToken: response.data.split(' ')[1], expiry: Date.now() + tokenTtl }
+                        localStorage.setItem("userToken", JSON.stringify(token));
+                        setPasswordNeeded(false);
+                        return true;
+                    }
+                }
+            })
+            .catch(function (_error) {
+                return false;
+            });
+    }
+
+    const setPhoto = (e) => {
+        setWrongFileType(false);
+        console.log(e.target.files[0])
+        if (e.target.files[0].type.includes("image")) {
+            let imgUrl = `https://${account}.blob.core.windows.net/${containerName}/${e.target.files[0].name}`
+            setProfilePicture(imgUrl);
+            let tempUser = { ...props.person }
+            tempUser['profile_image'] = URL.createObjectURL(e.target.files[0])
+            dispatch(signedIn(tempUser));
+        } else {
+            setWrongFileType(true);
+        }
+    }
+
     const addPhoto = () => {
         document.getElementById("editProfilePicture").click();
     }
 
-    const setPhoto = (e) => {
-        let imgUrl = URL.createObjectURL(e.target.files[0])
-        let tempUser = { ...props.person }
-        tempUser['profile_image'] = imgUrl
-        dispatch(signedIn(tempUser));
-
-    }
-
     return (
-        <div className="flex flex-col rounded-xl bg-emerald-900/5 p-6 mb-8">
+        <div className="flex flex-col rounded-xl bg-emerald-900/5 p-6 mb-8 pop-in" style={{ animationDelay: `200ms` }}>
             <div className="relative">
                 {props.person.profile_image === "null" ?
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-[150px] w-[150px] md:h-[300px] md:w-[300px] mx-auto" viewBox="0 0 20 20" fill="currentColor">
@@ -125,6 +150,7 @@ const ProfileEditCard = (props) => {
                     <input type="file" className=" hidden" id="editProfilePicture" onChange={(e) => { setPhoto(e) }}></input>
                 </div>
             </div>
+            {wrongFileType && <p className="text-red-800 text-sm md:text-base ml-4 mt-2">Wrong file type!</p>}
             <div className="mt-4">
                 <div className="container-4/5 flex flex-col justify-center mt-6 text-2xl font-medium text-emerald-900">
                     <div className="flex flex-col">

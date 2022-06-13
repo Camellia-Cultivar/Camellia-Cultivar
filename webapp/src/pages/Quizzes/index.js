@@ -30,7 +30,7 @@ const Quizzes = () => {
         let userToken = localStorage.getItem('userToken');
         if (userToken) {
             let user = JSON.parse(userToken);
-            !fetched && axios.get(`/api/quizzes/${user.userId}`, { headers: { Authorization: `Bearer ${user.loginToken}` } })
+            !fetched && axios.get(`/api/quizzes`, { headers: { Authorization: `Bearer ${user.loginToken}` } })
                 .then((response) => {
                     setQuizArray(response.data);
                     setFetched(true);
@@ -61,7 +61,7 @@ const Quizzes = () => {
             })
         }
         let user = JSON.parse(localStorage.getItem('userToken'));
-        axios.post(`/api/quizzes/${user.userId}`, answersToQuiz, { headers: { Authorization: `Bearer ${user.loginToken}` } })
+        axios.post(`/api/quizzes`, answersToQuiz, { headers: { Authorization: `Bearer ${user.loginToken}` } })
             .then((_response) => {
                 setFetched(false)
             })
@@ -95,7 +95,7 @@ const Quizzes = () => {
                 </div>
                 <div className="col-span-2 justify-self-stretch self-stretch bg-stone-100 rounded-l-full"></div>
             </div>
-            {quizArray.length === 0 && <div className="flex justify-center mt-16 fade-in" style={{ animationDelay: `1400ms` }}>
+            {quizArray.length === 0 && isLogged && <div className="flex justify-center mt-16 fade-in" style={{ animationDelay: `1400ms` }}>
                 <p className="text-xl lg:text-3xl font-bold">There are no more quizzes for you!</p>
             </div>}
             {isLogged ?
