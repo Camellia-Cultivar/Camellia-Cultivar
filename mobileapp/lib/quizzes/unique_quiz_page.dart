@@ -59,7 +59,10 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
 
   void handleSubmit() async {
     List<FormItem> answers = form.values.toList();
-    answers.removeWhere((item) => item.answer == null || item.answer!.isEmpty);
+    answers.removeWhere((item) =>
+        item.answer == null ||
+        item.answer!.isEmpty ||
+        item.cultivar_id == null);
 
     await api.setQuizAnswers(answers);
 

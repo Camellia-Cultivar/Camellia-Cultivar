@@ -78,6 +78,8 @@ class _QuizPageState extends State<QuizPage> {
   TextEditingController? _cultivarNameController;
   FocusNode? _focusInput;
 
+  late String textInput;
+
   @override
   void dispose() {
     //_cultivarNameController?.dispose();
@@ -92,6 +94,11 @@ class _QuizPageState extends State<QuizPage> {
 
   void handleNext() {
     setState(() => {
+          // form[_currentIndex] = FormItem(
+          //     widget.questions[_currentIndex].toJson()["specimenId"],
+          //     textInput,
+          //     autocompleteOptions[textInput.trim()]),
+          // textInput = "",
           if (_currentIndex < widget.questions.length - 1) {_currentIndex++},
           _cultivarNameController?.text = form[_currentIndex]?.answer ?? ""
         });
@@ -121,8 +128,6 @@ class _QuizPageState extends State<QuizPage> {
         item.answer == null ||
         item.answer!.isEmpty ||
         item.cultivar_id == null);
-
-    // autocompleteOptions.map((map) => null)
 
     await api.setQuizAnswers(answers);
 
@@ -242,7 +247,9 @@ class _QuizPageState extends State<QuizPage> {
                               controller: fieldTextEditingController,
                               focusNode: fieldFocusNode,
                               onEditingComplete: handleEditingComplete,
-                              // onChanged: (input) => getAutocomplete(input),
+                              // onChanged: (input) => setState(() {
+                              //   textInput = input;
+                              // }),
                               style:
                                   const TextStyle(fontWeight: FontWeight.bold),
                             );
