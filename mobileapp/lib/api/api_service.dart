@@ -236,7 +236,6 @@ class APIService {
 
   Future<void> setQuizAnswers(List<FormItem> answers) async {
     List<Map<String, dynamic>> lst = [];
-    print("hiii" + answers.toString());
 
     for (FormItem i in answers) {
       lst.add(i.getData());
@@ -291,7 +290,8 @@ class APIService {
           specimens.add(newMap);
         }
 
-        return specimens;
+        // return specimens;
+        return [];
       }
     } catch (e) {
       log(e.toString());

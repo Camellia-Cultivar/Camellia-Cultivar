@@ -148,7 +148,10 @@ class Home extends State<HomePage> with WidgetsBindingObserver {
                           }
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [Text('Something went wrong!')],
+                            children: const [
+                              Padding(padding: EdgeInsets.all(10)),
+                              Text('No specimen requests available!')
+                            ],
                           );
                         },
                       ),
