@@ -1,6 +1,6 @@
 package com.camellia.services;
 
-import com.camellia.models.specimens.SpecimenType;
+import com.camellia.mappers.QuizAnswerMapper;
 import com.camellia.repositories.QuizRepository;
 import com.camellia.services.cultivars.CultivarService;
 import com.camellia.services.specimens.ReferenceSpecimenService;
@@ -23,10 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 
@@ -55,6 +53,9 @@ public class QuizService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private QuizAnswerMapper mapper;
 
     public Page<QuizAnswer> getQuizzes(Pageable pageable) {
         return repository.findAll(pageable);
@@ -90,80 +91,17 @@ public class QuizService {
     }
 
 
-    public ResponseEntity<String> saveQuizAnswers(User user, List<QuizAnswerDTO> quizAnswers) throws MailException, UnsupportedEncodingException, MessagingException{
-        Specimen s;
+    public ResponseEntity<String> saveQuizAnswers(User user, List<QuizAnswerDTO> quizAnswers) throws MailException {
 
         if(user == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user");
         }
 
-        QuizAnswer qaSaved;
-        boolean correct;
+        mapper.quizAnswerDTOsToQuizAnswers(quizAnswers, user).forEach(quizAnswer -> System.out.print(quizAnswer.getCultivar().getId()));
 
-        for(QuizAnswerDTO qa: quizAnswers){
-            s = specimenService.getSpecimenById(qa.getSpecimenId());
+        List<QuizAnswer> answers = repository.saveAllAndFlush(mapper.quizAnswerDTOsToQuizAnswers(quizAnswers, user));
 
-
-            Cultivar c = cultivarService.getCultivarById(qa.getAnswer());
-
-            if(c == null){
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Cultivar");
-            }
-
-            qaSaved = new QuizAnswer();
-            qaSaved.setCultivar(c);
-            qaSaved.setSpecimen(s);
-
-
-            qaSaved.setUser(user);
-
-
-
-            if( s.isReference()){
-
-                correct = c != null && referenceSpecimenService.getReferenceSpecimenById(qa.getSpecimenId()).getCultivar().getId().equals(qa.getAnswer());
-
-                qaSaved.setCorrect(correct);
-                qaSaved.setSpecimenType(SpecimenType.REFERENCE);
-
-                repository.save(qaSaved);
-            }
-            else if( s.isToIdentify()){
-
-
-
-                qaSaved.setCorrect(false);
-                qaSaved.setSpecimenType(SpecimenType.TO_IDENTIFY);
-
-                repository.save(qaSaved);
-
-
-                int totalVotes = repository.getTotalVotesForSpecimen(s.getSpecimenId());
-
-
-                int reputationSum;
-
-                s.addCultivarProb(c, 0);
-
-                for(Cultivar tempC : s.getCultivarProbabilities().keySet()){
-                    reputationSum = 0;
-                    for(Long id : repository.getUsersFromCultivar(s.getSpecimenId(), tempC.getId())){
-                        reputationSum += userService.getUserById(id).getReputation();
-                    }
-
-                    double prob = reputationSum / totalVotes * 100 ;
-                    s.addCultivarProb(c, prob);
-                    specimenService.saveSpecimen(s);
-
-                    if( prob > 80){
-                        toIdentifySpecimenService.promoteToReferenceFromId(s.getSpecimenId(), tempC);
-                        break;
-                    }
-                }
-
-                
-            }
-        }
+        answers.stream().filter(QuizAnswer::isToIdentify).forEach(this::calculateSpecimenProbabilities);
 
         Long correctAnsweredQuizzes = repository.getUserCorrectAnswersCount(user);
         Long totalAnsweredQuizzes = repository.getUserAnswersCount(user);
@@ -172,9 +110,63 @@ public class QuizService {
         Long totalVotes = repository.getTotalVotes();
 
 
-        user.setReputation( (reputationParametersService.getQuizWeight() * correctAnsweredQuizzes / totalAnsweredQuizzes)  + 
-            (reputationParametersService.getVotesWeight() * userTotalVotes / totalVotes  )) ;
+        userService.saveReputation(user,
+                (reputationParametersService.getQuizWeight() * correctAnsweredQuizzes / totalAnsweredQuizzes)
+                        + (reputationParametersService.getVotesWeight() * userTotalVotes / totalVotes  )) ;
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(user.getReputation() + "");
+    }
+
+    private void calculateSpecimenProbabilities(QuizAnswer quizAnswer) {
+        Specimen specimen = quizAnswer.getSpecimen();
+        Cultivar cultivar = quizAnswer.getCultivar();
+
+        specimen.addCultivarProb(cultivar, 0);
+
+        Map<Cultivar, Double> probableCultivars = specimen.getProbableCultivarStream()
+                .collect(Collectors.toMap(
+                        probableCultivar ->  probableCultivar,
+                        probableCultivar ->  calculateProbabilityOfSpecimenBeingCultivar(specimen, probableCultivar)
+                ));
+
+        specimen.setCultivarProbabilities(probableCultivars);
+
+        System.out.println(probableCultivars);
+        specimenService.saveSpecimen(specimen);
+        System.out.println(probableCultivars.entrySet());
+
+        Optional<Cultivar> highProbabilityCultivar = probableCultivars.entrySet().stream()
+                .filter(cultivarDoubleEntry -> cultivarDoubleEntry.getValue() > 80.0)
+                .map(Map.Entry::getKey)
+                .findAny();
+
+        if (highProbabilityCultivar.isPresent()) {
+            try {
+                toIdentifySpecimenService.promoteToReference(specimen, highProbabilityCultivar.get());
+            } catch (UnsupportedEncodingException | MessagingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        specimenService.saveSpecimen(specimen);
+    }
+
+    private double calculateProbabilityOfSpecimenBeingCultivar(Specimen specimen, Cultivar cultivar) {
+        double reputationSum = sumUserReputationThatAnsweredCultivarForSpecimen(cultivar, specimen);
+        int totalVotes = specimen.getTotalVotes() + 1; // + 1 to count the new vote
+
+        double prob = reputationSum / totalVotes * 100.0;
+        specimen.addCultivarProb(cultivar, prob);
+
+        System.out.printf("%f / %d * 100%n", reputationSum, totalVotes);
+        return prob;
+    }
+
+    private double sumUserReputationThatAnsweredCultivarForSpecimen(Cultivar cultivar, Specimen specimen) {
+        System.out.println(repository.getUsersFromCultivar(specimen, cultivar));
+        return repository.getUsersFromCultivar(specimen, cultivar).stream()
+                        .map(User::getReputation)
+                        .reduce(Double::sum)
+                        .orElse(0.0);
     }
 }

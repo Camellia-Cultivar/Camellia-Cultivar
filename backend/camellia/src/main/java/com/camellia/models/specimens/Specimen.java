@@ -1,9 +1,7 @@
 package com.camellia.models.specimens;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Stream;
 
 import javax.persistence.*;
 
@@ -70,7 +68,7 @@ public class Specimen {
         joinColumns = @JoinColumn(name = "specimen_id"),
         inverseJoinColumns = @JoinColumn(name = "characteristic_value_id")
     )
-    @JsonIgnore
+    @JsonIgnoreProperties("specimens")
     Set<CharacteristicValue> characteristicValues;
 
     @ElementCollection
@@ -218,6 +216,14 @@ public class Specimen {
     public void approve() {this.setSpecimenType(SpecimenType.TO_IDENTIFY);}
 
     public void addCultivarProb(Cultivar c, double prob){
-       this.cultivarProbabilities.put(c, prob); 
-    }  
+       this.cultivarProbabilities.put(c, prob);
+    }
+
+    public int getTotalVotes() {
+        return quizAnswers.size();
+    }
+
+    public Stream<Cultivar> getProbableCultivarStream() {
+        return this.cultivarProbabilities.keySet().stream();
+    }
 }
