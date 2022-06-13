@@ -1,6 +1,7 @@
 package com.camellia.repositories;
 
 import com.camellia.models.QuizAnswer;
+import com.camellia.models.cultivars.Cultivar;
 import com.camellia.models.specimens.Specimen;
 import com.camellia.models.users.User;
 
@@ -31,8 +32,9 @@ public interface QuizRepository extends JpaRepository<QuizAnswer, Long>{
                     "AND a.specimenType = com.camellia.models.specimens.SpecimenType.REFERENCE" )
     Long getUserCorrectAnswersCount(@Param("user") User user);
 
-    @Query(nativeQuery = true, value = "SELECT user_id FROM quiz_answer WHERE specimen_id = :specimen_id AND cultivar_id = :cultivar_id")
-    List<Long> getUsersFromCultivar(@Param("specimen_id") Long specimenId, @Param("cultivar_id") Long cultivarId);
+//    @Query(nativeQuery = true, value = "SELECT user_id FROM quiz_answer WHERE specimen_id = :specimen_id AND cultivar_id = :cultivar_id")
+    @Query(value = "SELECT a.user FROM QuizAnswer a WHERE a.specimen = :specimen AND a.cultivar = :cultivar")
+    List<User> getUsersFromCultivar(@Param("specimen") Specimen specimen, @Param("cultivar") Cultivar cultivar);
 
 //    @Query(value = "SELECT COUNT(*) FROM quiz_answer WHERE user_id = :user_id AND specimen_type = \'TOIDENTIFY\'", nativeQuery = true )
     @Query(value =
