@@ -68,7 +68,7 @@ public class Specimen {
         joinColumns = @JoinColumn(name = "specimen_id"),
         inverseJoinColumns = @JoinColumn(name = "characteristic_value_id")
     )
-    @JsonIgnore
+    @JsonIgnoreProperties("specimens")
     Set<CharacteristicValue> characteristicValues;
 
     @ElementCollection
