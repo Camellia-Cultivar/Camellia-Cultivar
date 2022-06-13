@@ -159,4 +159,8 @@ public class UserService {
         return Optional.of(foundUser);
     }
 
+    public User saveReputation(User user, double reputation) {
+        user.setReputation(reputation);
+        return repository.save(user);
+    }
 }

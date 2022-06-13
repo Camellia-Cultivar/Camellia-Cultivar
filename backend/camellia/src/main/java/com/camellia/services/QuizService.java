@@ -110,8 +110,9 @@ public class QuizService {
         Long totalVotes = repository.getTotalVotes();
 
 
-        user.setReputation( (reputationParametersService.getQuizWeight() * correctAnsweredQuizzes / totalAnsweredQuizzes)  + 
-            (reputationParametersService.getVotesWeight() * userTotalVotes / totalVotes  )) ;
+        userService.saveReputation(user,
+                (reputationParametersService.getQuizWeight() * correctAnsweredQuizzes / totalAnsweredQuizzes)
+                        + (reputationParametersService.getVotesWeight() * userTotalVotes / totalVotes  )) ;
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(user.getReputation() + "");
     }
