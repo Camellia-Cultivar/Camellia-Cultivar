@@ -99,7 +99,7 @@ public class QuizService {
 
         mapper.quizAnswerDTOsToQuizAnswers(quizAnswers, user).forEach(quizAnswer -> System.out.print(quizAnswer.getCultivar().getId()));
 
-        List<QuizAnswer> answers = repository.saveAll(mapper.quizAnswerDTOsToQuizAnswers(quizAnswers, user));
+        List<QuizAnswer> answers = repository.saveAllAndFlush(mapper.quizAnswerDTOsToQuizAnswers(quizAnswers, user));
 
         answers.stream().filter(QuizAnswer::isToIdentify).forEach(this::calculateSpecimenProbabilities);
 
@@ -131,11 +131,14 @@ public class QuizService {
 
         specimen.setCultivarProbabilities(probableCultivars);
 
+        System.out.println(probableCultivars);
+        specimenService.saveSpecimen(specimen);
+        System.out.println(probableCultivars.entrySet());
+
         Optional<Cultivar> highProbabilityCultivar = probableCultivars.entrySet().stream()
                 .filter(cultivarDoubleEntry -> cultivarDoubleEntry.getValue() > 80.0)
                 .map(Map.Entry::getKey)
                 .findAny();
-
 
         if (highProbabilityCultivar.isPresent()) {
             try {
@@ -150,15 +153,17 @@ public class QuizService {
 
     private double calculateProbabilityOfSpecimenBeingCultivar(Specimen specimen, Cultivar cultivar) {
         double reputationSum = sumUserReputationThatAnsweredCultivarForSpecimen(cultivar, specimen);
-        int totalVotes = specimen.getTotalVotes();
+        int totalVotes = specimen.getTotalVotes() + 1; // + 1 to count the new vote
 
         double prob = reputationSum / totalVotes * 100.0;
         specimen.addCultivarProb(cultivar, prob);
 
+        System.out.printf("%f / %d * 100%n", reputationSum, totalVotes);
         return prob;
     }
 
     private double sumUserReputationThatAnsweredCultivarForSpecimen(Cultivar cultivar, Specimen specimen) {
+        System.out.println(repository.getUsersFromCultivar(specimen, cultivar));
         return repository.getUsersFromCultivar(specimen, cultivar).stream()
                         .map(User::getReputation)
                         .reduce(Double::sum)

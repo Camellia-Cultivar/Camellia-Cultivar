@@ -32,7 +32,7 @@ public class QuizAnswer {
     @JsonIgnoreProperties("user")
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn( referencedColumnName = "specimen_id", name="specimen_id", nullable=false)
     @JsonIgnoreProperties("specimen_id")
     private Specimen specimen;
