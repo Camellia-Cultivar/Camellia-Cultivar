@@ -94,11 +94,12 @@ class _QuizPageState extends State<QuizPage> {
 
   void handleNext() {
     setState(() => {
-          // form[_currentIndex] = FormItem(
-          //     widget.questions[_currentIndex].toJson()["specimenId"],
-          //     textInput,
-          //     autocompleteOptions[textInput.trim()]),
-          // textInput = "",
+          form[_currentIndex] = FormItem(
+              widget.questions[_currentIndex].toJson()["specimenId"],
+              _cultivarNameController?.text,
+              autocompleteOptions[_cultivarNameController?.text.trim()]),
+          print(_cultivarNameController?.text),
+          textInput = "",
           if (_currentIndex < widget.questions.length - 1) {_currentIndex++},
           _cultivarNameController?.text = form[_currentIndex]?.answer ?? ""
         });
@@ -123,11 +124,18 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   void handleSubmit() async {
+    form[_currentIndex] = FormItem(
+        widget.questions[_currentIndex].toJson()["specimenId"],
+        _cultivarNameController?.text,
+        autocompleteOptions[_cultivarNameController?.text.trim()]);
+    print(_cultivarNameController?.text);
     List<FormItem> answers = form.values.toList();
+    print(answers.length);
     answers.removeWhere((item) =>
         item.answer == null ||
         item.answer!.isEmpty ||
         item.cultivar_id == null);
+    print(answers.length);
 
     await api.setQuizAnswers(answers);
 
@@ -246,10 +254,10 @@ class _QuizPageState extends State<QuizPage> {
                             return TextField(
                               controller: fieldTextEditingController,
                               focusNode: fieldFocusNode,
-                              onEditingComplete: handleEditingComplete,
-                              // onChanged: (input) => setState(() {
-                              //   textInput = input;
-                              // }),
+                              // onEditingComplete: handleEditingComplete,
+                              onChanged: (input) => setState(() {
+                                textInput = input;
+                              }),
                               style:
                                   const TextStyle(fontWeight: FontWeight.bold),
                             );

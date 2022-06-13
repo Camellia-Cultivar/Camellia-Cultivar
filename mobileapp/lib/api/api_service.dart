@@ -236,9 +236,11 @@ class APIService {
 
   Future<void> setQuizAnswers(List<FormItem> answers) async {
     List<Map<String, dynamic>> lst = [];
+    print("hiii" + answers.toString());
 
     for (FormItem i in answers) {
       lst.add(i.getData());
+      print(i.getData());
     }
 
     if (lst.isEmpty) {
@@ -248,8 +250,9 @@ class APIService {
     try {
       var url = Uri.parse(APIConstants.baseUrl + APIConstants.quizEndpoint);
       // var obj = {"answers": lst};
+      print("here lays lst: " + lst.toString());
       var body = jsonEncode(lst);
-      // print(body);
+      print(body);
       var response = await http.post(url,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
