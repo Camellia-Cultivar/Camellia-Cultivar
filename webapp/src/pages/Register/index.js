@@ -55,13 +55,13 @@ const Register = () => {
 
         setIsLoading(true);
 
-
+//Base64.stringify((sha256(document.getElementById("register-password").value)))
 
         const user = {
             first_name: document.getElementById("register-fn").value,
             last_name: document.getElementById("register-ln").value,
             email: document.getElementById("register-email").value,
-            password: Base64.stringify((sha256(document.getElementById("register-password").value))),
+            password: document.getElementById("register-password").value,
         }
 
         const axios = require('axios').default;

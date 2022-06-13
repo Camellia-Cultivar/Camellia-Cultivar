@@ -71,6 +71,7 @@ const Home = () => {
                 </div>
             </div>
 
+            {/* "Mobile" Section */}
             <div className="grid gap-3 sm:place-items-center grid-flow-row-dense md:place-items-end sm:grid-cols-1 md:grid-cols-5 bg-emerald-900 text-white py-16">
                 <div className="grid col-span-3 mx-8 self-center">
                     <span className="font-medium leading-tight text-4xl fade-in" style={{ animationDelay: `1000ms` }}>We have a <span className="font-bold">mobile app</span></span>
@@ -81,7 +82,7 @@ const Home = () => {
                 </div>
             </div>
 
-
+            {/* "Achievements" Section */}
             <div className="flex justify-center text-center mt-16">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6 bg-emerald-900/5 text-emerald-900 p-10 rounded-lg fade-in">
 

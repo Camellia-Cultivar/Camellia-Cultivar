@@ -15,7 +15,7 @@ import { signedIn, signOut } from '../../redux/actions'
 const ProfileEditCard = (props) => {
 
     const account = "camelliacultivar";
-    const sasKey = "?sv=2021-06-08&ss=bfqt&srt=c&sp=rwdlacupitfx&se=2022-06-14T08:34:23Z&st=2022-06-13T00:34:23Z&sip=0.0.0.0-255.255.255.255&spr=https,http&sig=CDC38tJtHdH3XZUHSwRCHPIAttZMImszusAlc7BoK9I%3D";
+    const sasKey = "?sv=2021-06-08&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-06-14T00:10:33Z&st=2022-06-13T16:10:33Z&sip=0.0.0.0-255.255.255.255&spr=https,http&sig=3WV16o6czdJD8Sw9wCwonIv8rYnvqtDQHsbqyIDW45s%3D";
 
     const blobServiceClient = new BlobServiceClient(
         `https://${account}.blob.core.windows.net${sasKey}`,
@@ -32,6 +32,7 @@ const ProfileEditCard = (props) => {
     const [newFirstName, setNewFirstName] = useState(props.person.first_name);
     const [newLastName, setNewLastName] = useState(props.person.last_name);
     const user = useSelector(state => state.user);
+    const [profilePicture, setProfilePicture] = useState(user.profile_photo);
 
 
     const dispatch = useDispatch();
@@ -48,13 +49,13 @@ const ProfileEditCard = (props) => {
                 first_name: newFirstName,
                 last_name: newLastName,
                 email: tempUser.email,
-                password: Base64.stringify((sha256(password))),
-                profile_photo: user.profile_image
+                password: password,
+                profile_photo: profilePicture
             }
             if (changePassword && (newPassword === confirmNewPassword) && (newPassword !== "")) {
                 editedUser['password'] = Base64.stringify((sha256(newPassword)));
             }
-            sendEditedUser(editedUser);
+            await sendEditedUser(editedUser);
             setPasswordNeeded(false);
             props.setIsEditing(false);
 
@@ -67,10 +68,9 @@ const ProfileEditCard = (props) => {
     const uploadToServer = async (file) => {
         const containerClient = blobServiceClient.getContainerClient(containerName);
         try {
-                const blockBlobClient = containerClient.getBlockBlobClient(file.name);
-                await blockBlobClient.uploadData(file);
-                
-            }
+            const blockBlobClient = containerClient.getBlockBlobClient(file.name);
+            await blockBlobClient.uploadData(file);
+        }
         catch (error) {
             console.error(error.message);
         }
@@ -78,6 +78,7 @@ const ProfileEditCard = (props) => {
 
     const sendEditedUser = (editedUser) => {
         const loggedInUser = localStorage.getItem("userToken");
+        const file = 0;
         if (loggedInUser) {
             const userToken = JSON.parse(localStorage.getItem("userToken"));
             if (userToken.expiry > Date.now()) {
@@ -89,16 +90,16 @@ const ProfileEditCard = (props) => {
                     .catch(function (_error) {
                         return;
                     });
+                uploadToServer(file);
             } else {
                 localStorage.removeItem("userToken");
                 dispatch(signOut());
             }
-
         }
     }
 
     const verifyLogin = (email, _password) => {
-        let body = { email: email, password: Base64.stringify((sha256(_password))) };
+        let body = { email: email, password: _password };
         return axios.post('/api/users/login', body)
             .then(function (response) {
                 if ((response.status === 200) && window.localStorage) {
@@ -111,7 +112,6 @@ const ProfileEditCard = (props) => {
                         setPasswordNeeded(false);
                         return true;
                     }
-
                 }
             })
             .catch(function (_error) {
@@ -123,16 +123,14 @@ const ProfileEditCard = (props) => {
         setWrongFileType(false);
         console.log(e.target.files[0])
         if (e.target.files[0].type.includes("image")) {
-            uploadToServer(e.target.files[0]);
-
             let imgUrl = `https://${account}.blob.core.windows.net/${containerName}/${e.target.files[0].name}`
+            setProfilePicture(imgUrl);
             let tempUser = { ...props.person }
-            tempUser['profile_image'] = imgUrl
+            tempUser['profile_image'] = URL.createObjectURL(e.target.files[0])
             dispatch(signedIn(tempUser));
         } else {
             setWrongFileType(true);
         }
-
     }
 
     const addPhoto = () => {
@@ -140,7 +138,7 @@ const ProfileEditCard = (props) => {
     }
 
     return (
-        <div className="flex flex-col rounded-xl bg-emerald-900/5 p-6 mb-8">
+        <div className="flex flex-col rounded-xl bg-emerald-900/5 p-6 mb-8 pop-in" style={{ animationDelay: `200ms` }}>
             <div className="relative">
                 {props.person.profile_image === "null" ?
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-[150px] w-[150px] md:h-[300px] md:w-[300px] mx-auto" viewBox="0 0 20 20" fill="currentColor">

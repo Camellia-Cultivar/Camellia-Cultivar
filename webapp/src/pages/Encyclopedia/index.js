@@ -23,6 +23,7 @@ const Encyclopedia = () => {
 
     let noShadowSearch = `shadow-none border-x-0 border-b-0`;
 
+
     useEffect(() => {
         if (!fetched) {
             axios.get('/api/public/cultivars', { params: { page: page - 1 } })
@@ -55,16 +56,12 @@ const Encyclopedia = () => {
         }
     }
 
-
-
     const setSugestionClicked = (sugest) => {
         setSearchText(sugest.denomination);
         setSugestionsOn(false);
         setChosenSugestion(true);
         setSugestion(sugestion);
     }
-
-
 
     const clearAll = () => {
         axios.get('/api/public/cultivars', { params: { page: page-1 } })
@@ -106,10 +103,6 @@ const Encyclopedia = () => {
             .catch((_error) => {
                 return;
             })
-
-
-
-
     }
 
     const changePage = (index) => {
@@ -117,11 +110,9 @@ const Encyclopedia = () => {
         setPage(index);
     }
 
-
     const redirect = (route) => {
         navigate(route);
     }
-
 
     const changePageInput = (e) => {
 
@@ -139,15 +130,17 @@ const Encyclopedia = () => {
             <div className="pb-6 ml-4">
                 <p className="text-3xl font-bold text-center md:text-start fade-in" style={{ animationDelay: `100ms` }}>Encyclopedia</p>
             </div>
-            <div className="self-center flex flex-col w-full pt-4 fade-in" style={{ animationDelay: `200ms` }}>
+            <div className="self-center flex flex-col w-full pt-4 fade-in z-[10]" style={{ animationDelay: `200ms` }}>
                 <div className="flex w-full relative">
-
                     <div className=" flex w-11/12 mr-2 md:mr-4 relative sm:text-base md:text-xl" >
                         {sugestionsOn &&
                             <div className=" w-full top-[50%] pt-8 pb-2 rounded-b-xl absolute bg-white shadow-md">
                                 {autocompletedCamellias.map((ac, index) => (
                                     <Sugestion className="flex md:text-xl text-base py-2 cursor-pointer px-4 hover:bg-slate-50" setSugestionClicked={(search) => setSugestionClicked(search)} key={index} cultivar={ac} />
                                 ))}
+                                <div className="w-full h-full fixed">
+
+                                </div>
                             </div>
                         }
                         <input
@@ -161,10 +154,10 @@ const Encyclopedia = () => {
                     </div>
                     <button onClick={() => { searchCultivar() }} className="bg-emerald-900 text-white text-2xl px-4 md:px-6 py-1 rounded-3xl active:scale-95 hover:scale-105"><IoSearch></IoSearch></button>
                 </div>
-                <div className=" flex md:justify-start mt-4">
+                {/* <div className=" flex md:justify-start mt-4">
                     <button className="bg-emerald-900 text-white font-light text-base md:text-lg px-4 md:px-6 py-1 mx-1 md:mx-4 rounded-3xl active:scale-95">Filter By</button>
                     <button className="bg-emerald-900 text-white font-light text-base md:text-lg px-4 md:px-6 py-1 mx-1 md:mx-4 rounded-3xl active:scale-95">Sort By</button>
-                </div>
+                </div> */}
             </div>
 
             {isLoading ?

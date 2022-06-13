@@ -47,11 +47,11 @@ const Profile = () => {
 
     return (
         <div className='mt-16 container-4/5'>
-            <p className=" text-xl md:text-2xl lg:text-4xl font-bold text-emerald-900">Welcome {user.first_name}!</p>
+            <p className=" text-xl md:text-2xl lg:text-4xl font-bold text-emerald-900 fade-in" style={{ animationDelay: `100ms` }}>Welcome {user.first_name}!</p>
             <div className="flex flex-col lg:flex-row mt-8 md:mt-10">
                 {isEditing ? <ProfileEditCard person={user} setIsEditing={(editing) => { setIsEditing(editing) }}></ProfileEditCard> : <ProfileCard person={user} setIsEditing={(editing) => { setIsEditing(editing) }}></ProfileCard>}
                 {requests.length === 0 ?
-                    <div className="mt-16 lg:mt-0 lg:ml-16 xl:mx-auto xl:px-4 fade-in" style={{ animationDelay: `1400ms` }}>
+                    <div className="mt-16 lg:mt-0 lg:ml-16 xl:mx-auto xl:px-4 fade-in" style={{ animationDelay: `300ms` }}>
                         <p className="text-xl lg:text-3xl font-bold">You have no <span className="font-extrabold text-emerald-900">requests!</span></p>
                     </div>
                     :
