@@ -78,7 +78,6 @@ const Home = () => {
                     <div className="ml-11 text-lg py-3"><StepList baseDelay={1100} steps={third_list} /></div>
                 </div>
                 <div className="col-span-2 justify-self-stretch self-stretch bg-stone-100 slider-inverted rounded-l-full pl-32">
-                    <img className="h-[400px]" alt="mobile" src="/mobile.svg"></img>
                 </div>
             </div>
 
