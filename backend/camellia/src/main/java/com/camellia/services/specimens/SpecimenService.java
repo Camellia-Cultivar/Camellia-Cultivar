@@ -64,7 +64,7 @@ public class SpecimenService {
             specimen.setCharacteristicValues(new HashSet<>());
             logger.warn("Found no characteristics in passed specimen");
         }
-        return specimenRepository.save(specimen);
+        return specimenRepository.saveAndFlush(specimen);
     }
 
     public String deleteSpecimen(long id) {
