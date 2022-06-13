@@ -60,6 +60,11 @@ public class ToIdentifySpecimenService {
 
     public SpecimenDto promoteToReferenceFromId(long id, Cultivar c) throws MailException, UnsupportedEncodingException, MessagingException {
         Specimen promotingSpecimen = this.getToIdentifySpecimenById(id);
+        return promoteToReference(promotingSpecimen, c);
+    }
+
+
+    public SpecimenDto promoteToReference(Specimen promotingSpecimen, Cultivar c) throws MailException, UnsupportedEncodingException, MessagingException {
         if (promotingSpecimen == null)
             return null;
 
