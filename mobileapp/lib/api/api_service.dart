@@ -46,11 +46,13 @@ class APIService {
       if (response.statusCode == 200 && response.body == "") {
         return [-2, "Credentials are wrong!"];
       }
+      print(response.body);
       return [response.statusCode, response.body];
     } catch (e) {
       log(e.toString());
       er = e;
     }
+    print(er);
     return [-1, "Failed to authenticate. Please try again!"];
   }
 
@@ -64,10 +66,10 @@ class APIService {
         'Authorization': 'Bearer ${await storage.read(key: 'token')}',
       });
       print(response.body);
-      print(await storage.read(key: 'token'));
+      print(response.statusCode);
       if (response.statusCode == 202) {
         User api_user = userFromJson(response.body, uid);
-        // api_user.profileImage = "\x00";
+        print(api_user);
         return api_user;
       }
     } catch (e) {
@@ -254,6 +256,8 @@ class APIService {
             'Authorization': 'Bearer ${await storage.read(key: 'token')}'
           },
           body: body);
+      print("response");
+      print(response.body);
       if (response.statusCode != 200) {
         throw Exception("Submission of quiz answers did not suceed!");
       }

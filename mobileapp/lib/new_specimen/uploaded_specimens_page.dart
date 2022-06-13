@@ -224,7 +224,9 @@ class _UploadedSpecimensPage extends State<UploadedSpecimensPage> {
                     child: const Divider(
                       thickness: 2,
                     )),
-                _buildRequestsList(context, widget.uploadedSpecimens),
+                widget.uploadedSpecimens.isEmpty
+                    ? Container()
+                    : _buildRequestsList(context, widget.uploadedSpecimens),
               ]))),
       bottomNavigationBar: const BotNavbar(pageIndex: 0),
     );
@@ -234,15 +236,14 @@ class _UploadedSpecimensPage extends State<UploadedSpecimensPage> {
       BuildContext context, List<UploadedSpecimen> uploadedSpecimens) {
     Color primaryColor = Theme.of(context).primaryColor;
     var screenSize = MediaQuery.of(context).size;
-    if (uploadedSpecimens.isEmpty) {
-      return const Center(
-        child: Flexible(
-            child: Text(
-          "No identification Requests posted.",
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-        )),
-      );
-    }
     return Column(children: _uploadedRequests(context, uploadedSpecimens));
+  }
+
+  Widget _buildNoRequestsList() {
+    return const Flexible(
+        child: Text(
+      "No identification requests posted.",
+      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+    ));
   }
 }
