@@ -122,14 +122,9 @@ class _ProfilePage extends State<ProfilePage> {
                                   height: screenSize.height / 8,
                                   width: screenSize.width / 4,
                                   child: CircleAvatar(
-                                    backgroundColor: Colors.grey[100],
-                                    child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(100.0),
-                                        child: Image.network(
-                                          user!.profileImage,
-                                        )),
-                                  ),
+                                      backgroundColor: Colors.grey[100],
+                                      backgroundImage:
+                                          NetworkImage(user!.profileImage)),
                                 )),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

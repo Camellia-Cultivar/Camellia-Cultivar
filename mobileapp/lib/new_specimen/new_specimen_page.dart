@@ -67,12 +67,10 @@ class NewSpecimen extends State<NewSpecimenPage> {
 
   final gardenController = TextEditingController();
   final ownerController = TextEditingController();
+  final mainColorController = TextEditingController();
+  final secondaryColorController = TextEditingController();
 
   late final Future? upovFuture;
-  Map controllers = {
-    'main color': TextEditingController(),
-    'secondary color': TextEditingController()
-  };
 
   void _getCurrentPosition(BuildContext context) async {
     try {
@@ -126,6 +124,8 @@ class NewSpecimen extends State<NewSpecimenPage> {
     super.dispose();
     ownerController.dispose();
     gardenController.dispose();
+    mainColorController.dispose();
+    secondaryColorController.dispose();
   }
 
   Future<void> uploadInAzure(User user) async {
@@ -670,7 +670,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
                       }
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [Text('Something went wrong!')],
+                        children: const [Text('Loading...')],
                       );
                     },
                   )
@@ -705,7 +705,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
                           for (UpovSubcategoryOption option
                               in subCategory.options!)
                             S2Choice<String>(
-                                value: option.value.toString(),
+                                value: option.id.toString(),
                                 title: option.descriptor)
                         ],
                         value: selectedUpovs[subCategory.id].toString(),
@@ -743,7 +743,9 @@ class NewSpecimen extends State<NewSpecimenPage> {
             ),
             labelText: subcategory.name,
           ),
-          controller: controllers[subcategory.name],
+          controller: subcategory.name == "main color"
+              ? mainColorController
+              : secondaryColorController,
           onChanged: (value) {
             setState(() {
               selectedUpovs[subcategory.id] = value;
