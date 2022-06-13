@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import sha256 from 'crypto-js/sha256';
-import Base64 from 'crypto-js/enc-base64'
+import Base64 from 'crypto-js/enc-base64';
 
 import { tokenTtl } from '../../utilities/ttl';
 
@@ -19,7 +19,7 @@ const LoginCard = (props) => {
         return () => {
             document.removeEventListener('keydown', onEnterPress);
         }
-    }, []);
+    });
 
     const [wrongCredentials, setWrongCredentials] = useState(false);
     const [userNotAuthenticated, setUserNotAuthenticated] = useState(false);
