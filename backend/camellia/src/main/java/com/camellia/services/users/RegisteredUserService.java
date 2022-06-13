@@ -42,7 +42,7 @@ public class RegisteredUserService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user data");
         
         user.setAutoApproval(false);
-        user.setReputation(0);
+        user.setReputation(0.0);
 
         try{
             if(repository.findByEmail(user.getEmail()) != null){
