@@ -95,7 +95,7 @@ const Quizzes = () => {
                 </div>
                 <div className="col-span-2 justify-self-stretch self-stretch bg-stone-100 rounded-l-full"></div>
             </div>
-            {quizArray.length === 0 && <div className="flex justify-center mt-16 fade-in" style={{ animationDelay: `1400ms` }}>
+            {quizArray.length === 0 && isLogged && <div className="flex justify-center mt-16 fade-in" style={{ animationDelay: `1400ms` }}>
                 <p className="text-xl lg:text-3xl font-bold">There are no more quizzes for you!</p>
             </div>}
             {isLogged ?
