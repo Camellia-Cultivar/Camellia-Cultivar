@@ -1,20 +1,16 @@
 import 'package:camellia_cultivar/api/api_service.dart';
 import 'package:camellia_cultivar/home/homepage.dart';
-import 'package:camellia_cultivar/model/user.dart';
-import 'package:camellia_cultivar/providers/user.dart';
 import 'package:camellia_cultivar/quizzes/quiz_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../model/question.dart';
+
 class UniqueQuizPage extends StatefulWidget {
-  final int? specimenId;
+  final Question question;
 
-  final String image;
-
-  const UniqueQuizPage(
-      {Key? key, required this.specimenId, required this.image})
-      : super(key: key);
+  const UniqueQuizPage({Key? key, required this.question}) : super(key: key);
 
   @override
   _UniqueQuizPageState createState() => _UniqueQuizPageState();
@@ -23,11 +19,7 @@ class UniqueQuizPage extends StatefulWidget {
 class _UniqueQuizPageState extends State<UniqueQuizPage> {
   final api = APIService();
 
-  List<String> lst = <String>[
-    'C. Japonica April Dawn',
-    'C. Japonica Debutante',
-    'C. Sasanqua Mine No Uki',
-  ];
+  List<String> optionsList = [];
 
   List<T> map<T>(List data, Function handler) {
     List<T> result = [];
@@ -38,6 +30,7 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
   }
 
   Map<int, FormItem> form = {};
+  Map<String, int> autocompleteOptions = {};
 
   TextEditingController? _cultivarNameController;
   FocusNode? _focusInput;
@@ -51,33 +44,24 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
   @override
   void initState() {
     super.initState();
+    _cultivarNameController?.text =
+        form[widget.question.specimenId]?.answer ?? "";
   }
 
   void handleEditingComplete() {
+    String answer = _cultivarNameController!.text;
     setState(() {
-      // form[widget.specimenId!] =
-      //     FormItem(widget.specimenId, _cultivarNameController?.text);
+      form[widget.question.specimenId] = FormItem(widget.question.specimenId,
+          answer, autocompleteOptions[answer.trim()]);
     });
     _focusInput?.unfocus();
   }
 
-  void handleSubmit(User? user) async {
-    if (user == null) {
-      return;
-    }
-
+  void handleSubmit() async {
     List<FormItem> answers = form.values.toList();
     answers.removeWhere((item) => item.answer == null || item.answer!.isEmpty);
 
-    await api.setQuizAnswers(user.id, answers);
-
-    //int? reputation = await api.setQuizAnswers(user.id, answers);
-
-    // if(reputation != null) {
-    //   user.reputation = reputation;
-    // }
-
-    //context.read<UserProvider>().setUser(user);
+    await api.setQuizAnswers(answers);
 
     Navigator.pop(context);
 
@@ -93,10 +77,6 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
     Color primaryColor = Theme.of(context).primaryColor;
 
     var screenSize = MediaQuery.of(context).size;
-
-    User? user = context.read<UserProvider>().user;
-
-    _cultivarNameController?.text = form[widget.specimenId]?.answer ?? "";
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6F7),
@@ -142,9 +122,16 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
                     SizedBox(
                         width: screenSize.width / 1.5,
                         height: screenSize.height / 3,
-                        child: Image.network(widget.image,
-                            width: screenSize.width / 1.5,
-                            fit: BoxFit.fitHeight)),
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: widget.question.toJson()["images"].length,
+                          itemBuilder: (BuildContext context, int position) {
+                            return Image.network(
+                                widget.question.images[position],
+                                width: screenSize.width / 1.5,
+                                fit: BoxFit.fitHeight);
+                          },
+                        )),
                     Container(
                         padding: const EdgeInsets.only(top: 20, bottom: 20),
                         width: screenSize.width / 1.5,
@@ -165,14 +152,13 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
                                   const TextStyle(fontWeight: FontWeight.bold),
                             );
                           },
-                          optionsBuilder: (TextEditingValue textEditingValue) {
+                          optionsBuilder:
+                              (TextEditingValue textEditingValue) async {
                             if (textEditingValue.text == '') {
                               return const Iterable<String>.empty();
                             }
-                            return lst.where((String option) {
-                              return option.toLowerCase().contains(
-                                  textEditingValue.text.toLowerCase());
-                            });
+                            await getAutocomplete(textEditingValue.text);
+                            return optionsList;
                           },
                         )),
                     Padding(
@@ -181,7 +167,7 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
                         height: screenSize.height / 12.5,
                         width: screenSize.width / 1.8,
                         child: TextButton(
-                            onPressed: () => handleSubmit(user),
+                            onPressed: () => handleSubmit(),
                             style: ButtonStyle(
                               backgroundColor:
                                   MaterialStateProperty.all(primaryColor),
@@ -204,5 +190,14 @@ class _UniqueQuizPageState extends State<UniqueQuizPage> {
             ))),
       ),
     );
+  }
+
+  Future<void> getAutocomplete(String input) async {
+    var options = await api.getAutocomplete(input);
+    setState(() {
+      autocompleteOptions = options;
+      optionsList =
+          autocompleteOptions.keys.map((denomination) => denomination).toList();
+    });
   }
 }

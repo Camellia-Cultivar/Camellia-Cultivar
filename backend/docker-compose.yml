@@ -7,7 +7,7 @@ services:
         container_name: camellia-db
         restart: always
         ports:
-            - '5432:5432'
+            - '5439:5432'
         environment:
             - POSTGRES_USER=camellia
             - POSTGRES_PASSWORD=password

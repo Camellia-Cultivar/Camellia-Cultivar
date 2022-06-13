@@ -1,8 +1,4 @@
-import 'dart:html';
-
 import 'package:camellia_cultivar/model/question.dart';
-import 'package:camellia_cultivar/model/user.dart';
-import 'package:camellia_cultivar/providers/user.dart';
 import 'package:camellia_cultivar/quizzes/quiz_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +13,6 @@ class QuizOptionsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     Color primaryColor = Theme.of(context).primaryColor;
-    User? user = context.watch<UserProvider>().user;
 
     final api = APIService();
     List<Question>? questions;
@@ -29,7 +24,7 @@ class QuizOptionsPage extends StatelessWidget {
     ];
 
     _handleStartNewQuiz(BuildContext context) async {
-      questions = await api.getQuiz(user!);
+      questions = await api.getQuiz();
       print(questions);
       if (questions == null) {
         ScaffoldMessenger.of(context).showSnackBar(

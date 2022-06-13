@@ -20,10 +20,9 @@ Future<void> login(BuildContext context, User user) async {
 }
 
 Future<void> logout(BuildContext context, User user) async {
+  Navigator.popUntil(context, (route) => route.isFirst);
   Navigator.pushReplacement(
       context, MaterialPageRoute(builder: (context) => const LoginPage()));
-
-  context.read<UserProvider>().setUser(null);
 
   final storage = new FlutterSecureStorage();
   await storage.delete(key: "expiresIn");

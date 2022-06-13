@@ -1,21 +1,13 @@
 import 'dart:io';
 
-import 'package:camellia_cultivar/database/database_helper.dart';
-import 'package:camellia_cultivar/authentication/login.dart';
 import 'package:camellia_cultivar/main.dart';
 import 'package:camellia_cultivar/model/user.dart';
-import 'package:camellia_cultivar/new_specimen/new_specimen.dart';
 import 'package:camellia_cultivar/profile/profile_page.dart';
 import 'package:camellia_cultivar/providers/user.dart';
 import 'package:flutter/material.dart';
-import "package:camellia_cultivar/extensions/string_apis.dart";
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../api/api_service.dart';
-import '../navbar/botnavbar.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import '../new_specimen/new_specimen.dart';
 
 import 'package:azblob/azblob.dart';
 import 'package:mime/mime.dart';
@@ -48,7 +40,7 @@ class _EditProfilePage extends State<EditProfilePage> {
     var baseUrl = 'https://camelliacultivarstorage2.blob.core.windows.net';
 
     var azureImgUrl =
-        '/imagestorage/${user.id}/${basename(profileImage!.path)}';
+        '/imagestorage/${user.id}/profile/${basename(profileImage!.path)}';
     var content = await profileImage!.readAsBytes();
     String? contentType = lookupMimeType(basename(profileImage!.path));
 
@@ -92,6 +84,7 @@ class _EditProfilePage extends State<EditProfilePage> {
           reputation: user.reputation,
           verified: user.verified);
       if (_formKey.currentState!.validate()) {
+        await uploadInAzure(user);
         new_user.firstName = firstNameController.text;
         new_user.lastName = lastNameController.text;
         if (profileImageUrl != null) {
@@ -365,8 +358,6 @@ class _EditProfilePage extends State<EditProfilePage> {
                                                       controller:
                                                           passwordController,
                                                       validator: (value) {
-                                                        print("Value: " +
-                                                            value.toString());
                                                         if ((value == null ||
                                                             value.isEmpty)) {
                                                           return 'Password is required!';

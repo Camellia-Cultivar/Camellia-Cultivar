@@ -1,10 +1,6 @@
 import 'dart:io';
 
-import 'package:camellia_cultivar/navbar/new_specimen_icon.dart';
-import 'package:camellia_cultivar/main.dart';
 import 'package:camellia_cultivar/navbar/botnavbar.dart';
-import 'package:camellia_cultivar/navbar/button.dart';
-import 'package:camellia_cultivar/new_specimen/upov_characteristics.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -31,7 +27,6 @@ import '../model/upov_subcategory.dart';
 import '../model/upov_subcategory_option.dart';
 import '../model/user.dart';
 import '../providers/user.dart';
-import 'package:geocoding/geocoding.dart';
 
 class NewSpecimenPage extends StatefulWidget {
   const NewSpecimenPage({Key? key}) : super(key: key);
@@ -86,9 +81,9 @@ class NewSpecimen extends State<NewSpecimenPage> {
         List<Placemark> placemarks = await GeocodingPlatform.instance
             .placemarkFromCoordinates(position.latitude, position.longitude);
         var first_address = placemarks.first;
-        print(first_address.toString());
         setState(() {
-          userAddress = first_address.toJson();
+          userAddress =
+              "${first_address.street}, ${first_address.locality}, ${first_address.country}";
         });
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -113,8 +108,6 @@ class NewSpecimen extends State<NewSpecimenPage> {
           )));
     }
   }
-
-  _getPositionAddress() async {}
 
   Future<Position> _determinePosition() async {
     LocationPermission permission;
@@ -153,9 +146,11 @@ class NewSpecimen extends State<NewSpecimenPage> {
           contentType: contentType,
           type: BlobType.BlockBlob);
     }
-    setState(() {
-      specimen_images_urls = urls;
-    });
+    if (specimen_images_urls.isEmpty) {
+      setState(() {
+        specimen_images_urls = urls;
+      });
+    }
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -190,16 +185,16 @@ class NewSpecimen extends State<NewSpecimenPage> {
     User? user = context.watch<UserProvider>().user;
 
     void handleSubmit() async {
-      if (specimen_images_urls.isEmpty) {
-        setState(() {
-          specimen_images_urls = [
-            "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F24%2F2019%2F05%2Fgettyimages-1038704710-2000.jpg"
-          ];
-        });
-      }
+      // if (specimen_images_urls.isEmpty) {
+      //   setState(() {
+      //     specimen_images_urls = [
+      //       "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F24%2F2019%2F05%2Fgettyimages-1038704710-2000.jpg"
+      //     ];
+      //   });
+      // }
 
       if (!_formKey.currentState!.validate() ||
-          specimen_images_urls.isEmpty ||
+          specimen_images.isEmpty ||
           userLocation == null) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             backgroundColor: Colors.white,
@@ -207,32 +202,22 @@ class NewSpecimen extends State<NewSpecimenPage> {
               'Please fill the first 4 fields',
               style: TextStyle(color: Colors.red),
             )));
-        List<Map<String, dynamic>> characteristicValues = [];
+        // List<Map<String, dynamic>> characteristicValues = [];
 
-        for (int id in selectedUpovs.keys) {
-          var input = selectedUpovs[id];
-          if (input is int) {
-            characteristicValues.add({
-              "characteristic": {"id": id},
-              "id": input
-            });
-          } else if (input is String) {
-            characteristicValues.add({
-              "characteristic": {"id": id},
-              "descriptor": input
-            });
-          }
-        }
-        // Map<String, dynamic> specimenToUpload = {
-        //   'owner': ownerController.text.trim(),
-        //   'photos': specimen_images_urls,
-        //   'address': userAddress,
-        //   'garden': gardenController.text.trim(),
-        //   'latitude': userLocation!.latitude,
-        //   'longitude': userLocation!.longitude,
-        //   'characteristicValues': characteristicValues
-        // };
-        // print("specimen to upload\t" + specimenToUpload.toString());
+        // for (int id in selectedUpovs.keys) {
+        //   var input = selectedUpovs[id];
+        //   if (input is int) {
+        //     characteristicValues.add({
+        //       "characteristic": {"id": id},
+        //       "id": input
+        //     });
+        //   } else if (input is String) {
+        //     characteristicValues.add({
+        //       "characteristic": {"id": id},
+        //       "descriptor": input
+        //     });
+        //   }
+        // }
       } else {
         if (userAddress == null) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -243,17 +228,8 @@ class NewSpecimen extends State<NewSpecimenPage> {
               )));
           return;
         }
-        uploadInAzure(user!);
-        //       "owner": ownerName,
-        //  "photos":[ link1, link2, … ],
-        //  "address": address,
-        //  "latitude": latitude (double),
-        //  "longitude": longitude (double),
-        //  "garden":"a",
-        //  "characteristicValues":[
-        //     	{"characteristic":{"id":4},"id":14}, // valores restritos (opções)
-        //     	{"characteristic":{"id":43},"descriptor":1000}, // valores abertos
-        //  ]
+        await uploadInAzure(user!);
+        print("after uploading in azure");
 
         List<Map<String, dynamic>> characteristicValues = [];
 
@@ -281,8 +257,9 @@ class NewSpecimen extends State<NewSpecimenPage> {
           'longitude': userLocation!.longitude,
           'characteristicValues': characteristicValues
         };
+        print("specimen to upload");
+        print(specimenToUpload);
         var statusCode = await api.postSpecimenRequest(specimenToUpload);
-        print(statusCode);
         if (statusCode == 200 || statusCode == 201 || statusCode == 202) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -689,7 +666,6 @@ class NewSpecimen extends State<NewSpecimenPage> {
 
                       if (snapshot.hasData) {
                         var upovs = snapshot.data! as List;
-                        print("length of upovs\t" + upovs.length.toString());
                         return _buildUpovs(context, upovs);
                       }
                       return Row(
@@ -708,33 +684,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
 
   Widget _buildUpovs(BuildContext context, List upovs) {
     Color primaryColor = Theme.of(context).primaryColor;
-    // Map<int, UpovSubcategoryOption> temp = {};
-    // for (UpovCategory category in upovs) {
-    //   for (UpovSubcategory subCategory in category.characteristics) {
-    //     //   temp[subCategory.id] = UpovSubcategoryOption(
-    //     //       value: 0, descriptor: "i don't know", id: 0);
 
-    //     // for (UpovSubcategoryOption option in subCategory.options!) {
-    //     //     temp[subCategory.id] = option;
-    //     // }
-    //     selectedValues[subCategory.id] =
-    //         UpovSubcategoryOption(value: 0, descriptor: "i don't know", id: 0);
-    //   }
-    // }
-
-    // for (int i = 0; i < upovs.length; i++) {
-    //   var category = upovs[i];
-    //   for (int j = 0; j < category.characteristics; j++) {
-    //     var options = category.characteristics[j];
-    //     for (int l = 0; j < options.options; l++) {
-    //       var option = options.options[l];
-    //       temp[i + j + l] = option;
-    //     }
-    //   }
-    // }
-    // setState(() {
-    //   possibleValues = temp;
-    // });
     return Column(children: [
       for (UpovCategory category in upovs)
         ExpansionTile(
@@ -766,31 +716,30 @@ class NewSpecimen extends State<NewSpecimenPage> {
                                 : null),
                         modalType: S2ModalType.popupDialog,
                       )
-                    : _buildColorTextInput(context, subCategory)
+                    : _buildColorTextInput(subCategory)
             ])
     ]);
   }
 
-  Widget _buildColorTextInput(
-      BuildContext context, UpovSubcategory subcategory) {
-    Color primaryColor = Theme.of(context).primaryColor;
+  Widget _buildColorTextInput(UpovSubcategory subcategory) {
+    Color black = Colors.black;
     FocusNode myFocusNode = FocusNode();
     return (Padding(
         padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
         child: TextFormField(
           focusNode: myFocusNode,
-          cursorColor: primaryColor,
+          cursorColor: black,
           decoration: InputDecoration(
-            //primaryColor
-            labelStyle: TextStyle(color: primaryColor),
+            //black
+            labelStyle: TextStyle(color: black),
             enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: primaryColor),
+              borderSide: BorderSide(color: black),
             ),
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: primaryColor),
+              borderSide: BorderSide(color: black),
             ),
             border: UnderlineInputBorder(
-              borderSide: BorderSide(color: primaryColor),
+              borderSide: BorderSide(color: black),
             ),
             labelText: subcategory.name,
           ),
@@ -803,92 +752,3 @@ class NewSpecimen extends State<NewSpecimenPage> {
         )));
   }
 }
-
-  // Widget upovs(BuildContext context, List upovs) {
-  //   List<String> selectedValues = List.filled(50, 'idk');
-  //   Color primaryColor = Theme.of(context).primaryColor;
-  //   return Column(children: [
-  //     for (UpovCategory category in upovs)
-  //       ExpansionTile(
-  //           collapsedIconColor: primaryColor,
-  //           collapsedTextColor: primaryColor,
-  //           title: Text(
-  //             category.category,
-  //             style: const TextStyle(fontSize: 18.0),
-  //           ),
-  //           children: [
-  //             for (UpovSubcategory subCategory in category.characteristics)
-  //               subCategory.options != null
-  //                   ? SmartSelect<String>.single(
-  //                       title: subCategory.name,
-  //                       choiceItems: [
-  //                         S2Choice<String>(
-  //                             value: 0.toString(), title: "i don't know"),
-  //                         for (UpovSubcategoryOption option
-  //                             in subCategory.options!)
-  //                           S2Choice<String>(
-  //                               value: option.value.toString(),
-  //                               title: option.descriptor)
-  //                       ],
-  //                       value: selectedValues[subCategory.id - 1],
-  //                       onChange: (selected) => setState(() =>
-  //                           selectedValues[subCategory.id - 1] =
-  //                               selected.value),
-  //                       modalType: S2ModalType.popupDialog,
-  //                     )
-  //                   : _buildColorTextInput(context)
-  //           ])
-  //   ]);
-  // }
-// }
-
-// Widget _buildColorTextInput(BuildContext context) {
-//   Color primaryColor = Theme.of(context).primaryColor;
-//   FocusNode myFocusNode = FocusNode();
-//   final mainColorController = TextEditingController();
-//   final secondaryColorController = TextEditingController();
-//   return (Column(
-//     children: [
-//       TextFormField(
-//         focusNode: myFocusNode,
-//         cursorColor: primaryColor,
-//         decoration: InputDecoration(
-//           //primaryColor
-//           labelStyle: TextStyle(color: primaryColor),
-//           enabledBorder: UnderlineInputBorder(
-//             borderSide: BorderSide(color: primaryColor),
-//           ),
-//           focusedBorder: UnderlineInputBorder(
-//             borderSide: BorderSide(color: primaryColor),
-//           ),
-//           border: UnderlineInputBorder(
-//             borderSide: BorderSide(color: primaryColor),
-//           ),
-//           labelText: 'Main Color',
-//         ),
-//         controller: mainColorController,
-//       ),
-//       TextFormField(
-//         focusNode: myFocusNode,
-//         cursorColor: primaryColor,
-//         decoration: InputDecoration(
-//           //primaryColor
-//           labelStyle: TextStyle(color: primaryColor),
-//           enabledBorder: UnderlineInputBorder(
-//             borderSide: BorderSide(color: primaryColor),
-//           ),
-//           focusedBorder: UnderlineInputBorder(
-//             borderSide: BorderSide(color: primaryColor),
-//           ),
-//           border: UnderlineInputBorder(
-//             borderSide: BorderSide(color: primaryColor),
-//           ),
-//           labelText: 'Secondary Color',
-//         ),
-//         controller: secondaryColorController,
-//       ),
-//     ],
-//   ));
-// }
-
-

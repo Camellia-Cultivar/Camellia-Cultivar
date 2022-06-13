@@ -85,21 +85,24 @@ class _SliderShowFullmagesState extends State<SliderShowFullmages> {
                         ]);
                   }),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: map<Widget>(widget.listImagesModel, (index, url) {
-                    return Container(
-                      width: 10.0,
-                      height: 9.0,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 5.0),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: (_current == index) ? primaryColor : Colors.grey,
-                      ),
-                    );
-                  }),
-                ),
+                Flexible(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: map<Widget>(widget.listImagesModel, (index, url) {
+                      return Container(
+                        width: 10.0,
+                        height: 9.0,
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 5.0),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color:
+                              (_current == index) ? primaryColor : Colors.grey,
+                        ),
+                      );
+                    }),
+                  ),
+                )
               ],
             )));
   }

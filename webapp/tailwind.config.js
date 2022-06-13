@@ -11,6 +11,9 @@ module.exports = {
         '2/5':'40%',
         '3/5':'60%',
         '4/5':'80%',
+      },
+      colors:{
+        'primary-transparent':'#F2F6F5'
       }
       
     },

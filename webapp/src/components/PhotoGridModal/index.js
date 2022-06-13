@@ -12,19 +12,17 @@ class PhotoGridModal extends React.Component {
                         <div className="grid grid-cols-6 justify-items-stretch px-4 pt-5 sm:p-6 h-[75vh]"
                              onClick={(e) => e.stopPropagation()}
                         >
-                            <div>
+                            <div className="overflow-y-scroll grid grid-cols-3 gap-y-2 mr-1">
+                                <p className="col-span-3 text-xl text-emerald-900 border-b-2 pl-1">Images</p>
                                 {this.props.photosArray.map((link, index, row) =>
                                     <div
                                         key={this.props.id + "-image-" + index}
                                         className=
-                                            "relative cursor-pointer
-                                            last:text-lg xl:last:text-3xl text-xl last:font-semibold text-transparent
-                                            bg-no-repeat bg-center bg-cover
-                                            h-12 w-12
-                                            ring-4 ring-transparent hover:ring-teal-300 focus:ring-teal-300"
+                                            "ml-1 relative cursor-pointer last:text-lg xl:last:text-3xl text-xl last:font-semibold text-transparent bg-no-repeat bg-center bg-cover h-12 w-12 ring-4 ring-transparent hover:ring-teal-300 focus:ring-teal-300"
                                         style={{backgroundImage: `url(${link})`}}
                                         onClick={() => this.props.setModalImageIndex(index)}
-                                    >{(index + 1 === row.length) && row.length < this.props.photosArray.length - 1 && (
+                                    >
+                                        {(index + 1 === row.length) && row.length < this.props.photosArray.length - 1 && (
                                         <p>+{(this.props.photosArray.length - index)}</p>
                                     )}</div>
                                 )}
@@ -44,7 +42,7 @@ class PhotoGridModal extends React.Component {
                                         <img
                                             style={{height: "calc(75vh - 3rem)"}}
                                             src={`${this.props.photosArray[this.props.currentPhotoIndex]}`}
-                                            alt={"Enlarged image"}
+                                            alt="Enlarged Version"
                                         />
                                     </TransformComponent>
                                 </TransformWrapper>

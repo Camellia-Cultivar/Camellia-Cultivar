@@ -36,15 +36,10 @@ class CharacteristicDropdown extends Component {
                 <AnimateHeight duration={500} height={this.state.height}>
                     <div className="px-6 bg-emerald-900/10 shadow-inner">
                         { this.state.down &&
-                            Object.keys(this.state.details).map((key, i) => {
-                                return (
-                                    <div key={i} className="flex w-full justify-between py-2">
-                                        <p className=" text-sm sm:text-base capitalize font-semibold text-left mr-1 sm:w-1/2">{key}</p>
-                                        <p className=" text-sm sm:text-base capitalize text-right ml-1 sm:w-1/2">{this.state.details[key]}</p>
+                                    <div className="flex w-full justify-between py-2">
+                                        <p className=" text-sm sm:text-base capitalize font-semibold text-left mr-1 sm:w-1/2">{this.props.details.characteristic}</p>
+                                        <p className=" text-sm sm:text-base capitalize text-right ml-1 sm:w-1/2">{this.props.details.value}</p>
                                     </div>
-                                )
-                            })
-
                         }
                     </div>
                 </AnimateHeight>

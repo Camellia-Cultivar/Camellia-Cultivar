@@ -7,7 +7,7 @@ class User {
   String firstName;
   String lastName;
   String email;
-  int reputation;
+  double reputation;
   String profileImage;
   bool verified;
 
@@ -61,12 +61,24 @@ class User {
   //   };
   // }
 
-  factory User.fromJson(Map<String, dynamic> json, int id) => User(
-      id: id,
-      firstName: json["first_name"],
-      lastName: json["last_name"],
-      email: json["email"],
-      profileImage: json["profile_image"],
-      reputation: json["reputation"],
-      verified: json["verified"]);
+  factory User.fromJson(Map<String, dynamic> json, int id) {
+    // print("AAAAAAAAAAHHHHHHHHHHH" + json.toString() + "\n" + id.toString());
+    print(json["first_name"].runtimeType);
+    print((json["last_name"] as String).runtimeType);
+    print(json["email"].runtimeType);
+    print(json["reputation"].runtimeType);
+    print(json["profile_image"].runtimeType);
+    print(json["verified"].runtimeType);
+    print(id.runtimeType);
+    var user = User(
+        id: id,
+        firstName: json["first_name"],
+        lastName: json["last_name"],
+        email: json["email"],
+        profileImage: json["profile_image"],
+        reputation: json["reputation"],
+        verified: json["verified"]);
+    print("AAAAAAAAAAHHHHHHHHHHH" + user.toString());
+    return user;
+  }
 }
