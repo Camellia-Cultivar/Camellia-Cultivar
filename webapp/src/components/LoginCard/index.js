@@ -26,7 +26,7 @@ const LoginCard = (props) => {
     const loginUser = () => {
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
-        axios.post('/api/users/login', { email: email, password: Base64.stringify((sha256(password))) })
+        axios.post('/api/users/login', { email: email, password: password })
             .then(function (response) {
                 if ((response.status === 200) && window.localStorage) {
                     if (response.data === '') {
