@@ -670,7 +670,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
                       }
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [Text('Something went wrong!')],
+                        children: const [Text('Loading...')],
                       );
                     },
                   )

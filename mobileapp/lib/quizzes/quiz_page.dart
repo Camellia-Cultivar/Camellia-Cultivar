@@ -112,30 +112,27 @@ class _QuizPageState extends State<QuizPage> {
         });
   }
 
-  void handleEditingComplete() {
-    String answer = _cultivarNameController!.text;
-    setState(() {
-      form[_currentIndex] = FormItem(
-          widget.questions[_currentIndex].toJson()["specimenId"],
-          answer,
-          autocompleteOptions[answer.trim()]);
-    });
-    _focusInput?.unfocus();
-  }
+  // void handleEditingComplete() {
+  //   String answer = _cultivarNameController!.text;
+  //   setState(() {
+  //     form[_currentIndex] = FormItem(
+  //         widget.questions[_currentIndex].toJson()["specimenId"],
+  //         answer,
+  //         autocompleteOptions[answer.trim()]);
+  //   });
+  //   _focusInput?.unfocus();
+  // }
 
   void handleSubmit() async {
     form[_currentIndex] = FormItem(
         widget.questions[_currentIndex].toJson()["specimenId"],
         _cultivarNameController?.text,
         autocompleteOptions[_cultivarNameController?.text.trim()]);
-    print(_cultivarNameController?.text);
     List<FormItem> answers = form.values.toList();
-    print(answers.length);
     answers.removeWhere((item) =>
         item.answer == null ||
         item.answer!.isEmpty ||
         item.cultivar_id == null);
-    print(answers.length);
 
     await api.setQuizAnswers(answers);
 
