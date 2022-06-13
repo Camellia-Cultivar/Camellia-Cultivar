@@ -68,6 +68,7 @@ class _BotNavBar extends State<BotNavbar> {
                       GButton(
                         icon: FlowerIcon.new_specimen3,
                         text: 'New ID',
+                        iconSize: 20,
                       ),
                       GButton(
                         icon: Icons.home_rounded,

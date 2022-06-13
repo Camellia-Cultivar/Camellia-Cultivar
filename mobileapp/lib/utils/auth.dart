@@ -20,6 +20,7 @@ Future<void> login(BuildContext context, User user) async {
 }
 
 Future<void> logout(BuildContext context, User user) async {
+  Navigator.popUntil(context, (route) => route.isFirst);
   Navigator.pushReplacement(
       context, MaterialPageRoute(builder: (context) => const LoginPage()));
 

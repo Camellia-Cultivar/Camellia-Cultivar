@@ -185,16 +185,16 @@ class NewSpecimen extends State<NewSpecimenPage> {
     User? user = context.watch<UserProvider>().user;
 
     void handleSubmit() async {
-      if (specimen_images_urls.isEmpty) {
-        setState(() {
-          specimen_images_urls = [
-            "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F24%2F2019%2F05%2Fgettyimages-1038704710-2000.jpg"
-          ];
-        });
-      }
+      // if (specimen_images_urls.isEmpty) {
+      //   setState(() {
+      //     specimen_images_urls = [
+      //       "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F24%2F2019%2F05%2Fgettyimages-1038704710-2000.jpg"
+      //     ];
+      //   });
+      // }
 
       if (!_formKey.currentState!.validate() ||
-          specimen_images_urls.isEmpty ||
+          specimen_images.isEmpty ||
           userLocation == null) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             backgroundColor: Colors.white,
@@ -202,22 +202,22 @@ class NewSpecimen extends State<NewSpecimenPage> {
               'Please fill the first 4 fields',
               style: TextStyle(color: Colors.red),
             )));
-        List<Map<String, dynamic>> characteristicValues = [];
+        // List<Map<String, dynamic>> characteristicValues = [];
 
-        for (int id in selectedUpovs.keys) {
-          var input = selectedUpovs[id];
-          if (input is int) {
-            characteristicValues.add({
-              "characteristic": {"id": id},
-              "id": input
-            });
-          } else if (input is String) {
-            characteristicValues.add({
-              "characteristic": {"id": id},
-              "descriptor": input
-            });
-          }
-        }
+        // for (int id in selectedUpovs.keys) {
+        //   var input = selectedUpovs[id];
+        //   if (input is int) {
+        //     characteristicValues.add({
+        //       "characteristic": {"id": id},
+        //       "id": input
+        //     });
+        //   } else if (input is String) {
+        //     characteristicValues.add({
+        //       "characteristic": {"id": id},
+        //       "descriptor": input
+        //     });
+        //   }
+        // }
       } else {
         if (userAddress == null) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -228,7 +228,8 @@ class NewSpecimen extends State<NewSpecimenPage> {
               )));
           return;
         }
-        uploadInAzure(user!);
+        await uploadInAzure(user!);
+        print("after uploading in azure");
 
         List<Map<String, dynamic>> characteristicValues = [];
 
@@ -256,6 +257,8 @@ class NewSpecimen extends State<NewSpecimenPage> {
           'longitude': userLocation!.longitude,
           'characteristicValues': characteristicValues
         };
+        print("specimen to upload");
+        print(specimenToUpload);
         var statusCode = await api.postSpecimenRequest(specimenToUpload);
         if (statusCode == 200 || statusCode == 201 || statusCode == 202) {
           ScaffoldMessenger.of(context).showSnackBar(
