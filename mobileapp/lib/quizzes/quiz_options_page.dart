@@ -20,7 +20,9 @@ class QuizOptionsPage extends StatelessWidget {
     List<String> rules = [
       "You will be asked to identify the cultivars of the different specimens that will be shown.",
       "It's possible to skip some specimen identifications, in case you don't know them.",
-      "Please make sure to press enter on your keyboard to save your answers."
+      // "Please make sure to press enter on your keyboard to save your answers."
+      "You can go back to a previous specimen and add an answer or change the answer given.",
+      "Once you feel ready, click on SUBMIT QUIZ."
     ];
 
     _handleStartNewQuiz(BuildContext context) async {
