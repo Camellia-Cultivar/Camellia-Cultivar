@@ -107,6 +107,11 @@ class _QuizPageState extends State<QuizPage> {
 
   void handleBack() {
     setState(() => {
+          form[_currentIndex] = FormItem(
+              widget.questions[_currentIndex].toJson()["specimenId"],
+              _cultivarNameController?.text,
+              autocompleteOptions[_cultivarNameController?.text.trim()]),
+          print(_cultivarNameController?.text),
           if (_currentIndex > 0) _currentIndex--,
           _cultivarNameController?.text = form[_currentIndex]?.answer ?? ""
         });
@@ -200,7 +205,8 @@ class _QuizPageState extends State<QuizPage> {
                             shape: BoxShape.circle,
                             color: _currentIndex == index
                                 ? const Color(0x5F064E3B)
-                                : (form[index]?.answer != null
+                                : (form[index]?.answer != null &&
+                                        form[index]!.answer!.isNotEmpty
                                     ? primaryColor
                                     : Colors.white),
                             border: Border.all(color: Colors.black),
