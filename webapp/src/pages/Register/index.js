@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AiOutlineLoading3Quarters, AiOutlineWarning } from 'react-icons/ai'
 import sha256 from 'crypto-js/sha256';
-import Base64 from 'crypto-js/enc-base64'
 
 import BallDecoration from '../../components/BallDecoration'
 
@@ -60,7 +59,7 @@ const Register = () => {
             first_name: document.getElementById("register-fn").value,
             last_name: document.getElementById("register-ln").value,
             email: document.getElementById("register-email").value,
-            password: Base64.stringify((sha256(document.getElementById("register-password").value))),
+            password: sha256(document.getElementById("register-password").value).toString(),
         }
 
         const axios = require('axios').default;
