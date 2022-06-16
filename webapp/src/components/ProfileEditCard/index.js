@@ -14,8 +14,9 @@ import { signedIn, signOut } from '../../redux/actions'
 
 const ProfileEditCard = (props) => {
 
+
     const account = "camelliacultivar";
-    const sasKey = "?sv=2021-06-08&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-06-14T00:10:33Z&st=2022-06-13T16:10:33Z&sip=0.0.0.0-255.255.255.255&spr=https,http&sig=3WV16o6czdJD8Sw9wCwonIv8rYnvqtDQHsbqyIDW45s%3D";
+    const sasKey = "?sv=2021-06-08&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-09-30T17:45:02Z&st=2022-06-16T09:45:02Z&sip=0.0.0.0-255.255.255.255&spr=https,http&sig=C7p06HM2Sr1qr8LVYLBQdGj301mHAVxi3eR14%2FL01CA%3D";
 
     const blobServiceClient = new BlobServiceClient(
         `https://${account}.blob.core.windows.net${sasKey}`,
@@ -26,6 +27,7 @@ const ProfileEditCard = (props) => {
     const [changePassword, setChangePassword] = useState(false);
     const [passwordNeeded, setPasswordNeeded] = useState(false);
     const [wrongFileType, setWrongFileType] = useState(false);
+    const [imageError, setImageError] = useState(false);
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
     const [password, setPassword] = useState("");
@@ -33,6 +35,7 @@ const ProfileEditCard = (props) => {
     const [newLastName, setNewLastName] = useState(props.person.last_name);
     const user = useSelector(state => state.user);
     const [profilePicture, setProfilePicture] = useState(user.profile_photo);
+    const [image, setImage] = useState(new File([], ""));
 
 
     const dispatch = useDispatch();
@@ -49,16 +52,15 @@ const ProfileEditCard = (props) => {
                 first_name: newFirstName,
                 last_name: newLastName,
                 email: tempUser.email,
-                password: password,
+                password: Base64.stringify((sha256(password))),
                 profile_photo: profilePicture
             }
             if (changePassword && (newPassword === confirmNewPassword) && (newPassword !== "")) {
                 editedUser['password'] = Base64.stringify((sha256(newPassword)));
             }
-            await sendEditedUser(editedUser);
+            sendEditedUser(editedUser);
             setPasswordNeeded(false);
             props.setIsEditing(false);
-
         } else {
             setPasswordNeeded(true);
         }
@@ -72,13 +74,13 @@ const ProfileEditCard = (props) => {
             await blockBlobClient.uploadData(file);
         }
         catch (error) {
-            console.error(error.message);
+            console.log(error.message);
+            setImageError(true);
         }
     }
 
     const sendEditedUser = (editedUser) => {
         const loggedInUser = localStorage.getItem("userToken");
-        const file = 0;
         if (loggedInUser) {
             const userToken = JSON.parse(localStorage.getItem("userToken"));
             if (userToken.expiry > Date.now()) {
@@ -90,7 +92,7 @@ const ProfileEditCard = (props) => {
                     .catch(function (_error) {
                         return;
                     });
-                uploadToServer(file);
+                uploadToServer(image);
             } else {
                 localStorage.removeItem("userToken");
                 dispatch(signOut());
@@ -128,6 +130,7 @@ const ProfileEditCard = (props) => {
             let tempUser = { ...props.person }
             tempUser['profile_image'] = URL.createObjectURL(e.target.files[0])
             dispatch(signedIn(tempUser));
+            setImage(e.target.files[0]);
         } else {
             setWrongFileType(true);
         }
@@ -138,7 +141,7 @@ const ProfileEditCard = (props) => {
     }
 
     return (
-        <div className="flex flex-col rounded-xl bg-emerald-900/5 p-6 mb-8 pop-in" style={{ animationDelay: `200ms` }}>
+        <div className="flex flex-col rounded-xl bg-emerald-900/5 p-6 mb-8 fade-in" style={{ animationDelay: `200ms` }}>
             <div className="relative">
                 {props.person.profile_image === "null" ?
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-[150px] w-[150px] md:h-[300px] md:w-[300px] mx-auto" viewBox="0 0 20 20" fill="currentColor">
@@ -222,12 +225,12 @@ const ProfileEditCard = (props) => {
                     }
                 </div>
             </div>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center">
-                <button onClick={() => { saveProfile() }} className="p-3 bg-emerald-900 text-white rounded-full mt-6 font-medium mx-2">
+                    {imageError && <p className="text-red-800 text-center mt-6">There was an error while uploading your image to our servers.</p>}
+            <div className="flex flex-col sm:flex-row items-center justify-center mt-6">
+                <button onClick={() => { saveProfile() }} className="p-3 bg-emerald-900 text-white rounded-full  font-medium mx-2">
                     Save Profile
                 </button>
-                <button onClick={() => { props.setIsEditing(false) }} className="py-2.5 px-3 border-2 border-emerald-900 text-emerald-900 rounded-full mt-6 font-medium mx-2">
+                <button onClick={() => { props.setIsEditing(false) }} className="py-2.5 px-3 border-2 border-emerald-900 text-emerald-900 rounded-full font-medium mx-2">
                     Cancel
                 </button>
             </div>
