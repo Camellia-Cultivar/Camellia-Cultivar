@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert' show utf8;
 import 'dart:convert';
 import 'dart:developer';
 
@@ -10,6 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong/latlong.dart';
+import 'package:crypto/crypto.dart';
 
 import '../quizzes/quiz_page.dart';
 import 'api_constants.dart';
@@ -32,6 +34,8 @@ class APIService {
   final storage = FlutterSecureStorage();
 
   Future<List<Object>> login(Map login_user) async {
+    login_user["password"] = sha256hashing(login_user["password"]);
+    print("dfcgvbjkopiuygdxfghjklohjgf\n" + sha256hashing("1"));
     var er;
     try {
       var url = Uri.parse(APIConstants.baseUrl + APIConstants.loginEndpoint);
@@ -46,13 +50,11 @@ class APIService {
       if (response.statusCode == 200 && response.body == "") {
         return [-2, "Credentials are wrong!"];
       }
-      print(response.body);
       return [response.statusCode, response.body];
     } catch (e) {
       log(e.toString());
       er = e;
     }
-    print(er);
     return [-1, "Failed to authenticate. Please try again!"];
   }
 
@@ -65,11 +67,8 @@ class APIService {
         "Access-Control-Allow-Origin": "*",
         'Authorization': 'Bearer ${await storage.read(key: 'token')}',
       });
-      print(response.body);
-      print(response.statusCode);
       if (response.statusCode == 202) {
         User api_user = userFromJson(response.body, uid);
-        print(api_user);
         return api_user;
       }
     } catch (e) {
@@ -79,6 +78,7 @@ class APIService {
   }
 
   Future<List<Object>> createUser(Map signup_user) async {
+    signup_user["password"] = sha256hashing(signup_user["password"]);
     try {
       var url = Uri.parse(APIConstants.baseUrl + APIConstants.registerEndpoint);
       var body = jsonEncode(signup_user);
@@ -92,6 +92,7 @@ class APIService {
     } catch (e) {
       log(e.toString());
       log("Could not fetch from api");
+      print(e.toString());
       // throw e;
     }
     return [-1, "Failed to create account. Please try again later!"];
@@ -99,19 +100,32 @@ class APIService {
 
   //TODO: Use try-catch when using this function
   Future<void> updateUser(User user, String password) async {
-    try {
-      var url = Uri.parse(APIConstants.baseUrl +
-          APIConstants.editProfileEndpoint +
-          "/${user.id}");
-      Map<String, String> request = {
+    Map<String, String> request = {};
+
+    if (password == null || password.isEmpty) {
+      request = {
+        "first_name": user.firstName,
+        "last_name": user.lastName,
+        "password": ""
+      };
+    } else {
+      password = sha256hashing(password);
+      request = {
         "first_name": user.firstName,
         "last_name": user.lastName,
         "password": password
       };
+    }
+    if (user.profileImage != "") {
+      print("1234567890..............APK");
+      request["profile_photo"] = user.profileImage;
+    }
+    print(request);
 
-      if (user.profileImage != "null") {
-        request["profile_photo"] = user.profileImage;
-      }
+    try {
+      var url = Uri.parse(APIConstants.baseUrl +
+          APIConstants.editProfileEndpoint +
+          "/${user.id}");
 
       var body = jsonEncode(request /*user.toJson()*/);
       var response = await http.put(url,
@@ -121,6 +135,7 @@ class APIService {
             'Authorization': 'Bearer ${await storage.read(key: 'token')}'
           },
           body: body);
+      print(response.body);
 
       if (response.statusCode != 200) {
         throw Exception("Update of profile did not suceed!");
@@ -390,7 +405,10 @@ class APIService {
         Map<String, int> options = {};
         for (dynamic specimen in optionsJson) {
           var map = specimen as Map;
-          options[map["denomination"] as String] = map["cultivarId"] as int;
+          print("qqwerty ");
+          print(utf8.decode((["denomination"] as String).runes.toList()));
+          options[utf8.decode((["denomination"] as String).runes.toList())] =
+              map["cultivarId"] as int;
         }
         return options;
       }
@@ -425,14 +443,14 @@ class APIService {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> cultivarDetails = json.decode(response.body);
-        cultivarDetails["characteristicValues"] = [
-          {
-            "category": "Leaf",
-            "subcategories": [
-              {"subcat": "name", "option": "option"}
-            ]
-          }
-        ];
+        // cultivarDetails["characteristicValues"] = [
+        //   {
+        //     "category": "Leaf",
+        //     "subcategories": [
+        //       {"subcat": "name", "option": "option"}
+        //     ]
+        //   }
+        // ];
         return cultivarDetails;
       }
     } catch (e) {
@@ -472,5 +490,11 @@ class APIService {
       log(e.toString());
     }
     return [];
+  }
+
+  String sha256hashing(String pw) {
+    var bytes = utf8.encode(pw);
+    var digest = sha256.convert(bytes).toString();
+    return digest;
   }
 }

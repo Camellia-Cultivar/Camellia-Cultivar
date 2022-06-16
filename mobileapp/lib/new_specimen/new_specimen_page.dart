@@ -71,6 +71,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
   final secondaryColorController = TextEditingController();
 
   late final Future? upovFuture;
+  bool isLoading = false;
 
   void _getCurrentPosition(BuildContext context) async {
     try {
@@ -228,6 +229,9 @@ class NewSpecimen extends State<NewSpecimenPage> {
               )));
           return;
         }
+        setState(() {
+          isLoading = true;
+        });
         await uploadInAzure(user!);
         print("after uploading in azure");
 
@@ -259,7 +263,11 @@ class NewSpecimen extends State<NewSpecimenPage> {
         };
         print("specimen to upload");
         print(specimenToUpload);
+
         var statusCode = await api.postSpecimenRequest(specimenToUpload);
+        setState(() {
+          isLoading = false;
+        });
         if (statusCode == 200 || statusCode == 201 || statusCode == 202) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -283,6 +291,14 @@ class NewSpecimen extends State<NewSpecimenPage> {
         }
       }
     }
+
+    // if (isLoading) {
+    //   showDialog(
+    //       context: context,
+    //       builder: (BuildContext context) {
+    //         return _buildLoadingPopUp(context);
+    //       });
+    // }
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6F7),
@@ -325,7 +341,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
                           color: primaryColor,
                           size: 25,
                         ),
-                        onPressed: () => {handleSubmit()}),
+                        onPressed: isLoading ? null : () => {handleSubmit()}),
                   )
                 ],
               ),
@@ -719,6 +735,41 @@ class NewSpecimen extends State<NewSpecimenPage> {
                     : _buildColorTextInput(subCategory)
             ])
     ]);
+  }
+
+//use when loading for sending request
+  Widget _buildLoadingPopUp(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Colors.green[50],
+      content: _buildLoadingBody(context),
+    );
+  }
+
+  Widget _buildLoadingBody(BuildContext context) {
+    var primaryColor = Theme.of(context).primaryColor;
+    var screenSize = MediaQuery.of(context).size;
+    return Container(
+      decoration: BoxDecoration(color: Colors.green[50]),
+      width: screenSize.width,
+      height: screenSize.height / 5,
+      alignment: AlignmentDirectional.center,
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: SizedBox(
+                  height: screenSize.height / 10,
+                  width: screenSize.height / 10,
+                  child: CircularProgressIndicator(color: primaryColor)),
+            ),
+            Container(
+                margin: const EdgeInsets.only(top: 25),
+                child: const Center(
+                    child: Text(
+                        "Sending your Specimen Identification Request..."))),
+          ]),
+    );
   }
 
   Widget _buildColorTextInput(UpovSubcategory subcategory) {

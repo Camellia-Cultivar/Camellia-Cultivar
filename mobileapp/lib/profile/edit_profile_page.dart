@@ -84,13 +84,14 @@ class _EditProfilePage extends State<EditProfilePage> {
           reputation: user.reputation,
           verified: user.verified);
       if (_formKey.currentState!.validate()) {
-        await uploadInAzure(user);
         new_user.firstName = firstNameController.text;
         new_user.lastName = lastNameController.text;
-        if (profileImageUrl != null) {
+        if (profileImage != null) {
+          await uploadInAzure(user);
           new_user.profileImage = profileImageUrl!;
+          print(new_user.profileImage);
         }
-
+        print("AAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHH");
         try {
           await api.updateUser(new_user, passwordController.text);
           context.read<UserProvider>().setUser(user);
@@ -349,13 +350,13 @@ class _EditProfilePage extends State<EditProfilePage> {
                                                       ),
                                                       controller:
                                                           passwordController,
-                                                      validator: (value) {
-                                                        if ((value == null ||
-                                                            value.isEmpty)) {
-                                                          return 'Password is required!';
-                                                        }
-                                                        return null;
-                                                      },
+                                                      // validator: (value) {
+                                                      //   if ((value == null ||
+                                                      //       value.isEmpty)) {
+                                                      //     return 'Password is required!';
+                                                      //   }
+                                                      //   return null;
+                                                      // },
                                                     )),
                                               ],
                                             ))),
