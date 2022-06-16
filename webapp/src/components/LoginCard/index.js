@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import axios from 'axios';
 import sha256 from 'crypto-js/sha256';
-import Base64 from 'crypto-js/enc-base64';
 
 import { tokenTtl } from '../../utilities/ttl';
 
@@ -29,7 +28,7 @@ const LoginCard = (props) => {
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
         setIsLoading(true);
-        axios.post('/api/users/login', { email: email, password: Base64.stringify((sha256(password))) })
+        axios.post('/api/users/login', { email: email, password: sha256(password).toString()})
             .then(function (response) {
                 if ((response.status === 200) && window.localStorage) {
                     if (response.data === '') {

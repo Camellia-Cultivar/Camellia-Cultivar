@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IoAddCircle } from 'react-icons/io5';
 import axios from 'axios';
 import sha256 from 'crypto-js/sha256';
-import Base64 from 'crypto-js/enc-base64';
 import { BlobServiceClient } from "@azure/storage-blob";
 
 
@@ -44,7 +43,7 @@ const ProfileEditCard = (props) => {
     const saveProfile = async () => {
         let tempUser = { ...props.person }
         setPasswordNeeded(false);
-        if (password !== '' && await verifyLogin(tempUser.email, password)) {
+        if (password !== '' && await verifyLogin(tempUser.email, sha256(password).toString())) {
             tempUser['first_name'] = newFirstName
             tempUser['last_name'] = newLastName
             dispatch(signedIn(tempUser))
@@ -52,11 +51,11 @@ const ProfileEditCard = (props) => {
                 first_name: newFirstName,
                 last_name: newLastName,
                 email: tempUser.email,
-                password: Base64.stringify((sha256(password))),
+                password:sha256(password).toString(),
                 profile_photo: profilePicture
             }
             if (changePassword && (newPassword === confirmNewPassword) && (newPassword !== "")) {
-                editedUser['password'] = Base64.stringify((sha256(newPassword)));
+                editedUser['password'] = sha256(newPassword).toString();
             }
             sendEditedUser(editedUser);
             setPasswordNeeded(false);
