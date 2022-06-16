@@ -63,7 +63,10 @@ const Quizzes = () => {
         let user = JSON.parse(localStorage.getItem('userToken'));
         axios.post(`/api/quizzes`, answersToQuiz, { headers: { Authorization: `Bearer ${user.loginToken}` } })
             .then((_response) => {
-                setFetched(false)
+                setQuizArray([]);
+                setAnswers(Array.apply(null, Array(9)));
+                setModalImageIndex(0);
+                setFetched(false);
             })
             .catch((_error) => {
                 return

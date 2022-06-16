@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { AiOutlineLoading3Quarters, AiOutlineWarning } from 'react-icons/ai'
 import sha256 from 'crypto-js/sha256';
 import Base64 from 'crypto-js/enc-base64'
 
@@ -12,6 +12,7 @@ const Register = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
+    const [alreadyExists, setAlreadyExists] = useState(false);
 
 
     const navigate = useNavigate();
@@ -55,13 +56,11 @@ const Register = () => {
 
         setIsLoading(true);
 
-//Base64.stringify((sha256(document.getElementById("register-password").value)))
-
         const user = {
             first_name: document.getElementById("register-fn").value,
             last_name: document.getElementById("register-ln").value,
             email: document.getElementById("register-email").value,
-            password: document.getElementById("register-password").value,
+            password: Base64.stringify((sha256(document.getElementById("register-password").value))),
         }
 
         const axios = require('axios').default;
@@ -77,7 +76,14 @@ const Register = () => {
 
             })
             .catch(function (_error) {
-                return;
+                console.log(_error);
+                if(_error.response.data ==="User already exists"){
+                    setAlreadyExists(true);
+                    setIsLoading(false);
+                    setEmailError(false);
+                    setNameError(false);
+                    setPasswordError(false);
+                }
             });
 
     }
@@ -89,6 +95,7 @@ const Register = () => {
                     <p className="text-3xl font-bold text-center">Create Account</p>
                 </div>
                 <div className="flex flex-col">
+                {alreadyExists && <div className="ml-3 mt-4 mb-3 bg-red-200 self-center py-2 px-4 rounded-lg text-sm text-center text-red-900 flex items-center"><AiOutlineWarning></AiOutlineWarning><p className="ml-2">User already exists!</p></div>}
                     <div className="contents md:flex md:justify-between mt-4 md:mt-2">
                         <div className="flex flex-col md:mr-2 mt-3 md:my-0 w-full">
                             <label className="ml-2 font-semibold text-sm mb-0.5 md:text-base " htmlFor='register-fn'>First Name</label>
@@ -116,6 +123,7 @@ const Register = () => {
                             :
                             <span className="text-lg text-white">GET STARTED</span>}
                     </button>
+                            
                 </div>
             </div>
             <BallDecoration className="hidden xl:contents "></BallDecoration>

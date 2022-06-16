@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import axios from 'axios';
 import sha256 from 'crypto-js/sha256';
 import Base64 from 'crypto-js/enc-base64';
@@ -6,7 +7,11 @@ import Base64 from 'crypto-js/enc-base64';
 import { tokenTtl } from '../../utilities/ttl';
 
 const LoginCard = (props) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [wrongCredentials, setWrongCredentials] = useState(false);
+    const [userNotAuthenticated, setUserNotAuthenticated] = useState(false);
 
+    // Enter listener
     useEffect(() => {
         const onEnterPress = event => {
             if (event.key === 'Enter') {
@@ -15,22 +20,21 @@ const LoginCard = (props) => {
             }
         }
         document.addEventListener('keydown', onEnterPress);
-
         return () => {
             document.removeEventListener('keydown', onEnterPress);
         }
     });
 
-    const [wrongCredentials, setWrongCredentials] = useState(false);
-    const [userNotAuthenticated, setUserNotAuthenticated] = useState(false);
     const loginUser = () => {
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
-        axios.post('/api/users/login', { email: email, password: password })
+        setIsLoading(true);
+        axios.post('/api/users/login', { email: email, password: Base64.stringify((sha256(password))) })
             .then(function (response) {
                 if ((response.status === 200) && window.localStorage) {
                     if (response.data === '') {
                         setWrongCredentials(true);
+                        setIsLoading(false);
                     } else {
                         const token = { userId: response.data.split(' ')[0], loginToken: response.data.split(' ')[1], expiry: Date.now() + tokenTtl }
                         const options = {
@@ -40,17 +44,16 @@ const LoginCard = (props) => {
                             .then(() => {
                                 localStorage.setItem("userToken", JSON.stringify(token));
                                 setWrongCredentials(false);
+                                setIsLoading(false);
                                 props.navigate("/")
-
                             })
                             .catch(err => {
                                 if (err.message === 'Request failed with status code 401') {
                                     setWrongCredentials(false);
                                     setUserNotAuthenticated(true);
+                                    setIsLoading(false);
                                 }
-
                             })
-
                     }
                 }
             })
@@ -94,7 +97,7 @@ const LoginCard = (props) => {
                         <span className="text-red-700 text-sm font-medium text-center mx-4 mt-4 md:mt-1" type="checkbox" id="wrongCredentials">Please verify your account and then login again!</span>
                     }
                 </div>
-                <button type="submit" onClick={() => loginUser()} className="bg-emerald-900 rounded-3xl w-3/4 self-center mt-10 md:mt-6 mb-4 md:mb-2 py-2 max-w-sm active:scale-95"><span className="text-lg text-white">LOGIN</span></button>
+                <button type="submit" onClick={() => loginUser()} className="flex justify-center bg-emerald-900 rounded-3xl w-3/4 self-center mt-10 md:mt-6 mb-4 md:mb-2 py-2 max-w-sm active:scale-95">{isLoading ? <AiOutlineLoading3Quarters className="text-white text-lg loading"></AiOutlineLoading3Quarters> : <span className="text-lg text-white">LOGIN</span>}</button>
                 <p onClick={() => props.navigate("/register")} className="self-center mt-4 md:mt-2 hover:font-semibold text-base md:text-sm underline underline-offset-1 cursor-pointer">Don't have an account? Sign Up</p>
             </div>
         </div>
