@@ -186,11 +186,6 @@ class NewSpecimen extends State<NewSpecimenPage> {
     User? user = context.watch<UserProvider>().user;
 
     void handleSubmit() async {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) => _buildLoadingPopUp(context),
-      );
       // if (specimen_images_urls.isEmpty) {
       //   setState(() {
       //     specimen_images_urls = [
@@ -260,7 +255,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
         Map<String, dynamic> specimenToUpload = {
           'owner': ownerController.text.trim(),
           'photos': specimen_images_urls,
-          'address': userAddress,
+          'address': "userAddress",
           'garden': gardenController.text.trim(),
           'latitude': userLocation!.latitude,
           'longitude': userLocation!.longitude,
@@ -268,6 +263,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
         };
         print("specimen to upload");
         print(specimenToUpload);
+
         var statusCode = await api.postSpecimenRequest(specimenToUpload);
         setState(() {
           isLoading = false;
@@ -295,6 +291,14 @@ class NewSpecimen extends State<NewSpecimenPage> {
         }
       }
     }
+
+    // if (isLoading) {
+    //   showDialog(
+    //       context: context,
+    //       builder: (BuildContext context) {
+    //         return _buildLoadingPopUp(context);
+    //       });
+    // }
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6F7),
@@ -337,7 +341,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
                           color: primaryColor,
                           size: 25,
                         ),
-                        onPressed: () => {handleSubmit()}),
+                        onPressed: isLoading ? null : () => {handleSubmit()}),
                   )
                 ],
               ),
@@ -733,6 +737,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
     ]);
   }
 
+//use when loading for sending request
   Widget _buildLoadingPopUp(BuildContext context) {
     return AlertDialog(
       backgroundColor: Colors.green[50],

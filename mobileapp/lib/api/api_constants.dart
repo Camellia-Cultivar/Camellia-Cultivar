@@ -1,5 +1,5 @@
 class APIConstants {
-  static String baseUrl = "http://localhost:8085/api";
+  static String baseUrl = "https://20.123.234.48:8085/api";
   static String quizEndpoint = "/quizzes";
   static String loginEndpoint = "/users/login";
   static String registerEndpoint = "/users/signup";
