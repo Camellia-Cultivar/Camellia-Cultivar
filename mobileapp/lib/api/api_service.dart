@@ -109,7 +109,6 @@ class APIService {
         "last_name": user.lastName,
         "password": password
       };
-
       if (user.profileImage != "null") {
         request["profile_photo"] = user.profileImage;
       }
