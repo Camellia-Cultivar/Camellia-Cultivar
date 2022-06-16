@@ -76,7 +76,6 @@ const Register = () => {
 
             })
             .catch(function (_error) {
-                console.log(_error);
                 if(_error.response.data ==="User already exists"){
                     setAlreadyExists(true);
                     setIsLoading(false);

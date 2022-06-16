@@ -74,7 +74,6 @@ const ProfileEditCard = (props) => {
             await blockBlobClient.uploadData(file);
         }
         catch (error) {
-            console.log(error.message);
             setImageError(true);
         }
     }
@@ -123,7 +122,6 @@ const ProfileEditCard = (props) => {
 
     const setPhoto = (e) => {
         setWrongFileType(false);
-        console.log(e.target.files[0])
         if (e.target.files[0].type.includes("image")) {
             let imgUrl = `https://${account}.blob.core.windows.net/${containerName}/${e.target.files[0].name}`
             setProfilePicture(imgUrl);
