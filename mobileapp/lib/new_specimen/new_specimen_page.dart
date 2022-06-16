@@ -255,7 +255,7 @@ class NewSpecimen extends State<NewSpecimenPage> {
         Map<String, dynamic> specimenToUpload = {
           'owner': ownerController.text.trim(),
           'photos': specimen_images_urls,
-          'address': "userAddress",
+          'address': userAddress,
           'garden': gardenController.text.trim(),
           'latitude': userLocation!.latitude,
           'longitude': userLocation!.longitude,

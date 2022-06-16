@@ -35,6 +35,7 @@ class APIService {
 
   Future<List<Object>> login(Map login_user) async {
     login_user["password"] = sha256hashing(login_user["password"]);
+    print("dfcgvbjkopiuygdxfghjklohjgf\n" + sha256hashing("1"));
     var er;
     try {
       var url = Uri.parse(APIConstants.baseUrl + APIConstants.loginEndpoint);
@@ -99,19 +100,32 @@ class APIService {
 
   //TODO: Use try-catch when using this function
   Future<void> updateUser(User user, String password) async {
-    password = sha256hashing(password);
-    try {
-      var url = Uri.parse(APIConstants.baseUrl +
-          APIConstants.editProfileEndpoint +
-          "/${user.id}");
-      Map<String, String> request = {
+    Map<String, String> request = {};
+
+    if (password == null || password.isEmpty) {
+      request = {
+        "first_name": user.firstName,
+        "last_name": user.lastName,
+        "password": ""
+      };
+    } else {
+      password = sha256hashing(password);
+      request = {
         "first_name": user.firstName,
         "last_name": user.lastName,
         "password": password
       };
-      if (user.profileImage != "null") {
-        request["profile_photo"] = user.profileImage;
-      }
+    }
+    if (user.profileImage != "") {
+      print("1234567890..............APK");
+      request["profile_photo"] = user.profileImage;
+    }
+    print(request);
+
+    try {
+      var url = Uri.parse(APIConstants.baseUrl +
+          APIConstants.editProfileEndpoint +
+          "/${user.id}");
 
       var body = jsonEncode(request /*user.toJson()*/);
       var response = await http.put(url,
@@ -121,6 +135,7 @@ class APIService {
             'Authorization': 'Bearer ${await storage.read(key: 'token')}'
           },
           body: body);
+      print(response.body);
 
       if (response.statusCode != 200) {
         throw Exception("Update of profile did not suceed!");
