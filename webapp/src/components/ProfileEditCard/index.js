@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IoAddCircle } from 'react-icons/io5';
 import axios from 'axios';
 import sha256 from 'crypto-js/sha256';
-import Base64 from 'crypto-js/enc-base64';
 import { BlobServiceClient } from "@azure/storage-blob";
 
 
