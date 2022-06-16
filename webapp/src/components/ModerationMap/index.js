@@ -1,7 +1,7 @@
-import React, { useState} from 'react';
+import React from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 
-import token from './accessToken'
+import token from './token'
 
 
 

@@ -56,12 +56,15 @@ const Profile = () => {
                     </div>
                     :
                     <div className="mt-16 lg:mt-0 lg:ml-16 xl:mx-auto xl:px-4">
-                        <p className="text-xl lg:text-2xl font-bold text-emerald-900">Your Requests</p>
+                        <p className="text-xl lg:text-2xl font-bold text-emerald-900 fade-in" style={{ animationDelay: `300ms` }}>Your Requests</p>
                         <div className="my-4 grid gap-8 xl:grid-cols-2">
                             {
                                 requests.map((request, index) => {
                                     return (
-                                        <div key={index} className=" grid grid-flow-row md:grid-cols-8 lg:grid-cols-none gap-2 border-2 rounded-lg border-emerald-900/10 bg-emerald-900/5 p-4">
+                                        <div key={index} 
+                                        className=" grid grid-flow-row md:grid-cols-8 lg:grid-cols-none gap-2 border-2 rounded-lg border-emerald-900/10 bg-emerald-900/5 p-4 fade-in"
+                                        style={{ animationDelay: `${300+index*50}ms` }}
+                                        >
                                             <img alt="" src={request.photo} className=" h-[100px] w-[100px] object-scale-down mx-auto rounded-lg"></img>
                                             <div className="flex flex-col justify-around  md:col-span-2 font-medium mt-4">
                                                 <div className="flex items-center ">
