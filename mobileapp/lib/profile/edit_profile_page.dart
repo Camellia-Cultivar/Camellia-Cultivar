@@ -84,11 +84,11 @@ class _EditProfilePage extends State<EditProfilePage> {
           reputation: user.reputation,
           verified: user.verified);
       if (_formKey.currentState!.validate()) {
-        await uploadInAzure(user);
         new_user.firstName = firstNameController.text;
         new_user.lastName = lastNameController.text;
-        if (profileImageUrl != null) {
+        if (profileImage != null) {
           new_user.profileImage = profileImageUrl!;
+          await uploadInAzure(new_user);
         }
 
         try {
