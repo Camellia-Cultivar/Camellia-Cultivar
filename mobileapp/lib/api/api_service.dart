@@ -405,9 +405,7 @@ class APIService {
         Map<String, int> options = {};
         for (dynamic specimen in optionsJson) {
           var map = specimen as Map;
-          print("qqwerty ");
-          print(utf8.decode((["denomination"] as String).runes.toList()));
-          options[utf8.decode((["denomination"] as String).runes.toList())] =
+          options[utf8.decode((map["denomination"] as String).runes.toList())] =
               map["cultivarId"] as int;
         }
         return options;
