@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { IoSearch, IoCloseCircleOutline } from "react-icons/io5";
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import axios from 'axios'
-import * as https from 'https'
+import https from 'stream-http'
 
 import Sugestion from "../../components/Sugestion"
 import CardList from '../../components/CardList';
