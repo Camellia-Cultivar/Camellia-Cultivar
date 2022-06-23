@@ -64,7 +64,7 @@ public class User implements Serializable{
     private String profilePhoto;
 
     @Column(name = "reputation", nullable = false)
-    private double reputation = 0;
+    private double reputation = 0.0;
 
     @Column(name = "verification_code", length = 64)
     private String verificationCode;

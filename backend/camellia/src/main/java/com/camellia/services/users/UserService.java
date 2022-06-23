@@ -159,12 +159,8 @@ public class UserService {
         return Optional.of(foundUser);
     }
 
-    public boolean isRegistered(User user) {
-        return (user != null &&
-                (
-                        user.getRolesList().contains("REGISTERED") ||
-                        user.getRolesList().contains("MOD") ||
-                        user.getRolesList().contains("ADMIN"))
-        );
+    public User saveReputation(User user, double reputation) {
+        user.setReputation(reputation);
+        return repository.save(user);
     }
 }

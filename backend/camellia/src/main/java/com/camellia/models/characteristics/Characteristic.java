@@ -33,7 +33,7 @@ public class Characteristic {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @JsonIgnoreProperties({ "specimens" })
+    @JsonIgnoreProperties({ "specimens", "cultivars" })
     private Set<CharacteristicValue> characteristicValues;
 
     @JsonProperty("values")
