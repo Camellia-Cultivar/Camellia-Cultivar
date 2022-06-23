@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from "axios";
 
 import StepList from "../../components/StepList";
+import { proxy } from '../../utilities/proxy';
 
 
 // static data (to remove when backend is functional)
@@ -36,7 +37,7 @@ const Home = () => {
     );
     const [fetchedAchievements, setFetchedAchievements] = useState(false)
 
-    axios.get('/api/public/achievements')
+    axios.get(`${proxy}/api/public/achievements`)
         .then(function (response) {
             // handle success
             if (!fetchedAchievements) {

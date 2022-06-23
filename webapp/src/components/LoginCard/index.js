@@ -4,6 +4,7 @@ import axios from 'axios';
 import sha256 from 'crypto-js/sha256';
 
 import { tokenTtl } from '../../utilities/ttl';
+import { proxy } from '../../utilities/proxy';
 
 const LoginCard = (props) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +29,7 @@ const LoginCard = (props) => {
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
         setIsLoading(true);
-        axios.post('/api/users/login', { email: email, password: sha256(password).toString()})
+        axios.post(`${proxy}/api/users/login`, { email: email, password: sha256(password).toString()})
             .then(function (response) {
                 if ((response.status === 200) && window.localStorage) {
                     if (response.data === '') {
@@ -39,7 +40,7 @@ const LoginCard = (props) => {
                         const options = {
                             headers: { 'Authorization': `Bearer ${token.loginToken}` }
                         }
-                        axios.get(`/api/users/${token.userId}`, options)
+                        axios.get(`${proxy}/api/users/${token.userId}`, options)
                             .then(() => {
                                 localStorage.setItem("userToken", JSON.stringify(token));
                                 setWrongCredentials(false);

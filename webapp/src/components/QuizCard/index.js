@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { proxy } from "../../utilities/proxy";
 import Sugestion from "../Sugestion";
 import './index.css';
 
@@ -19,7 +20,7 @@ const QuizCard = (props) => {
                     substring: value
                 }
             }
-            axios.get(`/api/public/autocomplete`, options)
+            axios.get(`${proxy}/api/public/autocomplete`, options)
                 .then((response) => {
                     setSugestions(response.data);
                 })

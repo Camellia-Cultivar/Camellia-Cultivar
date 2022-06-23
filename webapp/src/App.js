@@ -3,7 +3,6 @@ import { Route, Routes, } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 
-import './App.css';
 
 
 import Home from "./pages/Home";
@@ -18,6 +17,7 @@ import Moderation from './pages/Moderation';
 import Profile from './pages/Profile';
 import history from './utilities/history'
 import { signIn, signOut, signedIn, setMod } from './redux/actions'
+import { proxy } from './utilities/proxy';
 
 
 function App() {
@@ -39,7 +39,7 @@ function App() {
         const loggedInUser = localStorage.getItem("userToken");
         if (loggedInUser && secondFactor) {
             const user = JSON.parse(localStorage.getItem("userToken"));
-            axios.get(`/api/users/${user.userId}`, {
+            axios.get(`${proxy}/api/users/${user.userId}`, {
                 headers: {
                     "Authorization": `Bearer ${user.loginToken}`,
                 }
@@ -79,7 +79,7 @@ function App() {
                 'Authorization': 'Bearer ' + token
             }
         }
-        axios.get(`api/moderator/${id}`, options)
+        axios.get(`${proxy}/api/moderator/${id}`, options)
             .then(response => {
                 setIsMod(response.status === 202);
                 dispatch(setMod());

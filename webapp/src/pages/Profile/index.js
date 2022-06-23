@@ -9,6 +9,7 @@ import ProfileCard from '../../components/ProfileCard'
 import ProfileEditCard from '../../components/ProfileEditCard'
 
 import axios from 'axios'
+import { proxy } from '../../utilities/proxy'
 
 const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
@@ -35,7 +36,7 @@ const Profile = () => {
                         'Authorization': 'Bearer ' + JSON.parse(loggedInUser).loginToken
                     }
                 }
-                !fetched && axios.get('/api/requests/identification', options)
+                !fetched && axios.get(`${proxy}/api/requests/identification`, options)
                     .then(response => {
                         setRequests(response.data);
                         setFetched(true);

@@ -4,6 +4,7 @@ import { AiOutlineLoading3Quarters, AiOutlineWarning } from 'react-icons/ai'
 import sha256 from 'crypto-js/sha256';
 
 import BallDecoration from '../../components/BallDecoration'
+import { proxy } from '../../utilities/proxy';
 
 
 const Register = () => {
@@ -64,7 +65,7 @@ const Register = () => {
 
         const axios = require('axios').default;
 
-        axios.post('/api/users/signup', user, {
+        axios.post(`${proxy}/api/users/signup`, user, {
             headers: {
                 'content-type': 'application/json'
             }

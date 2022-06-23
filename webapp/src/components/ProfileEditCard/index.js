@@ -8,6 +8,7 @@ import { BlobServiceClient } from "@azure/storage-blob";
 
 import { tokenTtl } from '../../utilities/ttl';
 import { signedIn, signOut } from '../../redux/actions'
+import { proxy } from '../../utilities/proxy';
 
 
 
@@ -82,7 +83,7 @@ const ProfileEditCard = (props) => {
         if (loggedInUser) {
             const userToken = JSON.parse(localStorage.getItem("userToken"));
             if (userToken.expiry > Date.now()) {
-                axios.put(`/api/users/${userToken.userId}`, editedUser, {
+                axios.put(`${proxy}/api/users/${userToken.userId}`, editedUser, {
                     headers: {
                         "Authorization": `Bearer ${userToken.loginToken}`,
                     }
@@ -100,7 +101,7 @@ const ProfileEditCard = (props) => {
 
     const verifyLogin = (email, _password) => {
         let body = { email: email, password: _password };
-        return axios.post('/api/users/login', body)
+        return axios.post(`${proxy}/api/users/login`, body)
             .then(function (response) {
                 if ((response.status === 200) && window.localStorage) {
                     if (response.data === '') {

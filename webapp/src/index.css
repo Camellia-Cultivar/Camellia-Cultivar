@@ -26,6 +26,12 @@ code {
         monospace;
 }
 
+#app{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
 @layer components {
     /* Centered container with margin */
     .container-4\/5 {

@@ -7,6 +7,7 @@ import CharacteristicDropdown from '../../components/CharacteristicDropdown/inde
 import Map from '../../components/ModerationMap/index.js';
 
 import ProfileDetails from '../../components/ProfileDetails/index.js';
+import { proxy } from '../../utilities/proxy.js';
 
 
 const Moderation = () => {
@@ -41,7 +42,7 @@ const Moderation = () => {
                     'Authorization': 'Bearer ' + user.loginToken
                 }
             }
-            !fetched && axios.get(`/api/moderator/identification`, options)
+            !fetched && axios.get(`${proxy}/api/moderator/identification`, options)
                 .then(response => {
                     if (response.data === "") {
                         setNoRequests(true);
@@ -68,7 +69,7 @@ const Moderation = () => {
                 }
             }
 
-            axios.put(`/api/moderator/identification/${request.requestId}/approve`, {}, options)
+            axios.put(`${proxy}/api/moderator/identification/${request.requestId}/approve`, {}, options)
                 .then(response => {
                     if (response.status === 202) {
                         setIsLoading(true);
@@ -88,7 +89,7 @@ const Moderation = () => {
                     'Authorization': 'Bearer ' + user.loginToken
                 }
             }
-            axios.get(`/api/users/${submitter.userId}`, options)
+            axios.get(`${proxy}/api/users/${submitter.userId}`, options)
 
                 .then(response => {
                     setPerson(response.data);
@@ -109,7 +110,7 @@ const Moderation = () => {
                     'Authorization': 'Bearer ' + user.loginToken
                 }
             }
-            axios.put(`/api/users/autoapproval/${submitter.userId}`, {}, options)
+            axios.put(`${proxy}/api/users/autoapproval/${submitter.userId}`, {}, options)
                 .then(_response => {
                     getUserProfile();
                 })
@@ -131,7 +132,7 @@ const Moderation = () => {
                     specimen:specimen.specimenId
                 }
             }
-            axios.delete(`/api/moderator/specimen/${request.requestId}`, options)
+            axios.delete(`${proxy}/api/moderator/specimen/${request.requestId}`, options)
                 .then(() => {
                     setIsLoading(true);
                     setFetched(false);

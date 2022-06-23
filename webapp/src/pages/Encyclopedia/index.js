@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { IoSearch, IoCloseCircleOutline } from "react-icons/io5";
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import axios from 'axios'
+import https from 'stream-http'
 
 import Sugestion from "../../components/Sugestion"
 import CardList from '../../components/CardList';
+import { proxy } from '../../utilities/proxy';
 
 const Encyclopedia = () => {
 
@@ -23,10 +25,18 @@ const Encyclopedia = () => {
 
     let noShadowSearch = `shadow-none border-x-0 border-b-0`;
 
+    const agent = new https.Agent({  
+        rejectUnauthorized: false
+      });
+
+    const options1 = { 
+        params: { page: page - 1 },
+        httpsAgent: agent,
+    }
 
     useEffect(() => {
         if (!fetched) {
-            axios.get('/api/public/cultivars', { params: { page: page - 1 } })
+            axios.get(`${proxy}/api/public/cultivars`, options1)
                 .then((response) => {
                     setCamellias(response.data.content)
                     setLastPage(response.data.totalPages)
@@ -43,7 +53,7 @@ const Encyclopedia = () => {
         setSearchText(e.target.value)
         if (e.target.value.length > 2) {
             setSugestionsOn(true)
-            axios.get('/api/public/autocomplete', { params: { substring: e.target.value } })
+            axios.get(`${proxy}/api/public/autocomplete`, { params: { substring: e.target.value } })
                 .then((response) => {
                     setAutocompletedCamellias(response.data)
                 })
@@ -64,7 +74,7 @@ const Encyclopedia = () => {
     }
 
     const clearAll = () => {
-        axios.get('/api/public/cultivars', { params: { page: page-1 } })
+        axios.get(`${proxy}/api/public/cultivars`, { params: { page: page-1 } })
             .then((response) => {
                 setCamellias(response.data.content)
                 setFetched(true)
@@ -89,7 +99,7 @@ const Encyclopedia = () => {
                 search: searchText
             }
         }
-        await axios.get('/api/public/cultivars', options)
+        await axios.get(`${proxy}/api/public/cultivars`, options)
             .then((response) => {
                 setIsLoading(true);
                 setSugestionsOn(false);
