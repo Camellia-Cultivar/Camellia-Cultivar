@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import QuizCard from "../../components/QuizCard";
 import StepList from "../../components/StepList";
 import PhotoGridModal from "../../components/PhotoGridModal";
+import { proxy } from '../../utilities/proxy';
 
 let scrl = React.createRef();
 
@@ -30,7 +31,7 @@ const Quizzes = () => {
         let userToken = localStorage.getItem('userToken');
         if (userToken) {
             let user = JSON.parse(userToken);
-            !fetched && axios.get(`/api/quizzes`, { headers: { Authorization: `Bearer ${user.loginToken}` } })
+            !fetched && axios.get(`${proxy}/api/quizzes`, { headers: { Authorization: `Bearer ${user.loginToken}` } })
                 .then((response) => {
                     setQuizArray(response.data);
                     setFetched(true);
@@ -61,7 +62,7 @@ const Quizzes = () => {
             })
         }
         let user = JSON.parse(localStorage.getItem('userToken'));
-        axios.post(`/api/quizzes`, answersToQuiz, { headers: { Authorization: `Bearer ${user.loginToken}` } })
+        axios.post(`${proxy}/api/quizzes`, answersToQuiz, { headers: { Authorization: `Bearer ${user.loginToken}` } })
             .then((_response) => {
                 setQuizArray([]);
                 setAnswers(Array.apply(null, Array(9)));

@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import CharacteristicDropdown from '../../components/CharacteristicDropdown';
 import AnimateHeight from 'react-animate-height';
+import { proxy } from '../../utilities/proxy';
 const Camellia = () => {
 
 
@@ -25,7 +26,7 @@ const Camellia = () => {
 
     useEffect(() => {
         if (!fetched) {
-            axios.get(`/api/public/cultivars/${params.id}`)
+            axios.get(`${proxy}/api/public/cultivars/${params.id}`)
                 .then((response) => {
                     setCharacteristics(response.data.characteristicValues)
                     setCamellia(response.data)
@@ -39,7 +40,7 @@ const Camellia = () => {
     })
 
     const loadMore = () => {
-        axios.get(`/api/public/cultivars/${camellia.id}/photos`)
+        axios.get(`${proxy}/api/public/cultivars/${camellia.id}/photos`)
             .then((response) => {
                 let tempPhotos = [];
                 setOtherPhotosExist(response.data.content.length === 0);

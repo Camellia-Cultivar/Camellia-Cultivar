@@ -6,6 +6,7 @@ import axios from 'axios'
 
 import Sugestion from "../../components/Sugestion"
 import CardList from '../../components/CardList';
+import { proxy } from '../../utilities/proxy';
 
 const Encyclopedia = () => {
 
@@ -26,7 +27,7 @@ const Encyclopedia = () => {
 
     useEffect(() => {
         if (!fetched) {
-            axios.get('/api/public/cultivars', { params: { page: page - 1 } })
+            axios.get(`${proxy}/api/public/cultivars`, { params: { page: page - 1 } })
                 .then((response) => {
                     setCamellias(response.data.content)
                     setLastPage(response.data.totalPages)
@@ -43,7 +44,7 @@ const Encyclopedia = () => {
         setSearchText(e.target.value)
         if (e.target.value.length > 2) {
             setSugestionsOn(true)
-            axios.get('/api/public/autocomplete', { params: { substring: e.target.value } })
+            axios.get(`${proxy}/api/public/autocomplete`, { params: { substring: e.target.value } })
                 .then((response) => {
                     setAutocompletedCamellias(response.data)
                 })
@@ -64,7 +65,7 @@ const Encyclopedia = () => {
     }
 
     const clearAll = () => {
-        axios.get('/api/public/cultivars', { params: { page: page-1 } })
+        axios.get(`${proxy}/api/public/cultivars`, { params: { page: page-1 } })
             .then((response) => {
                 setCamellias(response.data.content)
                 setFetched(true)
@@ -89,7 +90,7 @@ const Encyclopedia = () => {
                 search: searchText
             }
         }
-        await axios.get('/api/public/cultivars', options)
+        await axios.get(`${proxy}/api/public/cultivars`, options)
             .then((response) => {
                 setIsLoading(true);
                 setSugestionsOn(false);
