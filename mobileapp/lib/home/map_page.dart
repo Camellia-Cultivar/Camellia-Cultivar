@@ -5,39 +5,6 @@ import 'package:latlong/latlong.dart';
 import '../api/api_service.dart';
 import 'specimen_popup.dart';
 
-// List<LatLng> coordsLst = [
-//   LatLng(40.6384943, -8.6540832),
-//   LatLng(40.6391863, -8.6563771),
-//   LatLng(40.6364017, -8.6532305)
-// ];
-
-// List<Map<String, dynamic>> json = [
-//   {
-//     "coords": coordsLst[0],
-//     "cultivar_name": "C. Japonica",
-//     "species_name": "dfghjkl",
-//     "image":
-//         "https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455__340.jpg",
-//     "specimen_id": 3
-//   },
-//   {
-//     "coords": coordsLst[1],
-//     "cultivar_name": "C. Sasanqua",
-//     "species_name": "dfghjkl",
-//     "image":
-//         "https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg?w=2000",
-//     "specimen_id": 5
-//   },
-//   {
-//     "coords": coordsLst[2],
-//     "cultivar_name": "C. Japonica",
-//     "species_name": "dfghjkl",
-//     "image":
-//         "https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8&w=1000&q=80",
-//     "specimen_id": 12
-//   }
-// ];
-
 class ShowFullMap extends StatefulWidget {
   final List<dynamic>? specimens;
   const ShowFullMap(this.specimens, {Key? key}) : super(key: key);
@@ -88,7 +55,6 @@ class _ShowFullMapState extends State<ShowFullMap> {
     Color primaryColor = Theme.of(context).primaryColor;
     double _zoom = 12;
     MapController _mapController = MapController();
-    print(_openPopUp);
 
     setState(() {
       _markers = _latLngList
@@ -200,7 +166,6 @@ class _ShowFullMapState extends State<ShowFullMap> {
   var infoWindowVisible = false;
 
   Opacity popup(LatLng point, Map<String, dynamic>? specimen) {
-    print(_openPopUp[point]);
     return Opacity(
       opacity: _openPopUp[point]! ? 1.0 : 0.0,
       child: Container(

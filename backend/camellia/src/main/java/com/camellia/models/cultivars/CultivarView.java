@@ -7,12 +7,13 @@ import java.util.List;
 
 public interface CultivarView {
 
-    @Value("#{target.cultivar_id}")
+    @Value("#{target.id}")
     Long getId();
 
     String getSpecies();
 
     String getEpithet();
 
+    @Value("#{target.characteristicValues}")
     List<CharacteristicValueDetailsView> getCharacteristics();
 }

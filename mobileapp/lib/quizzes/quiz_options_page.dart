@@ -1,8 +1,4 @@
-import 'dart:html';
-
 import 'package:camellia_cultivar/model/question.dart';
-import 'package:camellia_cultivar/model/user.dart';
-import 'package:camellia_cultivar/providers/user.dart';
 import 'package:camellia_cultivar/quizzes/quiz_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +13,6 @@ class QuizOptionsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     Color primaryColor = Theme.of(context).primaryColor;
-    User? user = context.watch<UserProvider>().user;
 
     final api = APIService();
     List<Question>? questions;
@@ -25,18 +20,20 @@ class QuizOptionsPage extends StatelessWidget {
     List<String> rules = [
       "You will be asked to identify the cultivars of the different specimens that will be shown.",
       "It's possible to skip some specimen identifications, in case you don't know them.",
-      "Please make sure to press enter on your keyboard to save your answers."
+      // "Please make sure to press enter on your keyboard to save your answers."
+      "You can go back to a previous specimen and add an answer or change the answer given.",
+      "Once you feel ready, click on SUBMIT QUIZ."
     ];
 
     _handleStartNewQuiz(BuildContext context) async {
-      questions = await api.getQuiz(user!);
+      questions = await api.getQuiz();
       print(questions);
-      if (questions == null) {
+      if (questions == null || questions!.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               backgroundColor: Colors.white,
               content: Text(
-                "No quizzes are available, come back later!",
+                "No quizzes available, come back later!",
                 style: TextStyle(color: Colors.blue),
               )),
         );
@@ -138,10 +135,7 @@ class QuizOptionsPage extends StatelessWidget {
                 ),
               )),
           Padding(padding: EdgeInsets.all(10)),
-
           Flexible(child: Text(rule)),
-          // const Text(
-          //     "You will be asked to identify the cultivar of the different specimens that will be shown."))
         ]),
         Padding(padding: EdgeInsets.all(5))
       ],

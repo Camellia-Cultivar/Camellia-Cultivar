@@ -17,9 +17,10 @@ Map<String, dynamic> json = {
 };
 
 class CultivarPage extends StatefulWidget {
-  final int specimenId;
+  final Map<String, dynamic> cultivarDetails;
 
-  const CultivarPage({Key? key, id, required this.specimenId}) : super(key: key);
+  const CultivarPage({Key? key, required this.cultivarDetails})
+      : super(key: key);
 
   @override
   State<CultivarPage> createState() => _CultivarPage();
@@ -54,7 +55,7 @@ class _CultivarPage extends State<CultivarPage> {
                           BackButton(
                             color: primaryColor,
                           ),
-                          Text(json["cultivar_name"],
+                          Text(widget.cultivarDetails["epithet"],
                               style: TextStyle(
                                   color: primaryColor,
                                   fontSize: screenSize.height / 35,
@@ -65,9 +66,13 @@ class _CultivarPage extends State<CultivarPage> {
                   SizedBox(
                       width: screenSize.width / 1.5,
                       height: screenSize.height / 3,
-                      child: Image.network(json["main_photo"],
-                          width: screenSize.width / 1.5,
-                          fit: BoxFit.fitHeight)),
+                      child: widget.cultivarDetails["photograph"] != null
+                          ? Image.network(widget.cultivarDetails["photograph"],
+                              width: screenSize.width / 1.5,
+                              fit: BoxFit.fitHeight)
+                          : const Center(
+                              child: Text("No images to show"),
+                            )),
                   const Padding(padding: EdgeInsets.all(20)),
                   Stack(
                     children: <Widget>[
@@ -96,7 +101,7 @@ class _CultivarPage extends State<CultivarPage> {
                           child: Padding(
                               padding: const EdgeInsets.only(right: 20),
                               child: Text(
-                                json["species"],
+                                widget.cultivarDetails["species"],
                                 style: TextStyle(color: primaryColor),
                               ))),
                     ],
@@ -131,7 +136,7 @@ class _CultivarPage extends State<CultivarPage> {
                               padding: EdgeInsets.only(
                                   left: screenSize.width / 2.62, right: 20),
                               child: Text(
-                                json["scientific_name"],
+                                widget.cultivarDetails["epithet"],
                                 style: TextStyle(color: primaryColor),
                                 textAlign: TextAlign.end,
                               ))),
@@ -157,7 +162,84 @@ class _CultivarPage extends State<CultivarPage> {
                           ],
                         ),
                         //TODO: Set what comes from API
-                        children: <Widget>[Text("")],
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                color: Color.fromARGB(6, 0, 0, 0),
+                                borderRadius: BorderRadius.circular(15.0)),
+                            margin: EdgeInsets.fromLTRB(
+                                screenSize.width / 15,
+                                screenSize.width / 30,
+                                screenSize.width / 15,
+                                screenSize.width / 100),
+                            padding: EdgeInsets.fromLTRB(
+                                screenSize.width / 15,
+                                screenSize.width / 100,
+                                screenSize.width / 15,
+                                screenSize.width / 80),
+                            child: Column(children: [
+                              const Text(
+                                "Description",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
+                              Padding(
+                                  padding:
+                                      EdgeInsets.all(screenSize.height / 200)),
+                              Text("    " +
+                                  widget.cultivarDetails["description"]),
+                            ]),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                color: Color.fromARGB(6, 0, 0, 0),
+                                borderRadius: BorderRadius.circular(15.0)),
+                            margin: EdgeInsets.fromLTRB(
+                                screenSize.width / 15,
+                                screenSize.width / 30,
+                                screenSize.width / 15,
+                                screenSize.width / 30),
+                            padding: EdgeInsets.fromLTRB(
+                                screenSize.width / 15,
+                                screenSize.width / 80,
+                                screenSize.width / 15,
+                                screenSize.width / 80),
+                            child: Column(
+                              children: [
+                                const Text(
+                                  "Characteristics",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.all(
+                                        screenSize.height / 200)),
+                                for (dynamic category in widget
+                                    .cultivarDetails["characteristicValues"])
+                                  ExpansionTile(
+                                    collapsedIconColor: primaryColor,
+                                    collapsedTextColor: primaryColor,
+                                    title: Text(category["category"] as String),
+                                    children: [
+                                      for (dynamic subcat
+                                          in category["subcategories"])
+                                        ListTile(
+                                          leading: Text(subcat["subcat"]),
+                                          trailing: Text(
+                                            subcat["option"],
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        )
+                                    ],
+                                  )
+                              ],
+                            ),
+                          )
+                        ],
                       )),
                   Padding(
                     padding:
@@ -167,12 +249,7 @@ class _CultivarPage extends State<CultivarPage> {
                         child: TextButton(
                             style: const ButtonStyle(
                                 alignment: Alignment.centerLeft),
-                            onPressed: () => {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => SliderShowFullmages(
-                                          listImagesModel: json["photos"],
-                                          current: 0, isNetworkImg: true)))
-                                },
+                            onPressed: () => handleMorePhotos(context),
                             child: Wrap(
                               crossAxisAlignment: WrapCrossAlignment.center,
                               children: [
@@ -190,5 +267,22 @@ class _CultivarPage extends State<CultivarPage> {
                 ],
               ),
             )));
+  }
+
+  handleMorePhotos(BuildContext context) async {
+    List<String> photos =
+        await APIService().getCultivarPhotos(widget.cultivarDetails["id"]);
+    if (photos.isNotEmpty) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SliderShowFullmages(
+              listImagesModel: photos, current: 0, isNetworkImg: true)));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            "There aren't any more photos.",
+            style: TextStyle(color: Colors.blue),
+          ),
+          backgroundColor: Colors.white));
+    }
   }
 }

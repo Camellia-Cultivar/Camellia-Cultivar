@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:camellia_cultivar/layout.dart';
 import 'package:camellia_cultivar/authentication/login_page.dart';
 import 'package:camellia_cultivar/new_specimen/new_specimen_page.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
   runApp(
     MultiProvider(
       providers: [
@@ -33,5 +36,14 @@ class MainPage extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -44,7 +45,7 @@ public class CultivarController {
             @RequestParam(name = "number") Optional<Integer> quantity,
             @RequestParam(name = "search") Optional<String> searchBy
     ){
-        Pageable pageable = PageRequest.of(page.orElse(0), quantity.orElse(9));
+        Pageable pageable = PageRequest.of(page.orElse(0), quantity.orElse(9), Sort.by("id"));
         return searchBy.isPresent() ?
                 cultivarService.getCultivarsBySearchTermAndPage(searchBy.get(), pageable) :
                 cultivarService.getCultivarsByPage(pageable);
