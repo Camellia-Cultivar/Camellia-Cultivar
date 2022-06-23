@@ -3,7 +3,6 @@ import { Route, Routes, } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 
-import './App.css';
 
 
 import Home from "./pages/Home";
