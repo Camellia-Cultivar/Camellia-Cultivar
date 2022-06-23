@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { IoSearch, IoCloseCircleOutline } from "react-icons/io5";
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import axios from 'axios'
+import * as https from 'https'
 
 import Sugestion from "../../components/Sugestion"
 import CardList from '../../components/CardList';
@@ -24,10 +25,18 @@ const Encyclopedia = () => {
 
     let noShadowSearch = `shadow-none border-x-0 border-b-0`;
 
+    const agent = new https.Agent({  
+        rejectUnauthorized: false
+      });
+
+    const options1 = { 
+        params: { page: page - 1 },
+        httpsAgent: agent,
+    }
 
     useEffect(() => {
         if (!fetched) {
-            axios.get(`${proxy}/api/public/cultivars`, { params: { page: page - 1 } })
+            axios.get(`${proxy}/api/public/cultivars`, options1)
                 .then((response) => {
                     setCamellias(response.data.content)
                     setLastPage(response.data.totalPages)
